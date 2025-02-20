@@ -4,7 +4,7 @@
     virtualisation = {   
         docker = {
             enable = true;
-            enableNvidia = true;
+            enableNvidia = false;
             autoPrune ={
                 flags = [ "--all" ];
                 enable = true;
