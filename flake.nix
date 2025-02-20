@@ -6,7 +6,7 @@
     inputs.sops-nix.url = "github:Mic92/sops-nix";
   };
 
-  outputs = inputs@{ nixpkgs, ... }: {
+  outputs = inputs@{ nixpkgs, sops-nix,... }: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -15,7 +15,7 @@
           sops-nix.nixosModules.sops
         ];
       };
-      
+
       deimos-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
