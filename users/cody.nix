@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, ...}:
+{ inputs, ssh-keys, config, pkgs, ...}:
 {
     users={
         defaultUserShell = pkgs.zsh;
