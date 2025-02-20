@@ -1,7 +1,6 @@
 { inputs, ssh-keys, config, pkgs, ...}:
 {
-    let
-        
+
     users={
         defaultUserShell = pkgs.zsh;
         users.cody = {
