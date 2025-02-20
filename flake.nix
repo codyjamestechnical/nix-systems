@@ -14,7 +14,6 @@
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        extraSpecialArgs = {inherit inputs;};
         modules = [
           ./hosts/mars-server/default.nix
           sops-nix.nixosModules.sops
