@@ -1,4 +1,4 @@
-{ config, pkgs, ...}:
+{ inputs, config, pkgs, ...}:
 {
     users={
         defaultUserShell = pkgs.zsh;
@@ -13,6 +13,7 @@
                 "acme"
             ];
             shell = pkgs.zsh;
+            openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
             # openssh.authorizedKeys.keyFiles = [
             #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
             # ];

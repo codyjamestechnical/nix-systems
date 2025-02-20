@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     sops-nix.url = "github:Mic92/sops-nix";
+    ssh-keys = {
+      url = "https://github.com/codyjamestechnical.keys";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ nixpkgs, sops-nix,... }: {
