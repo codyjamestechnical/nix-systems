@@ -10,9 +10,13 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, sops-nix, ssh-keys,... }: {
+  outputs = { nixpkgs, sops-nix, ssh-keys,... } @inputs: 
+  let
+    inherit (self) outputs;
+   in {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";
         modules = [
           ./hosts/mars-server/default.nix
