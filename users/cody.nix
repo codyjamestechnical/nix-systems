@@ -18,11 +18,17 @@
             # openssh.authorizedKeys.keyFiles = [
             #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
             # ];
-            openssh.authorizedKeys.keyFiles = builtins.readFile (
-                builtins.fetchurl { 
-                    url=https://github.com/codyjamestechnical.keys ; sha256 = "sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
-                    }
-                );
+            # openssh.authorizedKeys.keys = builtins.readFile (
+            #     builtins.fetchurl { 
+            #         url=https://github.com/codyjamestechnical.keys ; sha256 = "sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
+            #         }
+            #     );
+            openssh.authorizedKeys.keyFiles = [
+                    (pkgs.fetchurl {
+                        url = "https://github.com/codyjamestechnical.keys";
+                        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Will be updated automatically
+                    })
+                ];
             packages = with pkgs; [
             ];
         };
