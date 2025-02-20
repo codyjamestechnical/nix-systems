@@ -27,12 +27,12 @@
                     "/var/komodo/ssl:/etc/komodo/ssl"
                     "/var/komodo/repos:/etc/komodo/repos"
                     "/var/komodo/stacks:/etc/komodo/stacks"
-                    "/var/secrets/komodo-passkey:var/secrets/komodo-passkey"
+                    "/var/secrets/komodo-passkey:/var/secrets/passkey"
                 ];
                 environment = {
                     PERIPHERY_SSL_ENABLED = "true";
                     PERIPHERY_INCLUDE_DISK_MOUNTS = "/etc/hostname";
-                    PERIPHERY_PASSKEYS_FILE = "/var/secrets/komodo-passkey";
+                    PERIPHERY_PASSKEYS_FILE = "/var/secrets/passkey";
                 };
                 labels = {"komodo.skip" = "";};
             };
