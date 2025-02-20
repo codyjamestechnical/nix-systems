@@ -24,6 +24,7 @@
         system = "x86_64-linux";
         modules = [
           ./hosts/deimos-server
+          ./users/cody.nix
           sops-nix.nixosModules.sops
           
         ];

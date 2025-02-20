@@ -5,7 +5,6 @@
 
         ../../modules/core.nix
         ../../modules/docker.nix
-        ../../users/cody.nix
         ../../users/docker.nix
     ];
 
