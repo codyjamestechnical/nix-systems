@@ -1,4 +1,4 @@
-{ inputs, ssh-keys, config, pkgs, ...}:
+{ inputs, config, pkgs, ...}:
 {
 
     users={
@@ -14,7 +14,7 @@
                 "acme"
             ];
             shell = pkgs.zsh;
-            openssh.authorizedKeys.keyFiles = [ ssh-keys.outPath ];
+            openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
             # openssh.authorizedKeys.keyFiles = [
             #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
             # ];
