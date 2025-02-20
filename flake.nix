@@ -11,7 +11,7 @@
       mars-server = nixpkgs.lib.nixosSystem {
         #system = "x86_64-linux";
         modules = [
-          ./hosts/mars-server
+          ./hosts/mars-server/default.nix
           sops-nix.nixosModules.sops
         ];
       };
