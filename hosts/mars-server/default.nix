@@ -9,7 +9,7 @@
         ../../users/docker.nix
     ];
 
-    networking.hostName = "mars.server";
+    networking.hostName = "mars-server";
 
     #ZFS Pool Setup
     # boot.supportedFilesystems = [ "zfs" ];
