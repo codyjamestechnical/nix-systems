@@ -19,49 +19,49 @@
     # services.zfs.trim.enable = true;
 
     #Samba Shares
-    services.samba = {
-        enable = true;
-        enableNmbd = false;
-        enableWinbindd = false;
-        extraConfig = ''
-            guest account = cody
-            map to guest = Bad User
-            create mask = 0777
-            force create mode = 0777
-            directory mask = 0777
-            force directory mode = 0777
-            load printers = no
-            printcap name = /dev/null
-            log file = /var/log/samba/client.%I
-            log level = 2
-        '';
-        shares = {
-            TV-Shows = {
-                "path" = "/mnt/cjt_pool/Media-Files/TV";
-                "guest ok" = "yes";
-                "read only" = "no";
-            };
+    # services.samba = {
+    #     enable = true;
+    #     enableNmbd = false;
+    #     enableWinbindd = false;
+    #     extraConfig = ''
+    #         guest account = cody
+    #         map to guest = Bad User
+    #         create mask = 0777
+    #         force create mode = 0777
+    #         directory mask = 0777
+    #         force directory mode = 0777
+    #         load printers = no
+    #         printcap name = /dev/null
+    #         log file = /var/log/samba/client.%I
+    #         log level = 2
+    #     '';
+    #     shares = {
+    #         TV-Shows = {
+    #             "path" = "/mnt/cjt_pool/Media-Files/TV";
+    #             "guest ok" = "yes";
+    #             "read only" = "no";
+    #         };
 
-            Movies = {
-                "path" = "/mnt/cjt_pool/Media-Files/Movies";
-                "guest ok" = "yes";
-                "read only" = "no";
-            };
+    #         Movies = {
+    #             "path" = "/mnt/cjt_pool/Media-Files/Movies";
+    #             "guest ok" = "yes";
+    #             "read only" = "no";
+    #         };
 
-            Downloads = {
-                "path" = "/mnt/cjt_pool/Media_Files/Downloads";
-                "guest ok" = "yes";
-                "read only" = "no";
-                "browsable" = "yes";
-            };
+    #         Downloads = {
+    #             "path" = "/mnt/cjt_pool/Media_Files/Downloads";
+    #             "guest ok" = "yes";
+    #             "read only" = "no";
+    #             "browsable" = "yes";
+    #         };
 
-            Docker = {
-                "path" = "/mnt/cjt_pool/Container Data/docker_data";
-                "guest ok" = "yes";
-                "read only" = "no";
-            };      
-        };
-    };
+    #         Docker = {
+    #             "path" = "/mnt/cjt_pool/Container Data/docker_data";
+    #             "guest ok" = "yes";
+    #             "read only" = "no";
+    #         };      
+    #     };
+    # };
 
   
     ### Create container macvlan network ###
