@@ -33,14 +33,6 @@
     variant = "";
   };
 
-#   # Define a user account. Don't forget to set a password with ‘passwd’.
-#   users.users.cody = {
-#     isNormalUser = true;
-#     description = "cody";
-#     extraGroups = [ "networkmanager" "wheel" ];
-#     packages = with pkgs; [];
-#   };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -84,33 +76,7 @@
     enable = true;
     enableBashCompletion = true;
     histSize = 10000;
-    # plugins = [
-    #   {
-    #     name = "powerlevel10k";
-    #     src = pkgs.zsh-powerlevel10k;
-    #     file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-    #   }
-    #   {
-    #     name = "powerlevel10k-config";
-    #     src = ./p10k-config;
-    #     file = ".p10k.zsh";
-    #   }
-    # ];
-    # ohMyZsh = {
-    #   enable = false;
-    #   theme = "powerlevel10k/powerlevel10k";
-    #   customPkgs = with pkgs; [
-    #     zsh-powerlevel10k
-    #   ];
-    #   plugins = [
-    #     "aliases"
-    #     "git"
-    #     "sudo"
-    #     "docker"
-   
-    #   ];
-    # };
-   
+
     autosuggestions.enable = true;
     shellAliases = {
       runsrvc = "sudo systemctl start";

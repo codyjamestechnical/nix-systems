@@ -4,6 +4,7 @@
         ./hardware-configuration.nix
 
         ../../modules/core.nix
+        ../../acme.nix
         ../../modules/docker.nix
         ../../users/docker.nix
         ../../users/cody.nix
