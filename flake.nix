@@ -9,7 +9,7 @@
   outputs = inputs@{ nixpkgs, sops-nix,... }: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
-        #system = "x86_64-linux";
+        system = "x86_64-linux";
         modules = [
           ./hosts/mars-server/default.nix
           sops-nix.nixosModules.sops
@@ -17,7 +17,7 @@
       };
 
       deimos-server = nixpkgs.lib.nixosSystem {
-        #system = "x86_64-linux";
+        system = "x86_64-linux";
         modules = [
           ./hosts/deimos-server
           sops-nix.nixosModules.sops
