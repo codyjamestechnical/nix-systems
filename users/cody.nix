@@ -14,11 +14,15 @@
                 "acme"
             ];
             shell = pkgs.zsh;
-            openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
+            # openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
             # openssh.authorizedKeys.keyFiles = [
             #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
             # ];
-
+            openssh.authorizedKeys.keys = let
+                authorizedKeys = pkgs.fetchurl {
+                    url = "https://github.com/codyjamestechnical.keys";
+                };
+            in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
             packages = with pkgs; [
             ];
         };
