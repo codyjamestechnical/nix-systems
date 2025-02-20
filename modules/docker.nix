@@ -31,7 +31,7 @@
                 environment = {
                     PERIPHERY_SSL_ENABLED = "true";
                     PERIPHERY_INCLUDE_DISK_MOUNTS = "/etc/hostname";
-                    PERIPHERY_PASSKEYS_FILE: "/var/komodo/passkey";
+                    PERIPHERY_PASSKEYS_FILE = "/var/komodo/passkey";
                 };
                 labels = {"komodo.skip" = "";};
             };
