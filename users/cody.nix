@@ -2,11 +2,6 @@
 {
     users={
         defaultUserShell = pkgs.zsh;
-        groups = {
-            acme.gid = 984;
-            ssl.gid = 2012;
-        };
-     
         users.cody = {
             isNormalUser = true;
             description = "Cody";
@@ -25,17 +20,6 @@
             packages = with pkgs; [
             ];
         };
-        
-
-        users.docker = {
-            isNormalUser = false;
-            isSystemUser = true;
-            group = "docker";
-            extraGroups = [
-                "ssl"
-            ];
-        };
-
       
     };
 

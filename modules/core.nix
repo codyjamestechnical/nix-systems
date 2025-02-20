@@ -33,13 +33,13 @@
     variant = "";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.cody = {
-    isNormalUser = true;
-    description = "cody";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-  };
+#   # Define a user account. Don't forget to set a password with ‘passwd’.
+#   users.users.cody = {
+#     isNormalUser = true;
+#     description = "cody";
+#     extraGroups = [ "networkmanager" "wheel" ];
+#     packages = with pkgs; [];
+#   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
