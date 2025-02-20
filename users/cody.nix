@@ -18,12 +18,7 @@
             # openssh.authorizedKeys.keyFiles = [
             #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
             # ];
-            openssh.authorizedKeys.keys = let
-                authorizedKeys = pkgs.fetchurl {
-                    url = "https://github.com/codyjamestechnical.keys";
-                    sha256 = "sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
-                };
-            in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
+            openssh.authorizedKeys.keys = builtins.readFile (builtins.fetchurl https://github.com/codyjamestechnical.keys);
             packages = with pkgs; [
             ];
         };
