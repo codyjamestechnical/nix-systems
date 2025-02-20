@@ -13,9 +13,9 @@
                 "acme"
             ];
             shell = pkgs.zsh;
-            # openssh.authorizedKeys.keyFiles = [
-            #     (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
-            # ];
+            openssh.authorizedKeys.keyFiles = [
+                (builtins.fetchurl { url = "https://github.com/codyjamestechnical.keys?1";})
+            ];
 
             packages = with pkgs; [
             ];
