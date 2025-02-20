@@ -1,0 +1,29 @@
+{
+  description = "NixOS configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/24.11";
+    inputs.sops-nix.url = "github:Mic92/sops-nix";
+  };
+
+  outputs = inputs@{ nixpkgs, ... }: {
+    nixosConfigurations = {
+      mars-server = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/mars-server
+          sops-nix.nixosModules.sops
+        ];
+      };
+      
+      deimos-server = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/deimos-server
+          sops-nix.nixosModules.sops
+          
+        ];
+      };
+    };
+  };
+}
