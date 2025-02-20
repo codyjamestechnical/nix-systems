@@ -27,6 +27,7 @@
                     "/var/komodo/ssl:/etc/komodo/ssl"
                     "/var/komodo/repos:/etc/komodo/repos"
                     "/var/komodo/stacks:/etc/komodo/stacks"
+                    "/var/secrets/komodo-passkey:var/secrets/komodo-passkey"
                 ];
                 environment = {
                     PERIPHERY_SSL_ENABLED = "true";
