@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, sops-nix,... }: {
+  outputs = inputs@{ nixpkgs, sops-nix, ssh-keys,... }: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
