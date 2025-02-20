@@ -6,6 +6,7 @@
         ../../modules/core.nix
         ../../modules/docker.nix
         ../../users/docker.nix
+        ../../users/cody.nix
     ];
 
     networking.hostName = "mars-server";
