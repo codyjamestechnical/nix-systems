@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ pkgs, ...}:
 {
     ## Virtualization Options
     virtualisation = {   
