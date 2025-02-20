@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = { nixpkgs, sops-nix, ssh-keys,... } @inputs: 
+  outputs = { self, nixpkgs, sops-nix, ssh-keys,... } @inputs: 
   let
     inherit (self) outputs;
    in {
