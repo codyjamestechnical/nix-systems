@@ -17,7 +17,7 @@
     virtualisation.oci-containers = {
         backend = "docker";
         containers = {
-            komodo-peripherie {
+            komodo-peripherie = {
                 image = "ghcr.io/mbecker20/periphery:latest";
                 ports = ["127.0.0.1:8120:8120"];
                 log-driver = "local";
