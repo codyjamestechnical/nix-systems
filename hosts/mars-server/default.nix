@@ -150,7 +150,7 @@ services.samba = {
 # };
 
 services.avahi = {
-    enable = true;
+    enable = false;
     nssmdns = true;
     publish = {
         enable = true;
