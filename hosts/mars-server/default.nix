@@ -66,7 +66,6 @@
 
 services.samba = {
     enable = true;
-    securityType = "user";
     openFirewall = true;
     nmbd.enable = true;
     smbd.enable = true;
