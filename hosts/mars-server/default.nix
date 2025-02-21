@@ -86,6 +86,9 @@ services.samba = {
             "map to guest" = "bad user";
             "log file" = "/var/log/samba/client.%I";
             "log level" = "2";
+            "wins support" = "yes";
+            "local master" = "yes";
+            "preferred master" = "yes";
         };
         "docker-data" = {
             "path" = "/docker-data";
