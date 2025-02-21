@@ -82,7 +82,7 @@ services.samba = {
             "guest account" = "nobody";
             "map to guest" = "bad user";
         };
-        "Movies" = {
+        "Docker Data" = {
             "path" = "/docker-data";
             "browseable" = "yes";
             "read only" = "no";
