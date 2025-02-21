@@ -84,6 +84,8 @@ services.samba = {
             # "hosts deny" = "0.0.0.0/0";
             "guest account" = "cody";
             "map to guest" = "bad user";
+            "log file" = "/var/log/samba/client.%I"
+            "log level = 2"
         };
         "docker-data" = {
             "path" = "/home/cody";
