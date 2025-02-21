@@ -25,7 +25,7 @@
     };
 
   fileSystems."/docker-data" = {
-    device = "/dev/nvme0n1p2";
+    device = "/dev/nvme0n1p1";
     fsType = "btrfs";
   };
 
