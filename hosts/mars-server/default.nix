@@ -64,6 +64,61 @@
     #     };
     # };
 
+services.samba = {
+    enable = true;
+    securityType = "user";
+    openFirewall = true;
+    settings = {
+        global = {
+            "workgroup" = "WORKGROUP";
+            "server string" = "smbnix";
+            "netbios name" = "smbnix";
+            "security" = "user";
+            #"use sendfile" = "yes";
+            #"max protocol" = "smb2";
+            # note: localhost is the ipv6 localhost ::1
+            "hosts allow" = "10.0.10. 10.0.30. 127.0.0.1 localhost";
+            "hosts deny" = "0.0.0.0/0";
+            "guest account" = "nobody";
+            "map to guest" = "bad user";
+        };
+        "Movies" = {
+            "path" = "/docker-data";
+            "browseable" = "yes";
+            "read only" = "no";
+            "guest ok" = "yes";
+            "create mask" = "0777";
+            "directory mask" = "0777";
+            "force user" = "1000";
+            "force group" = "100";
+        # "Movies" = {
+        #     "path" = "/mnt/cjt_pool/Media-Files/TV";
+        #     "browseable" = "yes";
+        #     "read only" = "no";
+        #     "guest ok" = "yes";
+        #     "create mask" = "0777";
+        #     "directory mask" = "0777";
+        #     "force user" = "1000";
+        #     "force group" = "100";
+        # };
+        # "TV-Shows" = {
+        #     "path" = "/mnt/cjt_pool/Media-Files/TV";
+        #     "browseable" = "yes";
+        #     "read only" = "no";
+        #     "guest ok" = "yes";
+        #     "create mask" = "0777";
+        #     "directory mask" = "0777";
+        #     "force user" = "1000";
+        #     "force group" = "100";
+        # };
+  };
+};
+
+services.samba-wsdd = {
+    enable = true;
+    openFirewall = true;
+};
+
   
     ### Create container macvlan network ###
     systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers; 
