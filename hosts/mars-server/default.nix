@@ -89,12 +89,12 @@ services.samba = {
         };
         "docker-data" = {
             "path" = "/home/cody";
-            # "browseable" = "yes";
+            "browseable" = "yes";
             "read only" = "no";
             "guest ok" = "yes";
-            # "create mask" = "0777";
-            # "directory mask" = "0777";
-            # "force user" = "1000";
+            "create mask" = "0777";
+            "directory mask" = "0777";
+            "force user" = "cody";
             # "force group" = "100";
         };
         # "Movies" = {
