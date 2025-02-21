@@ -121,18 +121,45 @@ services.samba = {
   };
 };
 
+# services.avahi = {
+#     publish.enable = true;
+#     publish.userServices = true;
+#     publish.hinfo = true;
+#     # ^^ Needed to allow samba to automatically register mDNS records (without the need for an `extraServiceFile`
+#     nssmdns4 = true;
+#     nssmdns6 = true;
+#     ipv6 = true;
+#     hostName = "mars";
+#     # ^^ Not one hundred percent sure if this is needed- if it aint broke, don't fix it
+# 	enable = true;
+#     openFirewall = true;
+#     extraServiceFiles = {
+#       smb = ''
+#         <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+#         <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+#         <service-group>
+#           <name replace-wildcards="yes">%h</name>
+#           <service>
+#             <type>_smb._tcp</type>
+#             <port>445</port>
+#           </service>
+#         </service-group>
+#       '';
+#     };
+
+# };
+
 services.avahi = {
-    publish.enable = true;
-    publish.userServices = true;
-    publish.hinfo = true;
-    # ^^ Needed to allow samba to automatically register mDNS records (without the need for an `extraServiceFile`
-    nssmdns4 = true;
-    nssmdns6 = true;
-    ipv6 = true;
-    hostName = "mars";
-    # ^^ Not one hundred percent sure if this is needed- if it aint broke, don't fix it
-	enable = true;
-    openFirewall = true;
+    enable = true;
+    nssmdns = true;
+    publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+    };
     extraServiceFiles = {
       smb = ''
         <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
@@ -141,13 +168,12 @@ services.avahi = {
           <name replace-wildcards="yes">%h</name>
           <service>
             <type>_smb._tcp</type>
-            <port>445</port>
           </service>
         </service-group>
       '';
     };
+  };  
 
-};
 
 services.samba-wsdd = {
     enable = true;
