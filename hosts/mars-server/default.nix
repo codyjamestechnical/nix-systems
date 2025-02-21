@@ -83,7 +83,7 @@ services.samba = {
             # note: localhost is the ipv6 localhost ::1
             "hosts allow" = "0.0.0.0/0";
             # "hosts deny" = "0.0.0.0/0";
-            "guest account" = "nobody";
+            "guest account" = "cody";
             "map to guest" = "bad user";
         };
         "docker-data" = {
