@@ -67,9 +67,9 @@
 services.samba = {
     enable = true;
     openFirewall = true;
-    nmbd.enable = false;
-    smbd.enable = false;
-    winbindd.enable = true;
+    # nmbd.enable = false;
+    # smbd.enable = false;
+    # winbindd.enable = false;
     nsswins = true;
     settings = {
         global = {
