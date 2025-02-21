@@ -24,7 +24,7 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  fileSystems."/docker-data" {
+  fileSystems."/docker-data" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
   };
