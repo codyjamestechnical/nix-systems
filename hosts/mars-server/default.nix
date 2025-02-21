@@ -86,7 +86,7 @@ services.samba = {
             "guest account" = "nobody";
             "map to guest" = "bad user";
         };
-        "Docker Data" = {
+        "docker-data" = {
             "path" = "/docker-data";
             "browseable" = "yes";
             "read only" = "no";
