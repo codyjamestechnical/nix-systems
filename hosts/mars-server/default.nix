@@ -67,8 +67,8 @@
 services.samba = {
     enable = true;
     openFirewall = true;
-    nmbd.enable = true;
-    smbd.enable = true;
+    nmbd.enable = false;
+    smbd.enable = false;
     winbindd.enable = true;
     nsswins = true;
     settings = {
@@ -121,7 +121,7 @@ services.samba = {
 };
 
 services.samba-wsdd = {
-    enable = true;
+    enable = false;
     openFirewall = true;
 };
 
