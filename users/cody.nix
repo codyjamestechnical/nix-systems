@@ -24,10 +24,7 @@
             #         }
             #     );
             openssh.authorizedKeys.keyFiles = [
-                    (pkgs.fetchurl {
-                        url = "https://github.com/codyjamestechnical.keys";
-                        sha256 = "sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU="; # Will be updated automatically
-                    })
+                    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIEB06+mXFpYiRLegmXjiZzPuF1rTs+ySVCn5mJ0hpZ cody@cjtech.io"
                 ];
             packages = with pkgs; [
             ];
