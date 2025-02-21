@@ -70,7 +70,7 @@
 
   #Tailscale
   services.tailscale.enable = true;
-  services.tailscale.useRoutingFeatures = both;
+  services.tailscale.useRoutingFeatures = "both";
 
   #ZSH
   programs.zsh = {
