@@ -141,6 +141,7 @@ services.avahi = {
           <name replace-wildcards="yes">%h</name>
           <service>
             <type>_smb._tcp</type>
+            <port>445</port>
           </service>
         </service-group>
       '';
