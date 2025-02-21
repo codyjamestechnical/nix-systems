@@ -74,9 +74,9 @@ services.samba = {
     settings = {
         global = {
             "workgroup" = "WORKGROUP";
-            "server string" = "mars-server";
-            "netbios name" = "mars-server";
-            # "security" = "user";
+            "server string" = "mars";
+            "netbios name" = "mars";
+            "security" = "user";
             #"use sendfile" = "yes";
             # "max protocol" = "smb3";
             # note: localhost is the ipv6 localhost ::1
