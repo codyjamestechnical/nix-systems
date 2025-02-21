@@ -91,7 +91,7 @@ services.samba = {
             "directory mask" = "0777";
             "force user" = "1000";
             "force group" = "100";
-        }
+        };
         # "Movies" = {
         #     "path" = "/mnt/cjt_pool/Media-Files/TV";
         #     "browseable" = "yes";
