@@ -19,7 +19,7 @@
         containers = {
             komodo-peripherie = {
                 image = "ghcr.io/mbecker20/periphery:latest";
-                ports = ["127.0.0.1:8120:8120"];
+                ports = ["0.0.0.0:8120:8120"];
                 log-driver = "local";
                 volumes = [
                     "/var/run/docker.sock:/var/run/docker.sock"
