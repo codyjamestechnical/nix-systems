@@ -78,9 +78,9 @@ services.samba = {
             "netbios name" = "mars-server";
             "security" = "user";
             #"use sendfile" = "yes";
-            "max protocol" = "smb3";
+            # "max protocol" = "smb3";
             # note: localhost is the ipv6 localhost ::1
-            "hosts allow" = "0.0.0.0/0";
+            # "hosts allow" = "0.0.0.0/0";
             # "hosts deny" = "0.0.0.0/0";
             "guest account" = "cody";
             "map to guest" = "bad user";
