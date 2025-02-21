@@ -129,7 +129,7 @@ services.avahi = {
     nssmdns4 = true;
     nssmdns6 = true;
     ipv6 = true;
-    hostName = "mars-server";
+    hostName = "mars";
     # ^^ Not one hundred percent sure if this is needed- if it aint broke, don't fix it
 	enable = true;
     openFirewall = true;
