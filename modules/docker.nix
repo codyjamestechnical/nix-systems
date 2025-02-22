@@ -10,10 +10,8 @@
                 enable = true;
                 dates = "weekly";
             };
-            extraOptions = [
-                "--host=unix:///var/run/docker.sock"
-                "--host=tcp://0.0.0.0:2375" # Replace 0.0.0.0 with a specific IP if needed
-            ];
+            extraOptions = "--host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375";
+            
         };
     };
 
