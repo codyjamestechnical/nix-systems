@@ -36,6 +36,20 @@
                 };
                 labels = {"komodo.skip" = "";};
             };
+
+            beszel-agent = {
+                image = "henrygd/beszel-agent";
+                container_name = "beszel-agent";
+                restart = "always";
+                extraOptions = ["--network=host"];
+                volumes = [
+                    "/var/run/docker.sock:/var/run/docker.sock:ro"
+                ];
+                environment = {
+                    PORT = "45876";
+                    KEY = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIZ+L7U8f/hxIu5fj0fTVT2ngKHo4Kv+SaSdEbat25cA";
+                }
+            };
         };
         
     };
