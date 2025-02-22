@@ -39,7 +39,7 @@
 
             beszel-agent = {
                 image = "henrygd/beszel-agent";
-                container_name = "beszel-agent";
+                serviceName = "beszel-agent";
                 restart = "always";
                 extraOptions = ["--network=host"];
                 volumes = [
