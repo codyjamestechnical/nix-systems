@@ -62,6 +62,8 @@
     bat
     ethtool
     networkd-dispatcher
+    zip
+    unzip
   ];
 
   # Enabled Services
