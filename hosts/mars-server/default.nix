@@ -182,6 +182,7 @@
                     PORT = "45876";
                     KEY = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIZ+L7U8f/hxIu5fj0fTVT2ngKHo4Kv+SaSdEbat25cA";
                 };
+                labels = {"komodo.skip" = "";};
             };
         };
         
