@@ -10,14 +10,12 @@
                 enable = true;
                 dates = "weekly";
             };
-            extraOptions = ''
-                {
-                    "hosts": [
-                    "unix:///var/run/docker.sock",
-                    "tcp://0.0.0.0:2375"
-                    ]
-                }
-            '';
+            daemon.settings = {
+                "hosts" = [
+                "unix:///var/run/docker.sock",
+                "tcp://0.0.0.0:2375"
+                ]
+            };
             
         };
     };
