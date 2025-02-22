@@ -176,7 +176,7 @@
                 extraOptions = ["--network=host"];
                 volumes = [
                     "/var/run/docker.sock:/var/run/docker.sock:ro"
-                    "/docker-data/.beszel:/extra-filesystems/nvme0n1p1:ro"
+                    "/docker-data/.beszel:/extra-filesystems/Docker_Data:ro"
                 ];
                 environment = {
                     PORT = "45876";
