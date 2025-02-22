@@ -8,5 +8,6 @@
     dnsProvider = "cloudflare";
     environmentFile = "/var/secrets/cloudflare-token";
     dnsPropagationCheck = true;
+    postRun = "docker restart $(docker ps -q)"
   };
 }
