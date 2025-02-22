@@ -10,7 +10,7 @@
                 enable = true;
                 dates = "weekly";
             };
-            extraConfig = ''
+            extraOptions = ''
                 {
                     "hosts": [
                     "unix:///var/run/docker.sock",
