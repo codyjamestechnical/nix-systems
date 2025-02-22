@@ -40,7 +40,6 @@
             beszel-agent = {
                 image = "henrygd/beszel-agent";
                 serviceName = "beszel-agent";
-                restart = "always";
                 extraOptions = ["--network=host"];
                 volumes = [
                     "/var/run/docker.sock:/var/run/docker.sock:ro"
