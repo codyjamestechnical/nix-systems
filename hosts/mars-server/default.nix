@@ -139,6 +139,7 @@
         backendBin = "${pkgs.docker}/bin/${backend}";
     in 
     {
+        enable = true;
         serviceConfig.Type = "oneshot";
         wantedBy = [ "multi-user.service" ];
         after = ["docker.service" "docker.socket"];
