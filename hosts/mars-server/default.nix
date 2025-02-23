@@ -11,6 +11,7 @@
     ];
 
     networking.hostName = "mars-server";
+    networking.hostId = "983hj902h9";
 
     # ZFS Pool Setup
     boot.supportedFilesystems = [ "zfs" ];
