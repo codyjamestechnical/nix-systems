@@ -11,6 +11,7 @@
                 dates = "weekly";
             };
             daemon.settings = {
+                userland-proxy = false;
                 "hosts" = [
                     "unix:///var/run/docker.sock"
                     "tcp://0.0.0.0:2375"

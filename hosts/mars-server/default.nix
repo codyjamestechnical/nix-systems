@@ -12,12 +12,12 @@
 
     networking.hostName = "mars-server";
 
-    #ZFS Pool Setup
-    # boot.supportedFilesystems = [ "zfs" ];
-    # boot.zfs.forceImportRoot = false;
-    # boot.zfs.extraPools = [ "cjt_pool" ];
-    # services.zfs.autoScrub.enable = true;
-    # services.zfs.trim.enable = true;
+    ZFS Pool Setup
+    boot.supportedFilesystems = [ "zfs" ];
+    boot.zfs.forceImportRoot = false;
+    boot.zfs.extraPools = [ "cjt_pool" ];
+    services.zfs.autoScrub.enable = true;
+    services.zfs.trim.enable = true;
 
     #Samba Shares
     services.samba = {
@@ -54,27 +54,27 @@
                 "force user" = "cody";
                 # "force group" = "100";
             };
-            # "Movies" = {
-            #     "path" = "/mnt/cjt_pool/Media-Files/TV";
-            #     "browseable" = "yes";
-            #     "read only" = "no";
-            #     "guest ok" = "yes";
-            #     "create mask" = "0777";
-            #     "directory mask" = "0777";
-            #     "force user" = "1000";
-            #     "force group" = "100";
-            # };
-            # "TV-Shows" = {
-            #     "path" = "/mnt/cjt_pool/Media-Files/TV";
-            #     "browseable" = "yes";
-            #     "read only" = "no";
-            #     "guest ok" = "yes";
-            #     "create mask" = "0777";
-            #     "directory mask" = "0777";
-            #     "force user" = "1000";
-            #     "force group" = "100";
-            # };
-    };
+            "Movies" = {
+                "path" = "/mnt/cjt_pool/Media-Files/TV";
+                "browseable" = "yes";
+                "read only" = "no";
+                "guest ok" = "yes";
+                "create mask" = "0777";
+                "directory mask" = "0777";
+                "force user" = "1000";
+                "force group" = "100";
+            };
+            "TV-Shows" = {
+                "path" = "/mnt/cjt_pool/Media-Files/TV";
+                "browseable" = "yes";
+                "read only" = "no";
+                "guest ok" = "yes";
+                "create mask" = "0777";
+                "directory mask" = "0777";
+                "force user" = "1000";
+                "force group" = "100";
+            };
+        };
     };
 
 # services.avahi = {
