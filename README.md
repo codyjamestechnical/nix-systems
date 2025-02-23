@@ -18,6 +18,12 @@ runcmd:
   programs.git.enable = true;
 
 ```
+### Copy your hardware-configuration.nix & networking.nix
+Use nano to copy your hardware-configuration.nix and your networking.nix files to the servers dierectory in this repo
+```
+sudo nano /etc/nixos/hardware-configuration.nix # then copy the text
+```
+Create a hardware-configuration.nix file in the servers directory in this repo and past the contents. Now do the same for networking if you are using nix-infect
 
 ### Clone This Repo
 ```

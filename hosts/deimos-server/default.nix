@@ -2,7 +2,7 @@
 {
     imports = [
         ./hardware-configuration.nix
-
+        ./networking.nix
         ../../modules/core.nix
         ../../modules/acme.nix
         ../../modules/docker.nix
@@ -10,6 +10,11 @@
         ../../users/cody.nix
     ];
 
+
+    boot.tmp.cleanOnBoot = true;
+    zramSwap.enable = true;
+
+    # Network HostName
     networking.hostName = "deimos-server";
 
     fileSystems."/docker-data" = {
