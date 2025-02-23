@@ -12,7 +12,7 @@
 
     networking.hostName = "mars-server";
 
-    ZFS Pool Setup
+    # ZFS Pool Setup
     boot.supportedFilesystems = [ "zfs" ];
     boot.zfs.forceImportRoot = false;
     boot.zfs.extraPools = [ "cjt_pool" ];
