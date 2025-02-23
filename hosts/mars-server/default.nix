@@ -53,7 +53,6 @@
                 "create mask" = "0777";
                 "directory mask" = "0777";
                 "force user" = "cody";
-                # "force group" = "100";
             };
             "Movies" = {
                 "path" = "/mnt/cjt_pool/Media-Files/TV";
@@ -62,8 +61,7 @@
                 "guest ok" = "yes";
                 "create mask" = "0777";
                 "directory mask" = "0777";
-                "force user" = "1000";
-                "force group" = "100";
+                "force user" = "cody";
             };
             "TV-Shows" = {
                 "path" = "/mnt/cjt_pool/Media-Files/TV";
@@ -72,8 +70,7 @@
                 "guest ok" = "yes";
                 "create mask" = "0777";
                 "directory mask" = "0777";
-                "force user" = "1000";
-                "force group" = "100";
+                "force user" = "cody";
             };
         };
     };

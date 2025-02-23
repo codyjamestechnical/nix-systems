@@ -64,6 +64,7 @@
     networkd-dispatcher
     zip
     unzip
+    cifs-utils
   ];
 
   # Enabled Services
