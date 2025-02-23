@@ -10,6 +10,11 @@
         ../../users/cody.nix
     ];
 
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+
+    #Network
     networking.hostName = "mars-server";
     networking.hostId = "deadb33f";
 
