@@ -141,7 +141,7 @@
     {
         enable = true;
         serviceConfig.Type = "oneshot";
-        wantedBy = [ "multi-user.service" ];
+        wantedBy = [ "basic.target" ];
         after = ["docker.service" "docker.socket"];
         script = "
             ${backendBin} network inspect ${network_name} >/dev/null 2>&1|| \
