@@ -13,7 +13,7 @@
   outputs = inputs@{ nixpkgs, sops-nix, ssh-keys,... }: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        system = "AArch64-linux";
         modules = [
           ./hosts/mars-server/default.nix
           sops-nix.nixosModules.sops
