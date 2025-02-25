@@ -74,6 +74,7 @@
         enable = true;
         user = "root";
         group = "root";
+        systemService = true;
         settings = {
             key = "/var/secrets/syncthing/key.pem";
             cert = "/var/secrets/syncthing/cert.pem";
