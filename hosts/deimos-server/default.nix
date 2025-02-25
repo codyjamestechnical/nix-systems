@@ -72,7 +72,6 @@
     ### SYNCTHING
     services.syncthing = {
         enable = true;
-        user = "root";
         group = "root";
         systemService = true;
         settings = {
