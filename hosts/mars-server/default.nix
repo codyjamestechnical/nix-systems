@@ -196,8 +196,7 @@
     ### SYNCTHING
     services.syncthing = {
         enable = true;
-        user = "root";
-        group = "wheel";
+        group = "root";
         settings = {
             key = "/var/secrets/syncthing/key.pem";
             cert = "/var/secrets/syncthing/cert.pem";
