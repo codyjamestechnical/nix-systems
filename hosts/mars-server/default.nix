@@ -195,6 +195,7 @@
 
     ### SYNCTHING
     services.syncthing = {
+        enable = true;
         settings = {
             key = "/var/secrets/syncthing/key.pem";
             cert = "/var/secrets/syncthing/cert.pem";
