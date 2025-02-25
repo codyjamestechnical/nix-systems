@@ -32,7 +32,7 @@ sudo nano /etc/nixos/networking.nix ## then copy the text
 Create a hardware-configuration.nix file in the servers directory in this repo and past the contents. Now do the same for networking if you are using nix-infect
 
 ### Create Secrets files
-Place the secrets files in the /var/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds.
+Place the secrets files in the /var/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds. If you need to store more than 3 secrets I would consider moving to a secrets manager like SOPs.
 ```
 # Create secrets directory
 sudo mkdir /var/secrets #Create Secrets Directory
