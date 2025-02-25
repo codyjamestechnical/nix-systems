@@ -193,29 +193,7 @@
         
     };
 
-    ### SYNCTHING
-    services.syncthing = {
-        settings = {
-            key = "/var/secrets/syncthing/key.pem";
-            cert = "/var/secrets/syncthing/cert.pem";
-            devices = {
-            "deimos-server" = { id = "KBCN6KF-4UE5NQF-EXHNPP5-CHOQQZR-7XVKWLU-ZA2QHQT-HFVVIFU-Y2H2AQG"; };
-            "mars-server" = { id = "O3UVKX5-6TTVKEC-BDCBSW2-CAHTROG-ZE5UQLK-BHLVTQ6-USVBBRM-IT42CQW"; };
-            };
-            folders = {
-                "test" = {
-                    path = "/home/cody/syncthing-test";
-                    devices = [ "mars-server" "deimos-server" ];
-                };
-                # "docker-data" = {
-                #     path = "/docker-data";
-                #     devices = [ "mars-server" "deimos-server" ];
-                #     # By default, Syncthing doesn't sync file permissions. This line enables it for this folder.
-                #     ignorePerms = false;
-                # };
-            };
-        };
-    };
+
 
 
     system.stateVersion = "24.11";
