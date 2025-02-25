@@ -55,6 +55,10 @@ sudo git clone https://github.com/codyjamestechnical/nix-systems.git
 ### Rebuild nixos with the flake
 ```
 sudo nixos-rebuild switch --flake "[path to nix-systems dir]#[system to build]
+```
+
+### Set password for your user
+```
 sudo passwd [your-user] # set password of main user
 ```
 
