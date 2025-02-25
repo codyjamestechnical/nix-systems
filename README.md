@@ -38,6 +38,8 @@ sudo mkdir /var/secrets #Create Secrets Directory
 sudo nano /var/secrets/cloudflare-token # Paste in the cloudflare token for ACME
 sudo nano /var/secrets/komodo-passkey # Paste in Komodo agent passkey
 sudo nano /var/secrets/smb-secrets # Paste in the CIFS share login
+sudo chown root:root -R /var/secrets #set owner and group to root
+sudo chmod 660 -R /var/secrets  #Set permissions on folder and files so that only root has access
 ```
 
 ### Clone This Repo
@@ -48,6 +50,7 @@ sudo git clone https://github.com/codyjamestechnical/nix-systems.git
 ### Rebuild nixos with the flake
 ```
 sudo nixos-rebuild switch --flake "[path to nix-systems dir]#[system to build]
+sudo passwd [your-user] # set password of main user
 ```
 
 ### Login to Tailscale
