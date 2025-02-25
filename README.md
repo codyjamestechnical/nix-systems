@@ -38,6 +38,7 @@ sudo mkdir /var/secrets #Create Secrets Directory
 sudo nano /var/secrets/cloudflare-token # Paste in the cloudflare token for ACME
 sudo nano /var/secrets/komodo-passkey # Paste in Komodo agent passkey
 sudo nano /var/secrets/smb-secrets # Paste in the CIFS share login
+```
 
 ### Clone This Repo
 ```
