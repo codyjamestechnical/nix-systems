@@ -34,10 +34,15 @@ Create a hardware-configuration.nix file in the servers directory in this repo a
 ### Create Secrets files
 Place the secrets files in the /var/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds.
 ```
+# Create secrets directory
 sudo mkdir /var/secrets #Create Secrets Directory
+
+#Create Files
 sudo nano /var/secrets/cloudflare-token # Paste in the cloudflare token for ACME
 sudo nano /var/secrets/komodo-passkey # Paste in Komodo agent passkey
 sudo nano /var/secrets/smb-secrets # Paste in the CIFS share login
+
+# Set Permissions
 sudo chown root:root -R /var/secrets #set owner and group to root
 sudo chmod 660 -R /var/secrets  #Set permissions on folder and files so that only root has access
 ```
