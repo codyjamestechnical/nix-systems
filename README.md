@@ -16,8 +16,13 @@ runcmd:
 ```
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   programs.git.enable = true;
-
 ```
+
+### Rebuild
+```
+sudo nixos-rebuild switch
+```
+
 ### Copy your hardware-configuration.nix & networking.nix
 Use nano to copy your hardware-configuration.nix and your networking.nix files to the servers dierectory in this repo
 ```
