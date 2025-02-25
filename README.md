@@ -49,3 +49,8 @@ sudo git clone https://github.com/codyjamestechnical/nix-systems.git
 ```
 sudo nixos-rebuild switch --flake "[path to nix-systems dir]#[system to build]
 ```
+
+### Login to Tailscale
+```
+sudo tailscale up --ssh --accept-dns --advertise-exit-node
+```
