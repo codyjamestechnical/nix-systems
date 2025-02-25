@@ -204,7 +204,7 @@
             };
             folders = {
                 "test" = {
-                    path = "/home/cody/syncthing-test";
+                    path = "/docker-data/syncthing-test";
                     devices = [ "deimos-server" ];
                 };
                 # "docker-data" = {

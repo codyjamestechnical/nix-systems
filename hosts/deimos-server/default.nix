@@ -80,7 +80,7 @@
             };
             folders = {
                 "test" = {
-                    path = "/home/cody/syncthing-test";
+                    path = "/docker-data/syncthing-test";
                     devices = [ "mars-server"  ];
                 };
                 # "docker-data" = {
