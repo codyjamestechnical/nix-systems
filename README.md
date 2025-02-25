@@ -31,14 +31,20 @@ sudo nano /etc/nixos/networking.nix ## then copy the text
 ```
 Create a hardware-configuration.nix file in the servers directory in this repo and past the contents. Now do the same for networking if you are using nix-infect
 
+### Create Secrets files
+Place the secrets files in the /var/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds.
+```
+sudo mkdir /var/secrets #Create Secrets Directory
+sudo nano /var/secrets/cloudflare-token # Paste in the cloudflare token for ACME
+sudo nano /var/secrets/komodo-passkey # Paste in Komodo agent passkey
+sudo nano /var/secrets/smb-secrets # Paste in the CIFS share login
+
 ### Clone This Repo
 ```
 sudo git clone https://github.com/codyjamestechnical/nix-systems.git
-
 ```
 
 ### Rebuild nixos with the flake
 ```
 sudo nixos-rebuild switch --flake "[path to nix-systems dir]#[system to build]
-
 ```
