@@ -4,6 +4,11 @@
     virtualisation = {   
         docker = {
             enable = true;
+            rootless = {
+                enable = true;
+                setSocketVariable = true;
+            };
+
             enableNvidia = false;
             autoPrune ={
                 flags = [ "--all" ];
