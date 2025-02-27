@@ -22,7 +22,7 @@
         fsType = "cifs";
         options = let
         # this line prevents hanging on network split
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,file_mode=0770,dir_mode=0770,uid=994,gid=131";
+        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,file_mode=0770,dir_mode=0770,uid=995,gid=131";
 
         in ["${automount_opts},credentials=/var/secrets/smb-secrets"];
     };
