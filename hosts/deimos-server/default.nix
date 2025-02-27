@@ -36,7 +36,7 @@
                 ports = ["0.0.0.0:8120:8120"];
                 log-driver = "local";
                 volumes = [
-                    "/var/run/docker.sock:/var/run/docker.sock"
+                    "/run/user/1000/docker.sock:/var/run/docker.sock"
                     "/proc:/proc"
                     "/etc/komodo/ssl:/etc/komodo/ssl"
                     "/etc/komodo/repos:/etc/komodo/repos"
