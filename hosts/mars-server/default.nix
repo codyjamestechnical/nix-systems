@@ -119,7 +119,7 @@
             </service-group>
         '';
         };
-  };  
+    };  
 
 
     services.samba-wsdd = {
@@ -127,7 +127,7 @@
         openFirewall = true;
     };
 
-  
+
     ### Create container macvlan network ###
     systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers; 
     let 
@@ -196,7 +196,8 @@
     ### SYNCTHING
     services.syncthing = {
         enable = true;
-        group = "root";
+        user = "docker";
+        group = "docker";
         systemService = true;
         settings = {
             key = "/var/secrets/syncthing/key.pem";
