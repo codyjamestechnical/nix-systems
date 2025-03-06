@@ -50,15 +50,15 @@
                 "preferred master" = "yes";
                 "server min protocol" = "SMB3_00";
             };
-            # "docker-data" = {
-            #     "path" = "/docker-data";
-            #     "browseable" = "yes";
-            #     "read only" = "no";
-            #     "guest ok" = "yes";
-            #     "create mask" = "0777";
-            #     "directory mask" = "0777";
-            #     "force user" = "cody";
-            # };
+            "docker-data" = {
+                "path" = "/docker-data";
+                "browseable" = "yes";
+                "read only" = "no";
+                "guest ok" = "yes";
+                "create mask" = "0777";
+                "directory mask" = "0777";
+                "force user" = "cody";
+            };
             "Movies" = {
                 "path" = "/mnt/cjt_pool/Media-Files/TV";
                 "browseable" = "yes";
