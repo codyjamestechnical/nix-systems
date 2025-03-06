@@ -24,10 +24,10 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  fileSystems."/docker-data" = {
-    device = "/dev/nvme0n1p1";
-    fsType = "ext4";
-  };
+  # fileSystems."/docker-data" = {
+  #   device = "/dev/nvme0n1p1";
+  #   fsType = "ext4";
+  # };
 
   swapDevices = [ ];
 
