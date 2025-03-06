@@ -196,8 +196,8 @@
     ### SYNCTHING
     services.syncthing = {
         enable = true;
-        user = "docker";
-        group = "docker";
+        user = "root";
+        group = "root";
         systemService = true;
         settings = {
             key = "/var/secrets/syncthing/key.pem";
