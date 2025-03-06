@@ -193,32 +193,32 @@
         
     };
 
-    ### SYNCTHING
-    services.syncthing = {
-        enable = true;
-        user = "root";
-        group = "root";
-        systemService = true;
-        settings = {
-            key = "/var/secrets/syncthing/key.pem";
-            cert = "/var/secrets/syncthing/cert.pem";
-            devices = {
-            "deimos-server" = { id = "KBCN6KF-4UE5NQF-EXHNPP5-CHOQQZR-7XVKWLU-ZA2QHQT-HFVVIFU-Y2H2AQG"; };
-            };
-            folders = {
-                "test" = {
-                    path = "/docker-data/syncthing-test";
-                    devices = [ "deimos-server" ];
-                };
-                # "docker-data" = {
-                #     path = "/docker-data";
-                #     devices = [ "mars-server" "deimos-server" ];
-                #     # By default, Syncthing doesn't sync file permissions. This line enables it for this folder.
-                #     ignorePerms = false;
-                # };
-            };
-        };
-    };
+    # ### SYNCTHING
+    # services.syncthing = {
+    #     enable = true;
+    #     user = "root";
+    #     group = "root";
+    #     systemService = true;
+    #     settings = {
+    #         key = "/var/secrets/syncthing/key.pem";
+    #         cert = "/var/secrets/syncthing/cert.pem";
+    #         devices = {
+    #         "deimos-server" = { id = "KBCN6KF-4UE5NQF-EXHNPP5-CHOQQZR-7XVKWLU-ZA2QHQT-HFVVIFU-Y2H2AQG"; };
+    #         };
+    #         folders = {
+    #             "test" = {
+    #                 path = "/docker-data/syncthing-test";
+    #                 devices = [ "deimos-server" ];
+    #             };
+    #             # "docker-data" = {
+    #             #     path = "/docker-data";
+    #             #     devices = [ "mars-server" "deimos-server" ];
+    #             #     # By default, Syncthing doesn't sync file permissions. This line enables it for this folder.
+    #             #     ignorePerms = false;
+    #             # };
+    #         };
+    #     };
+    # };
 
 
     system.stateVersion = "24.11";
