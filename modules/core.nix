@@ -119,17 +119,6 @@
       };
 
     };
-
-    extraNdsudoPackages = [
-      pkgs.smartmontools
-      pkgs.nvme-cli
-    ];
-
-    extraPackages = ''[
-      ps.psycopg2
-      ps.docker
-      ps.dnspython
-    ]'';
   };
   #MOSH
   programs.mosh.enable = true;
