@@ -22,7 +22,7 @@
                     "/var/run/docker.sock:/var/run/docker.sock:ro"
                     "/run/dbus:/run/dbus:ro"
                 ];
-                extraOptions = ["--network=host" "--pid=host" "--cap-add SYS_PTRACE" "--cap-add SYS_ADMIN" "--security-opt apparmor=unconfined"];
+                extraOptions = ["--network=host" "--pid=host" "--cap-add=sys_ptrace" "--cap-add=sys_admin" "--security-opt apparmor=unconfined"];
                 environmentFiles = [ "/var/secrets/netdata-env" ];
 
                 labels = {"komodo.skip" = "";};
