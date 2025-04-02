@@ -8,6 +8,7 @@
         ../../modules/docker.nix
         ../../users/docker.nix
         ../../users/cody.nix
+        ../../docker/netdata.nix
     ];
 
     # Bootloader.
