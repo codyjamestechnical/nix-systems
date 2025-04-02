@@ -125,11 +125,11 @@
       pkgs.nvme-cli
     ];
 
-    extraPackages = [
+    extraPackages = ''[
       ps.psycopg2
       ps.docker
       ps.dnspython
-    ];
+    ]'';
   };
   #MOSH
   programs.mosh.enable = true;
