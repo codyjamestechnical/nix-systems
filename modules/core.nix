@@ -61,6 +61,7 @@
     zip
     unzip
     cifs-utils
+    netdataCloud
   ];
 
   # Enabled Services
@@ -104,22 +105,22 @@
   };
 
   #NETDATA
-  services.netdata = {
-    enable = true;
-    package = pkgs.netdata.override {
- 		  withCloud = true;
- 	  };
+  # services.netdata = {
+  #   enable = true;
+  #   package = pkgs.netdata.override {
+ 	# 	  withCloud = true;
+ 	#   };
 
-    config = {
-      global = {
-        "update every" = "1";
-      };
-      ml = {
-        enabled = "yes";
-      };
+  #   config = {
+  #     global = {
+  #       "update every" = "1";
+  #     };
+  #     ml = {
+  #       enabled = "yes";
+  #     };
 
-    };
-  };
+  #   };
+  # };
   #MOSH
   programs.mosh.enable = true;
 
