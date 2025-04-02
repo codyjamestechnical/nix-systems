@@ -103,6 +103,34 @@
     };
   };
 
+  #NETDATA
+  services.netdata = {
+    enable = true;
+    package = pkgs.netdata.override {
+ 		  withCloud = true;
+ 	  };
+
+    config = {
+      global = {
+        "update every" = "1";
+      };
+      ml = {
+        enabled = "yes";
+      };
+
+    };
+
+    extraNdsudoPackages = [
+      pkgs.smartmontools
+      pkgs.nvme-cli
+    ];
+
+    extraPackages = [
+      ps.psycopg2
+      ps.docker
+      ps.dnspython
+    ];
+  };
   #MOSH
   programs.mosh.enable = true;
 
