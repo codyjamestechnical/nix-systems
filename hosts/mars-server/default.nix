@@ -157,7 +157,7 @@
         backend = "docker";
         containers = {
             komodo-peripherie = {
-                image = "ghcr.io/mbecker20/periphery:latest";
+                image = "ghcr.io/moghtech/komodo-periphery:latest";
                 ports = ["0.0.0.0:8120:8120"];
                 log-driver = "local";
                 volumes = [

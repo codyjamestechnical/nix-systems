@@ -4,7 +4,8 @@
   security.acme.acceptTerms = true;
   security.acme.defaults.email = "cody@31337.im";
   security.acme.defaults = {
-    postRun = "docker restart $(docker ps -q)";
+    # Restart all containers that use the caddy image after renewal
+    postRun = "docker ps -a --filter 'ancestor=caddy' --format '{{.ID}}' | xargs docker restart";
     renewInterval = "monthly";
   };
   security.acme.certs."31337.im" = {
