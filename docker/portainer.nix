@@ -18,6 +18,10 @@
                     "/docker-data/portainer:/data"
          
                 ];
+                environment = {
+                    SSLCERT = "/ssl/fullchain.pem";
+                    SSLKEY = "/ssl/key.pem";
+                };
                 labels = {"komodo.skip" = "";};
             };
         };
