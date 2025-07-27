@@ -12,6 +12,7 @@
         ../../docker/komodo-peripherie.nix
         ../../docker/beszel-agent.nix
         ../../docker/portainer.nix
+        ../../docker/portainer-agent.nix
     ];
 
 
