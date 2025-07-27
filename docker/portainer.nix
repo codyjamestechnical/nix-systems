@@ -20,10 +20,8 @@
          
                 ];
                 cmd = [
-                    "--sslcert" 
-                    "/ssl/cert.pem" 
-                    "--sslkey" 
-                    "/ssl/key.pem"
+                    "--sslcert=/ssl/cert.pem" 
+                    "--sslkey=/ssl/key.pem"
                 ];
                 labels = {"komodo.skip" = "";};
             };
