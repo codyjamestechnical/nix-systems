@@ -4,7 +4,7 @@
     virtualisation.oci-containers = {
         backend = "docker";
         containers = {
-            portainer = {
+            portainer-master = {
                 image = "portainer/portainer-ce:latest";
                 ports = [
                     "0.0.0.0:443:9443" 
