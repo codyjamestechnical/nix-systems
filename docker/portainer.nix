@@ -19,7 +19,7 @@
          
                 ];
                 environment = {
-                    SSLCERT = "/ssl/fullchain.pem";
+                    SSLCERT = "/ssl/cert.pem";
                     SSLKEY = "/ssl/key.pem";
                 };
                 labels = {"komodo.skip" = "";};
