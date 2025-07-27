@@ -11,6 +11,7 @@
         ../../docker/netdata.nix
         ../../docker/komodo-peripherie.nix
         ../../docker/beszel-agent.nix
+        ../../docker/portainer.nix
     ];
 
 
