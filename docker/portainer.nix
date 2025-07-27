@@ -13,12 +13,16 @@
                 log-driver = "local";
                 volumes = [
                     "/var/run/docker.sock:/var/run/docker.sock"
-                    "/var/lib/acme/31337.im:/ssl"
+                    "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
+                    "/var/lib/acme/31337.im/key.pem:/ssl/key.pem:ro"
                     "/proc:/proc"
                     "/docker-data/portainer:/data"
          
                 ];
-                extraOptions = ["--sslcert /ssl/cert.pem" "--sslkey /ssl/key.pem"];
+                cmd = [
+                    "--sslcert /ssl/cert.pem" 
+                    "--sslkey /ssl/key.pem"
+                ];
                 labels = {"komodo.skip" = "";};
             };
         };
