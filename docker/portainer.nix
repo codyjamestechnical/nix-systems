@@ -18,10 +18,7 @@
                     "/docker-data/portainer:/data"
          
                 ];
-                environment = {
-                    SSLCERT = "/ssl/cert.pem";
-                    SSLKEY = "/ssl/key.pem";
-                };
+                extraOptions = ["--sslcert /ssl/cert.pem" "--sslkey /ssl/key.pem"];
                 labels = {"komodo.skip" = "";};
             };
         };
