@@ -24,6 +24,10 @@
             };
             daemon.settings = {
                 userland-proxy = false;
+                experimental = true;
+                metrics-addr = "0.0.0.0:9323";
+                ipv6 = true;
+                fixed-cidr-v6 = "fd00::/80";
                 "hosts" = [
                     "unix:///var/run/docker.sock"
                     "tcp://0.0.0.0:2375"
