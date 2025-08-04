@@ -11,7 +11,7 @@
     volumes = [
       "/docker-data/Komodo/caddy:/data:rw"
       "/docker-data/Komodo/caddy/config:/config:rw"
-      "/docker-data/Komodo/caddyfile:/etc/caddy/Caddyfile:rw"
+      "/docker-data/Komodo/caddyfile:/etc/caddy/Caddyfile:ro"
       "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
       "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
     ];
