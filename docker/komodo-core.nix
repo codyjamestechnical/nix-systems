@@ -9,9 +9,9 @@
       "/docker-data/Komodo/.env"
     ];
     volumes = [
-      "/docker-data/komodo/caddy:/data:rw"
-      "/docker-data/komodo/caddy/config:/config:rw"
-      "/docker-data/komodo/caddyfile:/etc/caddy/Caddyfile:rw"
+      "/docker-data/Komodo/caddy:/data:rw"
+      "/docker-data/Komodo/caddy/config:/config:rw"
+      "/docker-data/Komodo/caddyfile:/etc/caddy/Caddyfile:rw"
       "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
       "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
     ];
@@ -33,7 +33,7 @@
       "/docker-data/Komodo/.env"
     ];
     volumes = [
-      "/docker-data/komodo/repo-cache:/repo-cache:rw"
+      "/docker-data/Komodo/repo-cache:/repo-cache:rw"
     ];
     labels = {
       "komodo.skip" = "";
@@ -54,8 +54,8 @@
       "/docker-data/Komodo/.env"
     ];
     volumes = [
-      "/docker-data/komodo/mongodb/config:/data/configdb:rw"
-      "/docker-data/komodo/mongodb/data:/data/db:rw"
+      "/docker-data/Komodo/mongodb/config:/data/configdb:rw"
+      "/docker-data/Komodo/mongodb/data:/data/db:rw"
     ];
     cmd = [ "--quiet" "--wiredTigerCacheSizeGB" "0.25" ];
     labels = {
