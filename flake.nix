@@ -28,6 +28,14 @@
           
         ];
       };
+
+      komodo-server = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        modules = [
+          ./hosts/komodo-server
+        ];
+      };
+      
     };
   };
 }
