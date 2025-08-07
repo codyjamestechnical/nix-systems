@@ -32,9 +32,9 @@
     environmentFiles = [
       "/docker-data/Komodo/.env"
     ];
-    volumes = [
-      "/docker-data/Komodo/repo-cache:/repo-cache:rw"
-    ];
+    # volumes = [
+    #   "/docker-data/Komodo/repo-cache:/repo-cache:rw"
+    # ];
     labels = {
       "komodo.skip" = "";
     };
