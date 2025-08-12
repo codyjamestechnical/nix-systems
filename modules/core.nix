@@ -113,6 +113,11 @@
     clock24 = true;
   };
 
+  # Create a symlink from /usr/libexec/platform-python to the Python executable
+  systemd.tmpfiles.rules = [
+    "L+ /usr/libexec/platform-python - - - - ${pkgs.python3Minimal}/bin/python3"
+  ];
+
   # Disable Firewall
   networking.firewall.enable = false;
 
