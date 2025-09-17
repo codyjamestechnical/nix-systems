@@ -9,7 +9,7 @@
         ../../users/docker.nix
         ../../users/cody.nix
         ../../docker/netdata.nix
-        ../../docker/komodo-peripherie.nix
+        ../../docker/komodo-periphery.nix
         ../../docker/beszel-agent.nix
         ../../docker/portainer.nix
         ../../docker/portainer-agent.nix
