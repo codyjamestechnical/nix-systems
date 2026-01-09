@@ -27,7 +27,7 @@
     ];
   };
 
-  komodo-periphery = {
+  virtualisation.oci-containers.containers."komodo-periphery" = {
     image = "ghcr.io/moghtech/komodo-periphery:latest";
     log-driver = "local";
     volumes = [
