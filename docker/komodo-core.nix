@@ -26,6 +26,29 @@
       "--network=komodo_komodo-internal"
     ];
   };
+
+  komodo-periphery = {
+    image = "ghcr.io/moghtech/komodo-periphery:latest";
+    log-driver = "local";
+    volumes = [
+        "/var/run/docker.sock:/var/run/docker.sock"
+        
+        "/etc/komodo/ssl:/etc/komodo/ssl"
+        "/etc/komodo/repos:/etc/komodo/repos"
+        "/etc/komodo/stacks:/etc/komodo/stacks"
+        "/var/secrets/komodo-passkey:/var/secrets/passkey"
+    ];
+    environment = {
+        PERIPHERY_SSL_ENABLED = "true";
+        PERIPHERY_INCLUDE_DISK_MOUNTS = "/etc/hostname";
+        PERIPHERY_PASSKEYS_FILE = "/var/secrets/passkey";
+    };
+    labels = {"komodo.skip" = "";};
+    extraOptions = [
+      "--network-alias=periphery"
+      "--network=komodo_komodo-internal"
+    ];
+  };
   
   virtualisation.oci-containers.containers."komodo-core" = {
     image = "ghcr.io/moghtech/komodo-core:latest";
