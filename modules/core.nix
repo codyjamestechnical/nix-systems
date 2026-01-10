@@ -48,7 +48,6 @@
     zsh-powerlevel10k
     nurl
     oh-my-zsh
-    nerdfonts
     powerline-fonts
     docker-compose
     virt-manager
