@@ -19,16 +19,19 @@
       };
 
       deimos-server = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        borgBackup = {
-          paths = "/docker-data";
-          repository = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/docker-data";
-        };
-        specialArgs = [ borgBackup ];
-        modules = [
-          ./hosts/deimos-server
-          ./modules/borg-backup.nix
-        ];
+        let 
+          borgBackup = {
+            paths = "/docker-data";
+            repository = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/docker-data";
+          };
+        in 
+          system = "aarch64-linux";
+          
+          specialArgs = [ borgBackup ];
+          modules = [
+            ./hosts/deimos-server
+            ./modules/borg-backup.nix
+          ];
       };
 
       komodo-server = nixpkgs.lib.nixosSystem {
