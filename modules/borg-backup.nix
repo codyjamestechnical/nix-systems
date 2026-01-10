@@ -9,4 +9,4 @@
     startAt = "daily";
     prune.keep.daily = 4;
   };
-};
+}
