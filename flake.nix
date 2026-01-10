@@ -24,7 +24,7 @@
         specialArgs = {
           borgBackup = {
             paths = "/docker-data";
-            repository = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/docker-data";
+            repo = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/docker-data";
           };
         };
         modules = [
