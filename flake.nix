@@ -23,7 +23,7 @@
         
         specialArgs = {
           borgBackup = {
-            paths = "/docker-data";
+            paths = "/root";
             repo = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/";
           };
         };
