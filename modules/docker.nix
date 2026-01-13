@@ -1,8 +1,5 @@
 { config, pkgs, ...}:
 {
-    imports = [
-        ../../users/docker.nix
-    ];
     ## Virtualization Options
     virtualisation = {   
         docker = {

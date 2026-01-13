@@ -1,10 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/acme.nix
-    ../../users/cody.nix
-  ];
   # Enable networking
   # networking.networkmanager.enable = true;
 
