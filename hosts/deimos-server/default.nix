@@ -12,9 +12,9 @@
         ../../users/cody.nix
         ../../users/docker.nix
     ];
-    systemd.tmpfiles.rules = [
-        "d /var/secret-test 0660 root root -"
-    ];
+    # systemd.tmpfiles.rules = [
+    #     "d /var/secret-test 0660 root root -"
+    # ];
 
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;

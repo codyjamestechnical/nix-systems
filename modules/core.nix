@@ -92,12 +92,13 @@
       stopsrvc = "sudo systemctl stop";
       resrvc = "sudo systemctl restart";
       ls = "lsd -lA";
-      rebuild = "cd /etc/nixos/nix-systems && sudo git pull && sudo nixos-rebuild switch --flake";
+      rebuild = "cd /etc/nixos/nix-systems && sudo git pull && sudo nixos-rebuild switch --flake '.#${config.networking.hostName}'";
       cat = "bat";
       dls = "sudo docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
       recompose = "sudo docker compose down --remove-orphans && sudo docker compose up -d";
       compose = "sudo docker compose up -d";
       decompose = "sudo docker compose down";
+      test = "echo '.#${config.networking.hostName}'";
      
     };
   };
