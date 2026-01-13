@@ -39,6 +39,21 @@
           ./hosts/komodo-server
         ];
       };
+
+      headscale-server = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {
+          tailscale-config = {
+            advertise-tags = "tag:core-infra,tag:servers";
+          };
+        };
+        modules = [
+          ./hosts/headscale-server
+          ./modules/tailscale.nix
+          ./modules/docker.nix
+
+        ];
+      }
       
     };
   };
