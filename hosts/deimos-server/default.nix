@@ -9,7 +9,9 @@
         ../../docker/komodo-periphery.nix
         ../../docker/beszel-agent.nix
     ];
-
+    systemd.tmpfiles.rules = [
+        "d /var/secret-test 0660 root root -"
+    ];
 
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;
