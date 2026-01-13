@@ -53,7 +53,7 @@
           ./modules/docker.nix
 
         ];
-      }
+      };
       
     };
   };
