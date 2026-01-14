@@ -4,6 +4,11 @@
   # Enable networking
   # networking.networkmanager.enable = true;
 
+  # Create secrets directory
+  systemd.tmpfiles.rules = [
+    "d /var/secrets 0660 root root -"
+  ];
+  
   # Set your time zone.
   time.timeZone = "America/New_York";
 

@@ -66,3 +66,36 @@ sudo passwd [your-user] # set password of main user
 ```
 sudo tailscale up --ssh --accept-dns --advertise-exit-node
 ```
+
+```
+#cloud-config
+
+runcmd:
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIX_CHANNEL=nixos-25.11 NO_REBOOT=true bash -x \
+  &&  { cat > /etc/nixos/configuration.nix << 'EOF'
+    { ... }: {
+    imports = [
+      ./hardware-configuration.nix
+      ./networking.nix # generated at runtime by nixos-infect
+     
+    ];
+
+    boot.tmp.cleanOnBoot = true;
+    zramSwap.enable = true;
+    networking.hostName = "deimos-server";
+    services.openssh.enable = true;
+    users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AzaC1lZDI1NTE5AAAAIJIpeRJG7daRcMbzphdfq7BsMCtb+9+P2jeLdDxTym7A'' ];
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    programs.git.enable = true;
+
+    system.stateVersion = "25.11";
+    }
+    
+    }
+  EOF \
+  && /root/.nix-profile/bin/nix build \
+  result/activate
+  result/bin/switch-to-configuration switch
+  git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
+  reboot
+
