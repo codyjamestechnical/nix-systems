@@ -98,7 +98,7 @@
       recompose = "sudo docker compose down --remove-orphans && sudo docker compose up -d";
       compose = "sudo docker compose up -d";
       decompose = "sudo docker compose down";
-      test = "echo '.#${config.networking.hostName}'";
+      testmyecho = "echo '.#${config.networking.hostName}'";
      
     };
   };
