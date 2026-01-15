@@ -70,6 +70,7 @@ sudo tailscale up --ssh --accept-dns --advertise-exit-node
 ```
 #cloud-config
 
+write_files:
 runcmd:
   - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIX_CHANNEL=nixos-25.11 NO_REBOOT=true bash -x \
   &&  { cat > /etc/nixos/configuration.nix << 'EOF'
@@ -84,7 +85,7 @@ runcmd:
     zramSwap.enable = true;
     networking.hostName = "deimos-server";
     services.openssh.enable = true;
-    users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AzaC1lZDI1NTE5AAAAIJIpeRJG7daRcMbzphdfq7BsMCtb+9+P2jeLdDxTym7A'' ];
+    users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIEB06+mXFpYiRLegmXjiZzPuF1rTs+ySVCn5mJ0hpZ cody@cjtech.io'' ];
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
     programs.git.enable = true;
 
@@ -96,6 +97,12 @@ runcmd:
   && /root/.nix-profile/bin/nix build \
   result/activate
   result/bin/switch-to-configuration switch
-  git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
-  reboot
+  - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
+  - mkdir /var/secrets
+  - touch /var/secrets/cloudflare-token
+  - touch /var/secrets/komodo-passkey
+  - touch /var/secrets/tailscale_key
+  - chown root:root -R /var/secrets
+  - chmod 660 -R /var/secrets
+  - reboot
 

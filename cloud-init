@@ -1,0 +1,30 @@
+#cloud-config
+write_files:
+    - path: /etc/nixos/host.nix
+      permissions: '0644'
+      content: |
+        { config, pkgs, ... }: 
+        {
+            nix.settings.experimental-features = [ "nix-command" "flakes" ];
+            programs.git.enable = true;
+            programs.zsh = {
+                enable = true;
+                enableBashCompletion = true;
+                histSize = 10000;
+
+                autosuggestions.enable = true;
+                shellAliases = {
+                    rebuild = "cd /etc/nixos/nix-systems && sudo git pull && sudo nixos-rebuild switch --flake '.#${config.networking.hostName}'";
+                
+                };
+            };
+        }
+runcmd:
+  - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
+  - mkdir /var/secrets
+  - touch /var/secrets/cloudflare-token
+  - touch /var/secrets/komodo-passkey
+  - touch /var/secrets/tailscale_key
+  - chown root:root -R /var/secrets
+  - chmod 660 -R /var/secrets
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-25.11 bash 2>&1 | tee /tmp/infect.log

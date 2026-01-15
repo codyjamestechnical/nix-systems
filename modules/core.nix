@@ -8,7 +8,7 @@
   systemd.tmpfiles.rules = [
     "d /var/secrets 0660 root root -"
   ];
-  
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
