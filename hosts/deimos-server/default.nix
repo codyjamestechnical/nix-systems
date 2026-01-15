@@ -4,16 +4,9 @@
         ./hardware-configuration.nix
         ./networking.nix
         ../../modules/core.nix
-        ../../modules/docker.nix
-        ../../users/cody.nix
         ../../docker/komodo-periphery.nix
         ../../docker/beszel-agent.nix
-        ../../modules/acme.nix
-        ../../users/cody.nix
     ];
-    # systemd.tmpfiles.rules = [
-    #     "d /var/secret-test 0660 root root -"
-    # ];
 
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;

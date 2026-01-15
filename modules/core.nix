@@ -1,6 +1,12 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./acme.nix
+    ./docker.nix
+    ./tailscale.nix
+    ../users/cody.nix
+  ];
   # Enable networking
   # networking.networkmanager.enable = true;
 
@@ -66,7 +72,7 @@
 
   # OpenSSH daemon
   services.openssh.enable = true;
-  
+
   #ZSH
   programs.zsh = {
     enable = true;
