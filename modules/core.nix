@@ -4,11 +4,6 @@
   # Enable networking
   # networking.networkmanager.enable = true;
 
-  # Create secrets directory
-  systemd.tmpfiles.rules = [
-    "d /var/secrets 0660 root root -"
-  ];
-
   # Set your time zone.
   time.timeZone = "America/New_York";
 
@@ -118,8 +113,10 @@
   };
 
   # Create a symlink from /usr/libexec/platform-python to the Python executable
+  # Create secrets directory
   systemd.tmpfiles.rules = [
     "L+ /usr/libexec/platform-python - - - - ${pkgs.python3Minimal}/bin/python3"
+    "d /var/secrets 0660 root root -"
   ];
 
   # Disable Firewall
