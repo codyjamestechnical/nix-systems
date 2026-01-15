@@ -1,4 +1,3 @@
-# Auto-generated using compose2nix v0.3.1.
 { pkgs, lib, ... }:
 
 {
@@ -7,7 +6,9 @@
 
     "headplane-caddy" = {
       image = "caddy:latest";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       environmentFiles = [
         "/docker-data/headscale/.env"
       ];
@@ -28,7 +29,9 @@
 
     "headplane-tailscale" = {
       image = "tailscale/tailscale:latest";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       dependsOn = [
         "headscale"
         "headplane-caddy"
@@ -53,7 +56,7 @@
       image = "ghcr.io/juanfont/headscale:latest";
       labels = {
         "komodo.skip" = "";
-        "me.tale.headplane.target" =  "headscale"; 
+        "me.tale.headplane.target" = "headscale";
       };
       ports = [
         "3478:3478/udp"
@@ -65,8 +68,8 @@
         "/docker-data/headscale/.env"
       ];
       volumes = [
-          "/docker-data/headscale/configs/headscale:/etc/headscale"
-          "/docker-data/headscale/data/headscale:/var/lib/headscale"
+        "/docker-data/headscale/configs/headscale:/etc/headscale"
+        "/docker-data/headscale/data/headscale:/var/lib/headscale"
       ];
       log-driver = "local";
       extraOptions = [
@@ -89,8 +92,9 @@
       environmentFiles = [
         "/docker-data/headscale/.env.headplane"
       ];
-    }
-
+    };
+  };
+  
   # Networks
   systemd.services."docker-network-headscale-internal" = {
     path = [ pkgs.docker ];

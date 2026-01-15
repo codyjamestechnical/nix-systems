@@ -4,7 +4,6 @@
   imports = [
     ./acme.nix
     ./docker.nix
-    ./tailscale.nix
     ../users/cody.nix
   ];
   # Enable networking
@@ -65,7 +64,7 @@
     zip
     unzip
     cifs-utils
-    
+
   ];
 
   # Enabled Services
@@ -92,7 +91,7 @@
       compose = "sudo docker compose up -d";
       decompose = "sudo docker compose down";
       testmyecho = "echo '.#${config.networking.hostName}'";
-     
+
     };
   };
 
@@ -115,7 +114,10 @@
   # Disable Firewall
   networking.firewall.enable = false;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   nix.settings.auto-optimise-store = true;
 }

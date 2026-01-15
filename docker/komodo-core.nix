@@ -7,7 +7,9 @@
 
     "komodo-caddy" = {
       image = "caddy:latest";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       environmentFiles = [
         "/docker-data/Komodo/.env"
       ];
@@ -32,17 +34,19 @@
 
     "komodo-periphery" = {
       image = "ghcr.io/moghtech/komodo-periphery:latest";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       environmentFiles = [
         "/docker-data/Komodo/.env"
       ];
       volumes = [
-          "/var/run/docker.sock:/var/run/docker.sock"
-          
-          "/etc/komodo/ssl:/etc/komodo/ssl"
-          "/etc/komodo/repos:/etc/komodo/repos"
-          "/etc/komodo/stacks:/etc/komodo/stacks"
-          "/var/secrets/komodo-passkey:/var/secrets/passkey"
+        "/var/run/docker.sock:/var/run/docker.sock"
+
+        "/etc/komodo/ssl:/etc/komodo/ssl"
+        "/etc/komodo/repos:/etc/komodo/repos"
+        "/etc/komodo/stacks:/etc/komodo/stacks"
+        "/var/secrets/komodo-passkey:/var/secrets/passkey"
       ];
       log-driver = "local";
       extraOptions = [
@@ -50,10 +54,12 @@
         "--network=komodo_komodo-internal"
       ];
     };
-    
+
     "komodo-core" = {
       image = "ghcr.io/moghtech/komodo-core:latest";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       environmentFiles = [
         "/docker-data/Komodo/.env"
       ];
@@ -66,10 +72,12 @@
         "--network=komodo_komodo-internal"
       ];
     };
-    
+
     "komodo-mongo" = {
       image = "mongo";
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
       environmentFiles = [
         "/docker-data/Komodo/.env"
       ];
@@ -77,7 +85,11 @@
         "/docker-data/Komodo/mongodb/config:/data/configdb:rw"
         "/docker-data/Komodo/mongodb/data:/data/db:rw"
       ];
-      cmd = [ "--quiet" "--wiredTigerCacheSizeGB" "0.25" ];
+      cmd = [
+        "--quiet"
+        "--wiredTigerCacheSizeGB"
+        "0.25"
+      ];
       log-driver = "local";
       extraOptions = [
         "--network-alias=mongo"

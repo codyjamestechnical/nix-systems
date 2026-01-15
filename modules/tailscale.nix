@@ -1,4 +1,9 @@
-{tailscale-config, config, pkgs, ... }:
+{
+  tailscale-config,
+  config,
+  pkgs,
+  ...
+}:
 let
   defaultConfig = {
     hostname = config.networking.hostName or "unnamed-device";
