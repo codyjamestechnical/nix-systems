@@ -19,12 +19,34 @@ write_files:
                 };
             };
         }
+
+    - path: /var/secrets/cloudflare-token
+      permissions: '0640'
+      content: |
+        CLOUDFLARE_DNS_API_TOKEN=
+
+    - path: /var/secrets/komodo-passkey
+      permissions: '0640'
+      content: |
+        YOUR_KOMODO_PASSKEY_HERE
+
+    - path: /var/secrets/tailscale_key
+      permissions: '0640'
+      content: |
+        YOUR_TAILSCALE_KEY_HERE
+
+    - path: /var/secrets/beszel-agent.env
+      permissions: '0640'
+      content: |
+        LISTEN=45876
+        KEY=
+        TOKEN=
+        HUB_URL=https://beszel.31337.im
+
 runcmd:
-  - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
-  - mkdir /var/secrets
-  - touch /var/secrets/cloudflare-token
-  - touch /var/secrets/komodo-passkey
-  - touch /var/secrets/tailscale_key
-  - chown root:root -R /var/secrets
-  - chmod 660 -R /var/secrets
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-25.11 bash 2>&1 | tee /tmp/infect.log
+    - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
+    - chown root:root -R /var/secrets
+    - chmod 640 -R /var/secrets
+    - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-25.11 NO_REBOOT=false bash 2>&1 | tee /tmp/infect.log
+    # - nixos-rebuild switch --flake "/etc/nixos/nix-systems#$(hostname)"
+    # - reboot
