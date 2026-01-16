@@ -49,13 +49,15 @@ write_files:
         USER_HASHED_PASSWORD_HERE # Replace with actual hashed password using `mkpasswd`
 
 runcmd:
-    - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-25.11 NO_REBOOT=true bash 2>&1 | tee /tmp/infect.log
     - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos/nix-systems
+    - mkdir /secrets
     - chown root:root -R /secrets
     - chmod 640 -R /secrets
     - mkdir /docker-data
     - chown docker:docker /docker-data
     - chmod 770 /docker-data
+    - cp /var/log/cloud-init-output.log /root/.
+    - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-25.11 NO_REBOOT=true bash 2>&1 | tee /tmp/infect.log
     - reboot
     # - nixos-rebuild switch --flake "/etc/nixos/nix-systems#$(hostname)"
     # - reboot
