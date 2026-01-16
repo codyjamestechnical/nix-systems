@@ -7,16 +7,8 @@ write_files:
         {
             nix.settings.experimental-features = [ "nix-command" "flakes" ];
             programs.git.enable = true;
-            programs.zsh = {
-                enable = true;
-                enableBashCompletion = true;
-                histSize = 10000;
-
-                autosuggestions.enable = true;
-                shellAliases = {
-                    rebuild = "cd /etc/nixos/nix-systems && sudo git pull && sudo nixos-rebuild switch --flake '.#${config.networking.hostName}'";
-                
-                };
+            programs.bash.shellAliases = {
+                rebuild = "cd /etc/nixos/nix-systems && sudo git pull && sudo nixos-rebuild switch --flake '.#${config.networking.hostName}'";
             };
         }
 

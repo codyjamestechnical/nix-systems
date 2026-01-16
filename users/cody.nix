@@ -11,7 +11,7 @@
     users.cody = {
       isNormalUser = true;
       description = "Cody";
-      hashedPasswordFile = /etc/nixos/secrets/cody_password;
+      hashedPasswordFile = "/etc/nixos/secrets/cody_password";
       extraGroups = [
         "networkmanager"
         "wheel"
