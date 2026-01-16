@@ -11,6 +11,7 @@
     users.cody = {
       isNormalUser = true;
       description = "Cody";
+      hashedPasswordFile = /var/secrets/cody_password;
       extraGroups = [
         "networkmanager"
         "wheel"

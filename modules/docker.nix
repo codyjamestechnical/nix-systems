@@ -2,7 +2,7 @@
 {
   # Create docker-data directory
   systemd.tmpfiles.rules = [
-    "d /docker-data 0660 docker docker -"
+    "d /docker-data 0670 docker docker -"
   ];
 
   users = {

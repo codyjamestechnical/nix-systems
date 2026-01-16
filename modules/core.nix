@@ -108,7 +108,6 @@
   # Create secrets directory
   systemd.tmpfiles.rules = [
     "L+ /usr/libexec/platform-python - - - - ${pkgs.python3Minimal}/bin/python3"
-    "d /var/secrets 0660 root root -"
   ];
 
   # Disable Firewall
