@@ -13,7 +13,7 @@ let
     advertise-tags = "tag:servers";
     accept-routes = true;
   };
-  cfg = tailscail-config // defaultConfig;
+  cfg = tailscale-config // defaultConfig;
 in
 {
   services.tailscale = {
