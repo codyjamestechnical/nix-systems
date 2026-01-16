@@ -78,6 +78,7 @@
         "--network=headscale-internal"
         "--health-cmd='CMD headscale health'"
       ];
+      cmd = [ "headscale" "serve"  "--config" "/etc/headscale/config.yaml" ];
     };
 
     "headplane" = {
