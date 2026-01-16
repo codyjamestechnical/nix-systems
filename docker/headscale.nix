@@ -13,9 +13,9 @@
         "/docker-data/headscale/.env"
       ];
       volumes = [
-        "/docker-data/headscale/caddy:/data:rw"
+        "/docker-data/headscale/caddy/data:/data:rw"
         "/docker-data/headscale/caddy/config:/config:rw"
-        "/docker-data/headscale/caddyfile:/etc/caddy/Caddyfile:ro"
+        "/docker-data/headscale/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
@@ -75,6 +75,7 @@
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
+        "--health-cmd='CMD headscale health'"
       ];
     };
 
@@ -90,11 +91,15 @@
         "/var/run/docker.sock:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
-        "/docker-data/headscale/.env.headplane"
+        "/docker-data/headscale/.env"
+      ];
+      extraOptions = [
+        "--network-alias=headscale"
+        "--network=headscale-internal"
       ];
     };
   };
-  
+
   # Networks
   systemd.services."docker-network-headscale-internal" = {
     path = [ pkgs.docker ];
