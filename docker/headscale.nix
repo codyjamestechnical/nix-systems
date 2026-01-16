@@ -46,7 +46,6 @@
       ];
       log-driver = "jounald";
       extraOptions = [
-        "--network-alias=headplane-tailscale"
         "--network=container:headplane-caddy"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
