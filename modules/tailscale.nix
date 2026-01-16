@@ -6,7 +6,7 @@
 }:
 let
   defaultConfig = {
-    hostname = "${config.networking.hostName}" or "unnamed-device";
+    hostname = config.networking.hostName;
     accept-dns = true;
     login-server = "headscale.31337.im";
     advertise-exit-node = false;
