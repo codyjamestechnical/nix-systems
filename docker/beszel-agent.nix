@@ -13,7 +13,7 @@
                     "/docker-data/.beszel:/extra-filesystems/Docker_Data:ro"
                 ];
                 environmentFiles = [
-                    "/secrets/beszel-agent.env"
+                    "/etc/secrets/beszel-agent.env"
                 ];
                 # environment = {
                 #     PORT = "45876";

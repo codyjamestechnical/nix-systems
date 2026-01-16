@@ -46,7 +46,7 @@
         "/etc/komodo/ssl:/etc/komodo/ssl"
         "/etc/komodo/repos:/etc/komodo/repos"
         "/etc/komodo/stacks:/etc/komodo/stacks"
-        "/secrets/komodo-passkey:/secrets/passkey"
+        "/etc/secrets/komodo-passkey:/etc/secrets/passkey"
       ];
       log-driver = "local";
       extraOptions = [

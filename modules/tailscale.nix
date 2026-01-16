@@ -18,7 +18,7 @@ in
 {
   services.tailscale = {
     enable = true;
-    authKeyFile = "/secrets/tailscale_key";
+    authKeyFile = "/etc/secrets/tailscale_key";
     useRoutingFeatures = "both";
     extraUpFlags = [
       "--hostname=${cfg.hostname}"

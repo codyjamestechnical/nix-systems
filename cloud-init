@@ -20,22 +20,22 @@ write_files:
             };
         }
 
-    - path: /secrets/cloudflare-token
+    - path: /etc/secrets/cloudflare-token
       permissions: '0640'
       content: |
         CLOUDFLARE_DNS_API_TOKEN=YOUR_CLOUDFLARE_API_TOKEN_HERE
 
-    - path: /secrets/komodo-passkey
+    - path: /etc/secrets/komodo-passkey
       permissions: '0640'
       content: |
         YOUR_KOMODO_PASSKEY_HERE
 
-    - path: /secrets/tailscale_key
+    - path: /etc/secrets/tailscale_key
       permissions: '0640'
       content: |
         YOUR_TAILSCALE_KEY_HERE
 
-    - path: /secrets/beszel-agent.env
+    - path: /etc/secrets/beszel-agent.env
       permissions: '0640'
       content: |
         LISTEN=45876
@@ -43,16 +43,16 @@ write_files:
         TOKEN=
         HUB_URL=https://beszel.31337.im
 
-    - path: /secrets/cody_password
+    - path: /etc/secrets/cody_password
       permissions: '0640'
       content: |
         USER_HASHED_PASSWORD_HERE # Replace with actual hashed password using `mkpasswd`
 
 runcmd:
     - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos/nix-systems
-    - mkdir /secrets
-    - chown root:root -R /secrets
-    - chmod 640 -R /secrets
+    - mkdir /etc/secrets
+    - chown root:root -R /etc/secrets
+    - chmod 640 -R /etc/secrets
     - mkdir /docker-data
     - chown docker:docker /docker-data
     - chmod 770 /docker-data

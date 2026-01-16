@@ -24,7 +24,7 @@
         # this line prevents hanging on network split
         automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,file_mode=0750,dir_mode=0750,uid=995,gid=131,mfsymlinks,seal,noperm,nobrl";
 
-        in ["${automount_opts},credentials=/secrets/smb-secrets"];
+        in ["${automount_opts},credentials=/etc/secrets/smb-secrets"];
     };
 
     system.stateVersion = "25.11";
