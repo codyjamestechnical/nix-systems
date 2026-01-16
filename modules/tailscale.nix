@@ -21,13 +21,13 @@ in
     authKeyFile = "/var/secrets/tailscale_key";
     useRoutingFeatures = "both";
     extraUpFlags = [
-      "--hostname=${tailscale-config.hostname}"
-      "--accept-dns=${tailscale-config.accept-dns}"
+      "--hostname=${cfg.hostname}"
+      "--accept-dns=${cfg.accept-dns}"
       "--ssh"
-      "--login-server=${tailscale-config.login-server}"
-      "--advertise-exit-node=${tailscale-config.advertise-exit-node}"
-      "--advertise-tags=${tailscale-config.advertise-tags}"
-      "--accept-routes=${tailscale-config.accept-routes}"
+      "--login-server=${cfg.login-server}"
+      "--advertise-exit-node=${cfg.advertise-exit-node}"
+      "--advertise-tags=${cfg.advertise-tags}"
+      "--accept-routes=${cfg.accept-routes}"
     ];
 
   };
