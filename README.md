@@ -32,19 +32,19 @@ sudo nano /etc/nixos/networking.nix ## then copy the text
 Create a hardware-configuration.nix file in the servers directory in this repo and past the contents. Now do the same for networking if you are using nix-infect
 
 ### Create Secrets files
-Place the secrets files in the /etc/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds. If you need to store more than 3 secrets I would consider moving to a secrets manager like SOPs.
+Place the secrets files in the /etc/nixos/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds. If you need to store more than 3 secrets I would consider moving to a secrets manager like SOPs.
 ```
 # Create secrets directory
-sudo mkdir /etc/secrets #Create Secrets Directory
+sudo mkdir /etc/nixos/secrets #Create Secrets Directory
 
 #Create Files
-sudo nano /etc/secrets/cloudflare-token # Paste in the cloudflare token for ACME
-sudo nano /etc/secrets/komodo-passkey # Paste in Komodo agent passkey
-sudo nano /etc/secrets/smb-secrets # Paste in the CIFS share login
+sudo nano /etc/nixos/secrets/cloudflare-token # Paste in the cloudflare token for ACME
+sudo nano /etc/nixos/secrets/komodo-passkey # Paste in Komodo agent passkey
+sudo nano /etc/nixos/secrets/smb-secrets # Paste in the CIFS share login
 
 # Set Permissions
-sudo chown root:root -R /etc/secrets #set owner and group to root
-sudo chmod 660 -R /etc/secrets  #Set permissions on folder and files so that only root has access
+sudo chown root:root -R /etc/nixos/secrets #set owner and group to root
+sudo chmod 660 -R /etc/nixos/secrets  #Set permissions on folder and files so that only root has access
 ```
 
 ### Clone This Repo
@@ -98,11 +98,11 @@ runcmd:
   result/activate
   result/bin/switch-to-configuration switch
   - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
-  - mkdir /etc/secrets
-  - touch /etc/secrets/cloudflare-token
-  - touch /etc/secrets/komodo-passkey
-  - touch /etc/secrets/tailscale_key
-  - chown root:root -R /etc/secrets
-  - chmod 660 -R /etc/secrets
+  - mkdir /etc/nixos/secrets
+  - touch /etc/nixos/secrets/cloudflare-token
+  - touch /etc/nixos/secrets/komodo-passkey
+  - touch /etc/nixos/secrets/tailscale_key
+  - chown root:root -R /etc/nixos/secrets
+  - chmod 660 -R /etc/nixos/secrets
   - reboot
 

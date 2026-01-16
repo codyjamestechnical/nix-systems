@@ -14,12 +14,12 @@
           "/etc/komodo/ssl:/etc/komodo/ssl"
           "/etc/komodo/repos:/etc/komodo/repos"
           "/etc/komodo/stacks:/etc/komodo/stacks"
-          "/etc/secrets/komodo-passkey:/etc/secrets/passkey"
+          "/etc/nixos/secrets/komodo-passkey:/etc/nixos/secrets/passkey"
         ];
         environment = {
           PERIPHERY_SSL_ENABLED = "true";
           PERIPHERY_INCLUDE_DISK_MOUNTS = "/etc/hostname";
-          PERIPHERY_PASSKEYS_FILE = "/etc/secrets/passkey";
+          PERIPHERY_PASSKEYS_FILE = "/etc/nixos/secrets/passkey";
         };
         labels = {
           "komodo.skip" = "";
