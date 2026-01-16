@@ -12,7 +12,7 @@
   security.acme.certs."31337.im" = {
     domain = "*.31337.im";
     dnsProvider = "cloudflare";
-    environmentFile = "/var/secrets/cloudflare-token";
+    environmentFile = "/secrets/cloudflare-token";
     dnsPropagationCheck = true;
   };
 }

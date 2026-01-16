@@ -23,7 +23,7 @@
                     "/run/dbus:/run/dbus:ro"
                 ];
                 extraOptions = ["--network=host" "--pid=host" "--cap-add=sys_ptrace" "--cap-add=sys_admin"];
-                environmentFiles = [ "/var/secrets/netdata-env" ];
+                environmentFiles = [ "/secrets/netdata-env" ];
 
                 labels = {"komodo.skip" = "";};
             };

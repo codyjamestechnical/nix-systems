@@ -28,7 +28,7 @@
         automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,file_mode=0750,dir_mode=0750,uid=995,gid=131,mfsymlinks,seal,noperm,nobrl";
 
       in
-      [ "${automount_opts},credentials=/var/secrets/smb-secrets" ];
+      [ "${automount_opts},credentials=/secrets/smb-secrets" ];
   };
 
   # ### SYNCTHING
@@ -37,8 +37,8 @@
   #     group = "root";
   #     systemService = true;
   #     settings = {
-  #         key = "/var/secrets/syncthing/key.pem";
-  #         cert = "/var/secrets/syncthing/cert.pem";
+  #         key = "/secrets/syncthing/key.pem";
+  #         cert = "/secrets/syncthing/cert.pem";
   #         devices = {
   #         "mars-server" = { id = "O3UVKX5-6TTVKEC-BDCBSW2-CAHTROG-ZE5UQLK-BHLVTQ6-USVBBRM-IT42CQW"; };
   #         };

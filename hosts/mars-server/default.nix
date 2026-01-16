@@ -161,8 +161,8 @@
     #     group = "root";
     #     systemService = true;
     #     settings = {
-    #         key = "/var/secrets/syncthing/key.pem";
-    #         cert = "/var/secrets/syncthing/cert.pem";
+    #         key = "/secrets/syncthing/key.pem";
+    #         cert = "/secrets/syncthing/cert.pem";
     #         devices = {
     #         "deimos-server" = { id = "KBCN6KF-4UE5NQF-EXHNPP5-CHOQQZR-7XVKWLU-ZA2QHQT-HFVVIFU-Y2H2AQG"; };
     #         };

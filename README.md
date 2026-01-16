@@ -32,19 +32,19 @@ sudo nano /etc/nixos/networking.nix ## then copy the text
 Create a hardware-configuration.nix file in the servers directory in this repo and past the contents. Now do the same for networking if you are using nix-infect
 
 ### Create Secrets files
-Place the secrets files in the /var/secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds. If you need to store more than 3 secrets I would consider moving to a secrets manager like SOPs.
+Place the secrets files in the /secrets directory on the server for ACME Certs, Komodo Agent, and CIFS share creds. If you need to store more than 3 secrets I would consider moving to a secrets manager like SOPs.
 ```
 # Create secrets directory
-sudo mkdir /var/secrets #Create Secrets Directory
+sudo mkdir /secrets #Create Secrets Directory
 
 #Create Files
-sudo nano /var/secrets/cloudflare-token # Paste in the cloudflare token for ACME
-sudo nano /var/secrets/komodo-passkey # Paste in Komodo agent passkey
-sudo nano /var/secrets/smb-secrets # Paste in the CIFS share login
+sudo nano /secrets/cloudflare-token # Paste in the cloudflare token for ACME
+sudo nano /secrets/komodo-passkey # Paste in Komodo agent passkey
+sudo nano /secrets/smb-secrets # Paste in the CIFS share login
 
 # Set Permissions
-sudo chown root:root -R /var/secrets #set owner and group to root
-sudo chmod 660 -R /var/secrets  #Set permissions on folder and files so that only root has access
+sudo chown root:root -R /secrets #set owner and group to root
+sudo chmod 660 -R /secrets  #Set permissions on folder and files so that only root has access
 ```
 
 ### Clone This Repo
@@ -98,11 +98,11 @@ runcmd:
   result/activate
   result/bin/switch-to-configuration switch
   - git clone https://github.com/codyjamestechnical/nix-systems.git /etc/nixos
-  - mkdir /var/secrets
-  - touch /var/secrets/cloudflare-token
-  - touch /var/secrets/komodo-passkey
-  - touch /var/secrets/tailscale_key
-  - chown root:root -R /var/secrets
-  - chmod 660 -R /var/secrets
+  - mkdir /secrets
+  - touch /secrets/cloudflare-token
+  - touch /secrets/komodo-passkey
+  - touch /secrets/tailscale_key
+  - chown root:root -R /secrets
+  - chmod 660 -R /secrets
   - reboot
 
