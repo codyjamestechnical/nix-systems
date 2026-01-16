@@ -22,11 +22,11 @@ in
     useRoutingFeatures = "both";
     extraUpFlags = [
       "--hostname=${tailscale-config.hostname}"
-      "--accept-dns=${tailscail-config.accept-dns}"
+      "--accept-dns=${tailscale-config.accept-dns}"
       "--ssh"
-      "--login-server=${tailscail-config.login-server}"
-      "--advertise-exit-node=${tailscail-config.advertise-exit-node}"
-      "--advertise-tags=${tailscail-config.advertise-tags}"
+      "--login-server=${tailscale-config.login-server}"
+      "--advertise-exit-node=${tailscale-config.advertise-exit-node}"
+      "--advertise-tags=${tailscale-config.advertise-tags}"
       "--accept-routes=${tailscale-config.accept-routes}"
     ];
 
