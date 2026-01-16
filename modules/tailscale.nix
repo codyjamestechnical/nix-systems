@@ -29,7 +29,6 @@ in
       "--advertise-exit-node=${tailscail-config.advertise-exit-node}"
       "--advertise-tags=${tailscail-config.advertise-tags}"
       "--accept-routes=${tailscale-config.accept-routes}"
-      "--advertise-exit-node=${tailscale-config.advertise-exit-node}"
     ];
 
   };
