@@ -12,7 +12,6 @@ let
     advertise-exit-node = false;
     advertise-tags = "tag:servers";
     accept-routes = true;
-    advertise-exit-node = false;
   };
   cfg = tailscail-config // defaultConfig;
 in
