@@ -20,6 +20,7 @@
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
+      ports = [];
       extraOptions = [
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
@@ -69,7 +70,8 @@
       ];
       volumes = [
         "/docker-data/headscale/configs/headscale:/etc/headscale"
-        "/docker-data/headscale/data/headscale:/var/lib/headscale"
+        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale"
+        "/docker-data/headscale/data/headscale/run:/var/run/headscale"
       ];
       log-driver = "local";
       extraOptions = [
