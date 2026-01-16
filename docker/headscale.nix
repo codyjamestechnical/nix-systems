@@ -68,11 +68,11 @@
         "/docker-data/headscale/.env"
       ];
       volumes = [
-        "/docker-data/headscale/configs/headscale:/etc/headscale"
-        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale"
-        "/docker-data/headscale/data/headscale/run:/var/run/headscale"
+        "/docker-data/headscale/configs/headscale:/etc/headscale:rw"
+        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale:rw"
+        "/docker-data/headscale/data/headscale/run:/var/run/headscale:rw"
       ];
-      log-driver = "local";
+      log-driver = "jounald";
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
@@ -86,14 +86,15 @@
         "headscale"
       ];
       volumes = [
-        "/docker-data/headscale/data/headscale:/var/lib/headscale"
-        "/docker-data/headscale/configs/headscale:/etc/headscale"
-        "/docker-data/headscale/configs/headplaene:/etc/headplane"
+        "/docker-data/headscale/data/headscale:/var/lib/headscale:rw"
+        "/docker-data/headscale/configs/headscale:/etc/headscale:rw"
+        "/docker-data/headscale/configs/headplaene:/etc/headplane:rw"
         "/var/run/docker.sock:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
         "/docker-data/headscale/.env"
       ];
+      log-driver = "jounald";
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
