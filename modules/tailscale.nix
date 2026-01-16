@@ -7,11 +7,11 @@
 let
   defaultConfig = {
     hostname = config.networking.hostName;
-    accept-dns = true;
+    accept-dns = "true";
     login-server = "headscale.31337.im";
-    advertise-exit-node = false;
+    advertise-exit-node = "false";
     advertise-tags = "tag:servers";
-    accept-routes = true;
+    accept-routes = "true";
   };
   cfg = tailscale-config // defaultConfig;
 in
