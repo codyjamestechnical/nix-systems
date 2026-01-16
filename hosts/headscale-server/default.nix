@@ -6,6 +6,7 @@
         ../../modules/core.nix
         ../../docker/komodo-periphery.nix
         ../../docker/beszel-agent.nix
+        ../../docker/headscale.nix
         ../../modules/acme.nix
         ../../modules/docker.nix
     ];
