@@ -53,7 +53,7 @@
     };
 
     "headscale" = {
-      image = "ghcr.io/juanfont/headscale:latest";
+      image = "ghcr.io/juanfont/headscale:v0.28.0-beta.1";
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
@@ -87,9 +87,9 @@
         "headscale"
       ];
       volumes = [
-        "/docker-data/headscale/data/headscale:/var/lib/headscale:rw"
+        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale:rw"
         "/docker-data/headscale/configs/headscale:/etc/headscale:rw"
-        "/docker-data/headscale/configs/headplaene:/etc/headplane:rw"
+        "/docker-data/headscale/configs/headplane:/etc/headplane:rw"
         "/var/run/docker.sock:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
