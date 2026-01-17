@@ -44,7 +44,7 @@
         "/dev/net/tun:/dev/net/tun"
         "/docker-data/headscale/tailscale:/var/lib"
       ];
-      log-driver = "jounald";
+      log-driver = "journald";
       extraOptions = [
         "--network=container:headplane-caddy"
         "--cap-add=NET_ADMIN"
@@ -72,7 +72,7 @@
         "/docker-data/headscale/data/headscale/lib:/var/lib/headscale:rw"
         "/docker-data/headscale/data/headscale/run:/var/run/headscale:rw"
       ];
-      log-driver = "jounald";
+      log-driver = "journald";
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
@@ -95,7 +95,7 @@
       environmentFiles = [
         "/docker-data/headscale/.env"
       ];
-      log-driver = "jounald";
+      log-driver = "journald";
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
