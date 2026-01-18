@@ -15,6 +15,9 @@
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;
 
+    environment.systemPackages = [
+        pkgs.headscale
+    ];
     # Network HostName
     networking.hostName = "headscale-server";
 
