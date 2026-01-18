@@ -15,9 +15,6 @@
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;
 
-    environment.systemPackages = [
-        pkgs.headscale
-    ];
     # Network HostName
     networking.hostName = "headscale-server";
 
@@ -31,5 +28,9 @@
     #     in ["${automount_opts},credentials=/etc/nixos/secrets/smb-secrets"];
     # };
 
+    #ZSH
+    programs.zsh.shellAliases = {
+        headscale = "docker exec -it headscale headscale";
+  };
     system.stateVersion = "25.11";
 }
