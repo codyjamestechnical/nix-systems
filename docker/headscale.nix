@@ -4,7 +4,7 @@
   # Containers
   virtualisation.oci-containers.containers = {
 
-    "headplane-caddy" = {
+    "headscale-caddy" = {
       image = "caddy:latest";
       labels = {
         "komodo.skip" = "";
@@ -21,7 +21,8 @@
       ];
       log-driver = "journald";
       ports = [
-
+        "443:443"
+        "80:80"
       ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
@@ -30,29 +31,29 @@
       ];
     };
 
-    "headplane-tailscale" = {
-      image = "tailscale/tailscale:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
-      dependsOn = [
-        "headscale"
-        "headplane-caddy"
-      ];
-      environmentFiles = [
-        "/docker-data/headscale/.env"
-      ];
-      volumes = [
-        "/dev/net/tun:/dev/net/tun"
-        "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
-      ];
-      log-driver = "journald";
-      extraOptions = [
-        "--network=container:headplane-caddy"
-        "--cap-add=NET_ADMIN"
-        "--cap-add=NET_RAW"
-      ];
-    };
+    # "headscaletailscale" = {
+    #   image = "tailscale/tailscale:latest";
+    #   labels = {
+    #     "komodo.skip" = "";
+    #   };
+    #   dependsOn = [
+    #     "headscale"
+    #     "headplane-caddy"
+    #   ];
+    #   environmentFiles = [
+    #     "/docker-data/headscale/.env"
+    #   ];
+    #   volumes = [
+    #     "/dev/net/tun:/dev/net/tun"
+    #     "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
+    #   ];
+    #   log-driver = "journald";
+    #   extraOptions = [
+    #     "--network=container:headplane-caddy"
+    #     "--cap-add=NET_ADMIN"
+    #     "--cap-add=NET_RAW"
+    #   ];
+    # };
 
     "headscale" = {
       image = "ghcr.io/juanfont/headscale:v0.28.0-beta.1";
@@ -64,8 +65,6 @@
         "3478:3478/udp"
         "50443:50443"
         "50443:50443/udp"
-        "443:443"
-        "80:80"
       ];
       environmentFiles = [
         "/docker-data/headscale/.env"
