@@ -8,7 +8,7 @@
     environmentFile = "/etc/nixos/secrets/cloudflare-token";
     dnsPropagationCheck = true;
   };
-  
+
   # Containers
   virtualisation.oci-containers.containers = {
 
@@ -24,8 +24,8 @@
         "/docker-data/headscale/caddy/data:/data:rw"
         "/docker-data/headscale/caddy/config:/config:rw"
         "/docker-data/headscale/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
-        "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
-        "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
+        "/var/lib/acme/cjtech.io/fullchain.pem:/ssl/fullchain.pem:ro"
+        "/var/lib/acme/cjtech.io/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
       ports = [
