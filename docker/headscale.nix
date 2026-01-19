@@ -20,7 +20,9 @@
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
-      ports = [];
+      ports = [
+
+      ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
@@ -42,7 +44,7 @@
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
-        "/docker-data/headscale/tailscale:/var/lib"
+        "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
       ];
       log-driver = "journald";
       extraOptions = [
