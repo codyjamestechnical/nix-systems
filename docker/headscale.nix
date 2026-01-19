@@ -1,6 +1,14 @@
 { pkgs, lib, ... }:
 
 {
+
+  security.acme.certs."cjtech.io" = {
+    domain = "*.cjtech.io";
+    dnsProvider = "cloudflare";
+    environmentFile = "/etc/nixos/secrets/cloudflare-token";
+    dnsPropagationCheck = true;
+  };
+  
   # Containers
   virtualisation.oci-containers.containers = {
 

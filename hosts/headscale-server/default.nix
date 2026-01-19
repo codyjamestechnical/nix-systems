@@ -31,6 +31,6 @@
     #ZSH
     programs.zsh.shellAliases = {
         headscale = "docker exec -it headscale headscale";
-  };
+    };
     system.stateVersion = "25.11";
 }
