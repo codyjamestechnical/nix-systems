@@ -8,7 +8,7 @@ let
   defaultConfig = {
     hostname = config.networking.hostName;
     accept-dns = "true";
-    login-server = "headscale.31337.im";
+    login-server = "https://headscale.cjtech.io";
     advertise-exit-node = "false";
     advertise-tags = "tag:servers";
     accept-routes = "true";
