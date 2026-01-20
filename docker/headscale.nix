@@ -87,6 +87,7 @@
         "--network-alias=headscale"
         "--network=headscale-internal"
         "--health-cmd='CMD headscale health'"
+        "--dns=1.1.1.1"
       ];
       cmd = [ "serve" "--config" "/etc/headscale/config.yaml" ];
     };
