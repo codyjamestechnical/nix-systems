@@ -110,6 +110,7 @@
       extraOptions = [
         "--network-alias=headscale"
         "--network=headscale-internal"
+        "--dns=1.1.1.1"
       ];
     };
   };
