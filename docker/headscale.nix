@@ -39,7 +39,7 @@
       ];
     };
 
-    # "headscaletailscale" = {
+    # "headscale-tailscale" = {
     #   image = "tailscale/tailscale:latest";
     #   labels = {
     #     "komodo.skip" = "";
