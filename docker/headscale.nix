@@ -45,7 +45,7 @@
       };
       dependsOn = [
         "headscale"
-        "headplane-caddy"
+        "headscale-caddy"
       ];
       environmentFiles = [
         "/docker-data/headscale/.env"
@@ -56,7 +56,7 @@
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network=container:headplane-caddy"
+        "--network=container:headscale-caddy"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
       ];
