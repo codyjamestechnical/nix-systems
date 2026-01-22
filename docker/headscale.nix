@@ -24,13 +24,12 @@
         "/docker-data/headscale/caddy/data:/data:rw"
         "/docker-data/headscale/caddy/config:/config:rw"
         "/docker-data/headscale/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
-        "/var/lib/acme/cjtech.io/fullchain.pem:/ssl/fullchain.pem:ro"
-        "/var/lib/acme/cjtech.io/key.pem:/ssl/privkey.pem:ro"
+        "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
+        "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
       ports = [
-        "443:443"
-        "80:80"
+        
       ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
@@ -39,29 +38,29 @@
       ];
     };
 
-    # "headscale-tailscale" = {
-    #   image = "tailscale/tailscale:latest";
-    #   labels = {
-    #     "komodo.skip" = "";
-    #   };
-    #   dependsOn = [
-    #     "headscale"
-    #     "headplane-caddy"
-    #   ];
-    #   environmentFiles = [
-    #     "/docker-data/headscale/.env"
-    #   ];
-    #   volumes = [
-    #     "/dev/net/tun:/dev/net/tun"
-    #     "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
-    #   ];
-    #   log-driver = "journald";
-    #   extraOptions = [
-    #     "--network=container:headplane-caddy"
-    #     "--cap-add=NET_ADMIN"
-    #     "--cap-add=NET_RAW"
-    #   ];
-    # };
+    "headscale-tailscale" = {
+      image = "tailscale/tailscale:latest";
+      labels = {
+        "komodo.skip" = "";
+      };
+      dependsOn = [
+        "headscale"
+        "headplane-caddy"
+      ];
+      environmentFiles = [
+        "/docker-data/headscale/.env"
+      ];
+      volumes = [
+        "/dev/net/tun:/dev/net/tun"
+        "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network=container:headplane-caddy"
+        "--cap-add=NET_ADMIN"
+        "--cap-add=NET_RAW"
+      ];
+    };
 
     "headscale" = {
       image = "ghcr.io/juanfont/headscale:v0.27.2-rc.1";
@@ -70,6 +69,8 @@
         "me.tale.headplane.target" = "headscale";
       };
       ports = [
+        "443:443"
+        "80:80"
         "3478:3478/udp"
         "50443:50443"
         "50443:50443/udp"
@@ -84,7 +85,7 @@
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network-alias=headscale"
+        "--network-alias=headscale headscale.cjtech.io"
         "--network=headscale-internal"
         "--health-cmd='CMD headscale health'"
         "--dns=1.1.1.1"
