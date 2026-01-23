@@ -63,7 +63,7 @@
     };
 
     "headscale" = {
-      image = "ghcr.io/juanfont/headscale:v0.27.2-rc.1";
+      image = "ghcr.io/juanfont/headscale:v0.27.1";
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
