@@ -39,7 +39,7 @@
       ExecStop = "docker network rm -f wg-exit-node-internal";
     };
     script = ''
-      docker network inspect headscale-internal || docker network create wg-exit-node-internal --ipv6
+      docker network inspect wg-exit-node-internal || docker network create wg-exit-node-internal --ipv6
     '';
     wantedBy = [ "multi-user.target" ];
   };
