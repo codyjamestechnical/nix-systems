@@ -22,9 +22,9 @@
         "--cap-add=NET_ADMIN"
         "--network-alias=wg-exit-node"
         "--network=wg-exit-node-internal"
-        "--sysctl net.ipv4.ip_forward=1"
-        "--sysctl net.ipv6.conf.all.forwarding=1"
-        "--sysctl net.ipv4.conf.all.src_valid_mark=1"
+        "--sysctl=net.ipv4.ip_forward=1"
+        "--sysctl=net.ipv6.conf.all.forwarding=1"
+        "--sysctl=net.ipv4.conf.all.src_valid_mark=1"
         "--device=/dev/net/tun"
       ];
     };
