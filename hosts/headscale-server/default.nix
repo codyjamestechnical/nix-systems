@@ -5,6 +5,7 @@
         ./networking.nix
         ../../modules/core.nix
         ../../docker/komodo-periphery.nix
+        ../../docker/wg-exit-node.nix
         ../../docker/beszel-agent.nix
         ../../docker/headscale.nix
         ../../modules/acme.nix
