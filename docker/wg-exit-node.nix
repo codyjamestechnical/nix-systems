@@ -11,7 +11,7 @@
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/headscale/.env"
+        "/docker-data/wg-exit-node/.env"
       ];
       volumes = [
         "/docker-data/wg-exit-node/config:/etc/wireguard:rw"
