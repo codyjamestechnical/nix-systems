@@ -10,7 +10,7 @@ in
 {
   # Containers
   virtualisation.oci-containers.containers = {
-    
+
     ### KOMODO PERIPHERY ###
     "${cfg.service_name}" = {
       image = "ghcr.io/moghtech/komodo-periphery:latest";
@@ -33,6 +33,6 @@ in
         "komodo.skip" = "";
       };
     };
-    
+
   };
 }

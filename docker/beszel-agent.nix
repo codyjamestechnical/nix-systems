@@ -1,10 +1,10 @@
-{ config, pkgs, ...}:
+{ config, pkgs, ... }:
 let
   cfg = {
     service_name = "beszel-agent";
     network_name = "beszel-internal";
     base-dir = "/docker-data/.beszel";
-    secrets_dir = "/etc/nixos/secrets";\
+    secrets_dir = "/etc/nixos/secrets";
   };
 in
 {
@@ -18,14 +18,16 @@ in
         "--network=host"
       ];
       volumes = [
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
-          "${cfg.base_dir}:/extra-filesystems/Docker_Data:ro"
+        "/var/run/docker.sock:/var/run/docker.sock:ro"
+        "${cfg.base_dir}:/extra-filesystems/Docker_Data:ro"
       ];
       environmentFiles = [
-          "${cfg.secrets_dir}/beszel-agent.env"
+        "${cfg.secrets_dir}/beszel-agent.env"
       ];
-      labels = {"komodo.skip" = "";};
+      labels = {
+        "komodo.skip" = "";
+      };
     };
-      
+
   };
 }
