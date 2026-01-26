@@ -40,9 +40,9 @@ in
         TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false";
-        TS_LOGIN_SERVER=https://headscale.cjtech.io
+        TS_LOGIN_SERVER = "https://headscale.cjtech.io";
+      };
     };
-  };
     
   ### NETWORK ###
   systemd.services."docker-network-${cfg.network_name}" = {
