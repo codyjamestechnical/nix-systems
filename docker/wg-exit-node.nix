@@ -14,7 +14,7 @@ in
   virtualisation.oci-containers.containers = {
 
     ### WIREGUARD EXIT NODE ###
-    "${service_name}" = {
+    "${cfg.service_name}" = {
       image = "ghcr.io/juhovh/tailguard:latest";
       labels = {
         "komodo.skip" = "";
@@ -44,7 +44,7 @@ in
       };
     };
   };
-    
+
   ### NETWORK ###
   systemd.services."docker-network-${cfg.network_name}" = {
     path = [ pkgs.docker ];
