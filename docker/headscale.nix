@@ -46,8 +46,8 @@ in
         "komodo.skip" = "";
       };
       dependsOn = [
-        "headscale"
-        "${cfg.service_name}caddy"
+        "${cfg.service_name}-server"
+        "${cfg.service_name}-caddy"
       ];
       environmentFiles = [
         "${cfg.base_dir}/.env"
