@@ -21,6 +21,7 @@ in
       };
       environmentFiles = [
         "${cfg.base-dir}.env"
+        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       volumes = [
         "${cfg.base-dir}/config:/etc/wireguard:rw"
@@ -37,7 +38,6 @@ in
         "--device=/dev/net/tun"
       ];
       environment = {
-        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false";
         TS_LOGIN_SERVER = "https://headscale.cjtech.io";

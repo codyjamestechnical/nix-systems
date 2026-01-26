@@ -48,6 +48,7 @@ in
       };
       dependsOn = [
         "${cfg.service_name}-caddy"
+        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       environmentFiles = [
         "${cfg.base-dir}/.env"
@@ -63,7 +64,6 @@ in
         "--cap-add=NET_RAW"
       ];
       environment = {
-        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
         TS_HOSTNAME = "${cfg.service_name}";
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_ACCEPT_DNS = "true";

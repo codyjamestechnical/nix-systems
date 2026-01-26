@@ -51,6 +51,7 @@ in
       ];
       environmentFiles = [
         "${cfg.base_dir}/.env"
+        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
@@ -63,7 +64,6 @@ in
         "--cap-add=NET_RAW"
       ];
       environment = {
-        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
         TS_HOSTNAME = "${cfg.service_name}";
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_ACCEPT_DNS = "true";
