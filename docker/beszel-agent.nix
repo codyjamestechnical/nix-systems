@@ -3,7 +3,7 @@ let
   cfg = {
     service_name = "beszel-agent";
     network_name = "beszel-internal";
-    base-dir = "/docker-data/.beszel";
+    base_dir = "/docker-data/.beszel";
     secrets_dir = "/etc/nixos/secrets";
   };
 in
