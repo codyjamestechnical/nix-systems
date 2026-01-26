@@ -43,6 +43,7 @@ in
         TS_LOGIN_SERVER = "https://headscale.cjtech.io";
       };
     };
+  };
     
   ### NETWORK ###
   systemd.services."docker-network-${cfg.network_name}" = {
