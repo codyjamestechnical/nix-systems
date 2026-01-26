@@ -112,7 +112,7 @@ in
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
-        "headscale"
+        "${cfg.service_name}-server"
       ];
       volumes = [
         "${cfg.base_dir}/data/headscale/lib:/var/lib/headscale:rw"
