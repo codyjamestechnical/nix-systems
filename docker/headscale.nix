@@ -1,58 +1,60 @@
 { pkgs, lib, ... }:
-
-{
-
-  security.acme.certs."cjtech.io" = {
-    domain = "*.cjtech.io";
-    dnsProvider = "cloudflare";
-    environmentFile = "/etc/nixos/secrets/cloudflare-token";
-    dnsPropagationCheck = true;
+let
+  cfg = {
+    service_name = "headscale";
+    network_name = "headscale-internal";
+    base-dir = "/docker-data/headscale";
+    secrets_dir = "/etc/nixos/secrets";
+    tailscale_tags = "tag:core-infra";
   };
-
+in
+{
   # Containers
   virtualisation.oci-containers.containers = {
 
-    "headscale-caddy" = {
+    ### CADDY ###
+    "${cfg.service_name}-caddy" = {
       image = "caddy:latest";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/headscale/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "/docker-data/headscale/caddy/data:/data:rw"
-        "/docker-data/headscale/caddy/config:/config:rw"
-        "/docker-data/headscale/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
+        "${cfg.base_dir}/caddy/data:/data:rw"
+        "${cfg.base_dir}/caddy/config:/config:rw"
+        "${cfg.base_dir}/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
       ports = [
-        
+
       ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
-        "--network=headscale-internal"
+        "--network=${cfg.network_name}"
       ];
     };
 
-    "headscale-tailscale" = {
+    ### TAILSCALE ###
+    "${cfg.service_name}-tailscale" = {
       image = "tailscale/tailscale:latest";
       labels = {
         "komodo.skip" = "";
       };
       dependsOn = [
         "headscale"
-        "headscale-caddy"
+        "${cfg.service_name}caddy"
       ];
       environmentFiles = [
-        "/docker-data/headscale/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
-        "/docker-data/headscale/data/tailscale:/var/lib/tailscale:rw"
+        "${cfg.base_dir}/data/tailscale:/var/lib/tailscale:rw"
       ];
       log-driver = "journald";
       extraOptions = [
@@ -60,9 +62,18 @@
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
       ];
+      environment = {
+        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
+        TS_HOSTNAME = "${cfg.service_name}";
+        TS_STATE_DIR = "/var/lib/tailscale";
+        TS_ACCEPT_DNS = "true";
+        TS_USERSPACE = "false";
+        TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
+      };
     };
 
-    "headscale" = {
+    ### HEADSCALE SERVER ###
+    "${cfg.service_name}-server" = {
       image = "ghcr.io/juanfont/headscale:v0.27.2-rc.1";
       labels = {
         "komodo.skip" = "";
@@ -76,56 +87,61 @@
         "50443:50443/udp"
       ];
       environmentFiles = [
-        "/docker-data/headscale/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "/docker-data/headscale/configs/headscale:/etc/headscale:rw"
-        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale:rw"
-        "/docker-data/headscale/data/headscale/run:/var/run/headscale:rw"
+        "${cfg.base_dir}/configs/headscale:/etc/headscale:rw"
+        "${cfg.base_dir}/data/headscale/lib:/var/lib/headscale:rw"
+        "${cfg.base_dir}/data/headscale/run:/var/run/headscale:rw"
       ];
       log-driver = "journald";
       extraOptions = [
         "--network-alias=headscale headscale.cjtech.io"
-        "--network=headscale-internal"
+        "--network=${cfg.network_name}"
         "--health-cmd='CMD headscale health'"
         "--dns=1.1.1.1"
       ];
-      cmd = [ "serve" "--config" "/etc/headscale/config.yaml" ];
+      cmd = [
+        "serve"
+        "--config"
+        "/etc/headscale/config.yaml"
+      ];
     };
 
-    "headplane" = {
+    ### HEADPLANE ###
+    "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
         "headscale"
       ];
       volumes = [
-        "/docker-data/headscale/data/headscale/lib:/var/lib/headscale:rw"
-        "/docker-data/headscale/configs/headscale:/etc/headscale:rw"
-        "/docker-data/headscale/configs/headplane:/etc/headplane:rw"
+        "${cfg.base_dir}/data/headscale/lib:/var/lib/headscale:rw"
+        "${cfg.base_dir}/configs/headscale:/etc/headscale:rw"
+        "${cfg.base_dir}/configs/headplane:/etc/headplane:rw"
         "/var/run/docker.sock:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
-        "/docker-data/headscale/.env"
+        "${cfg.base_dir}/.env"
       ];
       log-driver = "journald";
       extraOptions = [
         "--network-alias=headscale"
-        "--network=headscale-internal"
+        "--network=${cfg.network_name}"
         "--dns=1.1.1.1"
       ];
     };
   };
 
-  # Networks
-  systemd.services."docker-network-headscale-internal" = {
+  ### NETWORK ###
+  systemd.services."docker-network-${cfg.network_name}" = {
     path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "docker network rm -f headscale-internal";
+      ExecStop = "docker network rm -f ${cfg.network_name}";
     };
     script = ''
-      docker network inspect headscale-internal || docker network create headscale-internal --ipv6
+      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
     '';
 
     wantedBy = [ "multi-user.target" ];

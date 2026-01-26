@@ -4,7 +4,7 @@
         ./hardware-configuration.nix
         ./networking.nix
         ../../modules/core.nix
-        ../../docker/komodo-periphery.nix
+        ../../docker/komodo-core.nix
         ../../docker/wg-exit-node.nix
         ../../docker/beszel-agent.nix
         ../../docker/headscale.nix

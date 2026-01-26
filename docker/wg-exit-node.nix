@@ -1,46 +1,61 @@
 { pkgs, lib, ... }:
-
+let
+  cfg = {
+    service_name = "wg-exit-node";
+    network_name = "wg-exit-node-internal";
+    base-dir = "/docker-data/wg-exit-node";
+    secrets_dir = "/etc/nixos/secrets";
+    tailscale_tags = "tag:core-infra";
+  };
+in
 {
 
   # Containers
   virtualisation.oci-containers.containers = {
 
-    "wg-exit-node" = {
+    ### WIREGUARD EXIT NODE ###
+    "${service_name}" = {
       image = "ghcr.io/juhovh/tailguard:latest";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/wg-exit-node/.env"
+        "${cfg.base-dir}.env"
       ];
       volumes = [
-        "/docker-data/wg-exit-node/config:/etc/wireguard:rw"
-        "/docker-data/wg-exit-node/state:/tailguard/state:rw"
+        "${cfg.base-dir}/config:/etc/wireguard:rw"
+        "${cfg.base-dir}/state:/tailguard/state:rw"
       ];
       log-driver = "journald";
       extraOptions = [
         "--cap-add=NET_ADMIN"
         "--network-alias=wg-exit-node"
-        "--network=wg-exit-node-internal"
+        "--network=${cfg.network_name}"
         "--sysctl=net.ipv4.ip_forward=1"
         "--sysctl=net.ipv6.conf.all.forwarding=1"
         "--sysctl=net.ipv4.conf.all.src_valid_mark=1"
         "--device=/dev/net/tun"
       ];
+      environment = {
+        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
+        TS_STATE_DIR = "/var/lib/tailscale";
+        TS_USERSPACE = "false";
+        TS_LOGIN_SERVER=https://headscale.cjtech.io
     };
   };
     
-  # Networks
-  systemd.services."docker-network-wg-exit-node-internal" = {
+  ### NETWORK ###
+  systemd.services."docker-network-${cfg.network_name}" = {
     path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "docker network rm -f wg-exit-node-internal";
+      ExecStop = "docker network rm -f ${cfg.network_name}";
     };
     script = ''
-      docker network inspect wg-exit-node-internal || docker network create wg-exit-node-internal --ipv6
+      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
     '';
+
     wantedBy = [ "multi-user.target" ];
   };
 

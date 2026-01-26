@@ -1,22 +1,30 @@
-# Auto-generated using compose2nix v0.3.1.
 { pkgs, lib, ... }:
-
+let
+  cfg = {
+    service_name = "komodo";
+    network_name = "komodo-internal";
+    base-dir = "/docker-data/komodo";
+    secrets_dir = "/etc/nixos/secrets";
+    tailscale_tags = "tag:core-infra";
+  };
+in
 {
   # Containers
   virtualisation.oci-containers.containers = {
 
-    "komodo-caddy" = {
+    ### CADDY ###
+    "${cfg.service_name}-caddy" = {
       image = "caddy:latest";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/Komodo/.env"
+        "${cfg.base-dir}/.env"
       ];
       volumes = [
-        "/docker-data/Komodo/caddy:/data:rw"
-        "/docker-data/Komodo/caddy/config:/config:rw"
-        "/docker-data/Komodo/caddyfile:/etc/caddy/Caddyfile:ro"
+        "${cfg.base-dir}/caddy:/data:rw"
+        "${cfg.base-dir}/caddy/config:/config:rw"
+        "${cfg.base-dir}/caddyfile:/etc/caddy/Caddyfile:ro"
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
@@ -28,62 +36,96 @@
       extraOptions = [
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
-        "--network=komodo_komodo-internal"
+        "--network=${cfg.network_name}"
       ];
     };
 
-    "komodo-periphery" = {
+    ### TAILSCALE ###
+    "${cfg.service_name}-tailscale" = {
+      image = "tailscale/tailscale:latest";
+      labels = {
+        "komodo.skip" = "";
+      };
+      dependsOn = [
+        "${cfg.service_name}-caddy"
+      ];
+      environmentFiles = [
+        "${cfg.base-dir}/.env"
+      ];
+      volumes = [
+        "/dev/net/tun:/dev/net/tun"
+        "${cfg.base-dir}/tailscale:/var/lib/tailscale:rw"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network=container:${cfg.service_name}-caddy"
+        "--cap-add=NET_ADMIN"
+        "--cap-add=NET_RAW"
+      ];
+      environment = {
+        TS_AUTHKEY = (builtins.readFile "${cfg.secrets_dir}/tailscale_key");
+        TS_HOSTNAME = "${cfg.service_name}";
+        TS_STATE_DIR = "/var/lib/tailscale";
+        TS_ACCEPT_DNS = "true";
+        TS_USERSPACE = "false";
+        TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
+      };
+    };
+
+    ### KOMODO PERIPHERY ###
+    "${cfg.service_name}-periphery" = {
       image = "ghcr.io/moghtech/komodo-periphery:latest";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/Komodo/.env"
+        "${cfg.base-dir}/.env"
       ];
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
-
-        "/etc/komodo/ssl:/etc/komodo/ssl"
-        "/etc/komodo/repos:/etc/komodo/repos"
-        "/etc/komodo/stacks:/etc/komodo/stacks"
-        "/etc/nixos/secrets/komodo-passkey:/etc/nixos/secrets/passkey"
+        # "/etc/komodo/ssl:/etc/komodo/ssl"
+        # "/etc/komodo/repos:/etc/komodo/repos"
+        # "/etc/komodo/stacks:/etc/komodo/stacks"
+        "${cfg.secrets-dir}/komodo-passkey:/etc/nixos/secrets/passkey:ro"
       ];
       log-driver = "local";
       extraOptions = [
         "--network-alias=periphery"
-        "--network=komodo_komodo-internal"
+        "--network=${cfg.network_name}"
       ];
     };
 
-    "komodo-core" = {
+    ### KOMODO CORE ###
+    "${cfg.service_name}-core" = {
       image = "ghcr.io/moghtech/komodo-core:latest";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/Komodo/.env"
+        "${cfg.base-dir}/.env"
       ];
       dependsOn = [
-        "komodo-mongo"
+        "${cfg.service_name}-mongo"
       ];
       log-driver = "local";
       extraOptions = [
         "--network-alias=komodo-core"
-        "--network=komodo_komodo-internal"
+        "--network=${cfg.network_name}"
       ];
     };
 
-    "komodo-mongo" = {
+    ### MONGODB ###
+    "${cfg.service_name}-mongo" = {
       image = "mongo";
       labels = {
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/Komodo/.env"
+        "${cfg.base-dir}/.env"
       ];
       volumes = [
-        "/docker-data/Komodo/mongodb/config:/data/configdb:rw"
-        "/docker-data/Komodo/mongodb/data:/data/db:rw"
+        "${cfg.base-dir}/mongodb/config:/data/configdb:rw"
+        "${cfg.base-dir}/mongodb/data:/data/db:rw"
       ];
       cmd = [
         "--quiet"
@@ -93,21 +135,21 @@
       log-driver = "local";
       extraOptions = [
         "--network-alias=mongo"
-        "--network=komodo_komodo-internal"
+        "--network=${cfg.network_name}"
       ];
     };
   };
 
-  # Networks
-  systemd.services."docker-network-komodo_komodo-internal" = {
+  ### NETWORK ###
+  systemd.services."docker-network-${cfg.network_name}" = {
     path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "docker network rm -f komodo_komodo-internal";
+      ExecStop = "docker network rm -f ${cfg.network_name}";
     };
     script = ''
-      docker network inspect komodo_komodo-internal || docker network create komodo_komodo-internal --ipv6
+      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
     '';
 
     wantedBy = [ "multi-user.target" ];
