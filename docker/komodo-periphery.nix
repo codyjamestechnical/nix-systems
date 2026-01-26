@@ -3,7 +3,7 @@ let
   cfg = {
     service_name = "komodo-periphery";
     network_name = "komodo-periphery-internal";
-    base-dir = "/docker-data/komodo-periphery";
+    base_dir = "/docker-data/komodo-periphery";
     secrets_dir = "/etc/nixos/secrets";
   };
 in

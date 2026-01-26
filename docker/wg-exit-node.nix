@@ -3,7 +3,7 @@ let
   cfg = {
     service_name = "wg-exit-node";
     network_name = "wg-exit-node-internal";
-    base-dir = "/docker-data/wg-exit-node";
+    base_dir = "/docker-data/wg-exit-node";
     secrets_dir = "/etc/nixos/secrets";
     tailscale_tags = "tag:core-infra";
   };

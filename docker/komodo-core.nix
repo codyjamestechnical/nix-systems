@@ -3,7 +3,7 @@ let
   cfg = {
     service_name = "komodo";
     network_name = "komodo-internal";
-    base-dir = "/docker-data/komodo";
+    base_dir = "/docker-data/komodo";
     secrets_dir = "/etc/nixos/secrets";
     tailscale_tags = "tag:core-infra";
   };

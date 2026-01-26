@@ -3,7 +3,7 @@ let
   cfg = {
     service_name = "headscale";
     network_name = "headscale-internal";
-    base-dir = "/docker-data/headscale";
+    base_dir = "/docker-data/headscale";
     secrets_dir = "/etc/nixos/secrets";
     tailscale_tags = "tag:core-infra";
   };
