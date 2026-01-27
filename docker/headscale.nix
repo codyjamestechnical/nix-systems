@@ -129,7 +129,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network-alias=headscale"
+        "--network-alias=headplane"
         "--network=${cfg.network_name}"
         "--dns=1.1.1.1"
       ];
