@@ -35,7 +35,7 @@ in
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
         "--network=${cfg.network_name}"
-        
+
       ];
     };
 
@@ -65,7 +65,7 @@ in
       environment = {
         TS_HOSTNAME = "${cfg.service_name}";
         TS_STATE_DIR = "/var/lib/tailscale";
-        TS_ACCEPT_DNS = "true";
+        TS_ACCEPT_DNS = "false";
         TS_USERSPACE = "false";
         TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
       };
