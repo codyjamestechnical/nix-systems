@@ -88,7 +88,7 @@ in
         # "/etc/komodo/ssl:/etc/komodo/ssl"
         # "/etc/komodo/repos:/etc/komodo/repos"
         # "/etc/komodo/stacks:/etc/komodo/stacks"
-        "${cfg.secrets-dir}/komodo-passkey:/etc/nixos/secrets/passkey:ro"
+        "${cfg.secrets_dir}/komodo-passkey:/etc/nixos/secrets/passkey:ro"
       ];
       log-driver = "local";
       extraOptions = [
