@@ -61,7 +61,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network=container:headscale-caddy"
+        "--network=container:${cfg.service_name}-caddy"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
       ];
@@ -129,7 +129,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network-alias=headplane"
+        "--network-alias=headscale-headplane"
         "--network=${cfg.network_name}"
         "--dns=1.1.1.1"
       ];

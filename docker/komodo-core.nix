@@ -35,6 +35,7 @@ in
         "--cap-add=NET_ADMIN"
         "--network-alias=caddy"
         "--network=${cfg.network_name}"
+        
       ];
     };
 
