@@ -11,6 +11,7 @@ in
 {
 
   # Containers
+  virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers = {
 
     ### WIREGUARD EXIT NODE ###
