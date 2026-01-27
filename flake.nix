@@ -48,7 +48,7 @@
           };
         };
         modules = [
-          ./hosts/headscale-server
+          ./hosts/core-infra
           ./modules/tailscale.nix
           ./modules/docker.nix
 
