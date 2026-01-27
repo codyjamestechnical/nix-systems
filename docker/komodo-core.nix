@@ -30,10 +30,6 @@ in
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
-      ports = [
-        "80:80/tcp"
-        "443:443/tcp"
-      ];
       log-driver = "journald";
       extraOptions = [
         "--cap-add=NET_ADMIN"
