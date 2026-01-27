@@ -114,7 +114,6 @@ in
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
-        "/docker-data/.env"
         "${cfg.service_name}-server"
       ];
       volumes = [

@@ -21,7 +21,7 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}.env"
+        "${cfg.base-dir}/.env"
       ];
       volumes = [
         "${cfg.base-dir}/config:/etc/wireguard:rw"
