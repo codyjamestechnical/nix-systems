@@ -19,7 +19,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/.env.base"
+        "/docker-data/base.env"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -51,7 +51,7 @@ in
         "${cfg.service_name}-caddy"
       ];
       environmentFiles = [
-        "/docker-data/.env.base"
+        "/docker-data/base.env"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -80,7 +80,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/.env.base"
+        "/docker-data/base.env"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -104,7 +104,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/.env.base"
+        "/docker-data/base.env"
         "${cfg.base-dir}/.env"
       ];
       dependsOn = [
@@ -124,7 +124,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/.env.base"
+        "/docker-data/base.env"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
