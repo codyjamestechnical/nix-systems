@@ -40,7 +40,7 @@
         ];
       };
 
-      headscale-server = nixpkgs.lib.nixosSystem {
+      core-infra = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
           tailscale-config = {
