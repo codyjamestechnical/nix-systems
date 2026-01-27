@@ -21,11 +21,11 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "${cfg.base-dir}/config:/etc/wireguard:rw"
-        "${cfg.base-dir}/state:/tailguard/state:rw"
+        "${cfg.base_dir}/config:/etc/wireguard:rw"
+        "${cfg.base_dir}/state:/tailguard/state:rw"
       ];
       log-driver = "journald";
       extraOptions = [
