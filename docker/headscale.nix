@@ -19,6 +19,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
@@ -50,8 +51,8 @@ in
         "${cfg.service_name}-caddy"
       ];
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base_dir}/.env"
-        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
@@ -87,6 +88,7 @@ in
         "50443:50443/udp"
       ];
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
@@ -112,6 +114,7 @@ in
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
+        "/docker-data/.env.base"
         "${cfg.service_name}-server"
       ];
       volumes = [

@@ -20,8 +20,8 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}.env"
-        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       volumes = [
         "${cfg.base-dir}/config:/etc/wireguard:rw"

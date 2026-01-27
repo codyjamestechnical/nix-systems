@@ -19,6 +19,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -48,9 +49,9 @@ in
       };
       dependsOn = [
         "${cfg.service_name}-caddy"
-        "${cfg.secrets_dir}/.env.tsauthkey"
       ];
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -79,6 +80,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
@@ -102,6 +104,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}/.env"
       ];
       dependsOn = [
@@ -121,6 +124,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
+        "/docker-data/.env.base"
         "${cfg.base-dir}/.env"
       ];
       volumes = [
