@@ -20,12 +20,12 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "${cfg.base-dir}/caddy:/data:rw"
-        "${cfg.base-dir}/caddy/config:/config:rw"
-        "${cfg.base-dir}/caddyfile:/etc/caddy/Caddyfile:ro"
+        "${cfg.base_dir}/caddy:/data:rw"
+        "${cfg.base_dir}/caddy/config:/config:rw"
+        "${cfg.base_dir}/caddyfile:/etc/caddy/Caddyfile:ro"
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
@@ -52,11 +52,11 @@ in
       ];
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
-        "${cfg.base-dir}/tailscale:/var/lib/tailscale:rw"
+        "${cfg.base_dir}/tailscale:/var/lib/tailscale:rw"
       ];
       log-driver = "journald";
       extraOptions = [
@@ -81,7 +81,7 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
@@ -105,7 +105,7 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       dependsOn = [
         "${cfg.service_name}-mongo"
@@ -125,11 +125,11 @@ in
       };
       environmentFiles = [
         "/docker-data/.env"
-        "${cfg.base-dir}/.env"
+        "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "${cfg.base-dir}/mongodb/config:/data/configdb:rw"
-        "${cfg.base-dir}/mongodb/data:/data/db:rw"
+        "${cfg.base_dir}/mongodb/config:/data/configdb:rw"
+        "${cfg.base_dir}/mongodb/data:/data/db:rw"
       ];
       cmd = [
         "--quiet"
