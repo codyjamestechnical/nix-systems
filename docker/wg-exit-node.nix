@@ -20,7 +20,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.base-dir}.env"
       ];
       volumes = [

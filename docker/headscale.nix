@@ -19,7 +19,7 @@ in
         "komodo.skip" = "";
       };
       environmentFiles = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
@@ -51,7 +51,7 @@ in
         "${cfg.service_name}-caddy"
       ];
       environmentFiles = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
@@ -88,7 +88,7 @@ in
         "50443:50443/udp"
       ];
       environmentFiles = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
@@ -114,7 +114,7 @@ in
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.service_name}-server"
       ];
       volumes = [
@@ -124,7 +124,7 @@ in
         "/var/run/docker.sock:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
-        "/docker-data/base.env"
+        "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
       log-driver = "journald";
