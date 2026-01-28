@@ -113,7 +113,7 @@ in
 
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
-      image = "ghcr.io/tale/headplane:0.6.2-beta.4";
+      image = "ghcr.io/tale/headplane:0.6.2-beta.3";
       dependsOn = [
         "${cfg.service_name}-server"
       ];
