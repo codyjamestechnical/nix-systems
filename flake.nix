@@ -80,6 +80,3 @@
     };
   };
 }
-sudo sh -c 'cat << EOF >> authorized_keys ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGCkSW5nvvsulofc9hohfwCc6nznIS2ZjJ43ogyD09Dt core-infra@cjtech.io EOF'
-
-87 85
