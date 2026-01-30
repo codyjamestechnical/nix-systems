@@ -100,6 +100,12 @@ in
       image = "ghcr.io/moghtech/komodo-core:latest";
       labels = {
         "komodo.skip" = "";
+        "homepage.group" = "Infrastructure & Monitoring";
+        "homepage.name" = "Komodo";
+        "homepage.icon" = "sh-komodo.svg";
+        "homepage.href" = "https://komodo.31337.im";
+        "homepage.description" = "ocker management & monitoring";
+        "homepage.siteMonitor" = "https://komodo.31337.im";
       };
       environmentFiles = [
         "/docker-data/.env"

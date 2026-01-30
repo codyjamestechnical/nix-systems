@@ -3,6 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ssh-keys = {
       url = "https://github.com/codyjamestechnical.keys";
       flake = false;
@@ -49,6 +55,7 @@
         };
         modules = [
           ./hosts/core-infra
+          sops-nix.nixosModules.sops
           ./modules/tailscale.nix
           ./modules/docker.nix
 
@@ -73,3 +80,6 @@
     };
   };
 }
+sudo sh -c 'cat << EOF >> authorized_keys ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGCkSW5nvvsulofc9hohfwCc6nznIS2ZjJ43ogyD09Dt core-infra@cjtech.io EOF'
+
+87 85
