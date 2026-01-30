@@ -3,11 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     ssh-keys = {
       url = "https://github.com/codyjamestechnical.keys";
@@ -55,7 +50,6 @@
         };
         modules = [
           ./hosts/core-infra
-          sops-nix.nixosModules.sops
           ./modules/tailscale.nix
           ./modules/docker.nix
 
