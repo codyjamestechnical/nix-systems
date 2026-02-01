@@ -134,7 +134,7 @@ in
         "--dns=1.1.1.1"
       ];
     };
-  };
+
 
   ### TAILSCALE EXPORTER FOR PROMETHEUS ###
     "${cfg.service_name}-tailscale-exporter" = {
