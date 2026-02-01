@@ -146,7 +146,7 @@ in
         
       ];
       environment = {
-        HEADSCALE_ADDRESS = "headscale.31337.im:50443";
+        HEADSCALE_ADDRESS = "headscale.cjtech.io:50443";
         HEADSCALE_INSECURE = "true";
       };
       environmentFiles = [
