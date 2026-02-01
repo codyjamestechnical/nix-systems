@@ -99,7 +99,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network-alias=headscale headscale.cjtech.io"
+        "--network-alias=headscale.cjtech.io"
         "--network=${cfg.network_name}"
         "--health-cmd='CMD headscale health'"
         "--dns=1.1.1.1"
@@ -146,7 +146,7 @@ in
         
       ];
       environment = {
-        HEADSCALE_ADDRESS = "headscale:50443";
+        HEADSCALE_ADDRESS = "headscale.cjtech.io:50443";
         HEADSCALE_INSECURE = "true";
         LISTEN_ADDRESS = "0.0.0.0:9250";
       };
