@@ -156,7 +156,6 @@ in
       log-driver = "journald";
       extraOptions = [
         "--network=container:${cfg.service_name}-caddy"
-        "--network=${cfg.network_name}"
       ];
     };
   };
