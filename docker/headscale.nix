@@ -136,6 +136,31 @@ in
     };
   };
 
+  ### TAILSCALE EXPORTER FOR PROMETHEUS ###
+    "${cfg.service_name}-tailscale-exporter" = {
+      image = "adinhodovic/tailscale-exporter:latest";
+      dependsOn = [
+        "${cfg.service_name}-server"
+      ];
+      volumes = [
+        
+      ];
+      environment = {
+        HEADSCALE_ADDRESS = "headscale.31337.im:50443";
+        HEADSCALE_INSECURE = "true";
+      };
+      environmentFiles = [
+        "/docker-data/.env"
+        "${cfg.base_dir}/.env"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network=container:${cfg.service_name}-caddy"
+        "--network=${cfg.network_name}"
+      ];
+    };
+  };
+
   ### NETWORK ###
   systemd.services."docker-network-${cfg.network_name}" = {
     path = [ pkgs.docker ];

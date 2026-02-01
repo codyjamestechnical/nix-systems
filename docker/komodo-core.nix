@@ -104,7 +104,7 @@ in
         "homepage.name" = "Komodo";
         "homepage.icon" = "sh-komodo.svg";
         "homepage.href" = "https://komodo.31337.im";
-        "homepage.description" = "ocker management & monitoring";
+        "homepage.description" = "Docker management & monitoring";
         "homepage.siteMonitor" = "https://komodo.31337.im";
       };
       environmentFiles = [
