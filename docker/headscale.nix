@@ -146,7 +146,7 @@ in
         
       ];
       environment = {
-        HEADSCALE_ADDRESS = "headscale.cjtech.io:50443";
+        HEADSCALE_ADDRESS = "https://headscale.cjtech.io:50443";
         HEADSCALE_INSECURE = "true";
         LISTEN_ADDRESS = "0.0.0.0:9250";
       };
