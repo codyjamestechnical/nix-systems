@@ -29,8 +29,8 @@ in
         "8080:8080"
       ];
       environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
+        # "/docker-data/.env"
+        # "${cfg.base_dir}/.env"
       ];
       volumes = [
         "${cfg.base_dir}/config:/opt/graphite/conf:rw"
