@@ -7,7 +7,6 @@
         ../../docker/komodo-core.nix
         ../../docker/wg-exit-node.nix
         ../../docker/beszel-agent.nix
-        ../../docker/graphite.nix
         ../../docker/headscale.nix
         ../../modules/acme.nix
         ../../modules/docker.nix
