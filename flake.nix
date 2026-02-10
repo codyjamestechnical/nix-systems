@@ -52,6 +52,7 @@
           ./hosts/core-infra
           ./modules/tailscale.nix
           ./modules/docker.nix
+          ./modules/prometheus-exporter.nix
 
         ];
       };
