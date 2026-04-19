@@ -133,6 +133,15 @@ in
         "--network=${cfg.network_name}"
         "--dns=1.1.1.1"
       ];
+      labels = {
+        "komodo.skip" = "";
+        "homepage.group" = "Infrastructure & Monitoring";
+        "homepage.name" = "Headplane";
+        "homepage.icon" = "https://headplane.net/logo.svg";
+        "homepage.href" = "https://headplane.31337.im";
+        "homepage.description" = "Headscale dashboard and management UI";
+        "homepage.siteMonitor" = "https://headplane.31337.im";
+      };
     };
 
 
