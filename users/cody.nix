@@ -8,6 +8,7 @@
 
   users = {
     defaultUserShell = pkgs.zsh;
+    # $ISBN&PN&FIRSTLETTER$
     users.cody = {
       isNormalUser = true;
       description = "Cody";
@@ -33,6 +34,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIEB06+mXFpYiRLegmXjiZzPuF1rTs+ySVCn5mJ0hpZ cody@cjtech.io"
       ];
       packages = with pkgs; [
+        htop
       ];
     };
   };
