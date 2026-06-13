@@ -27,7 +27,7 @@
       wg-exit-node-obscura-atlanta = {
         enable = true;
         tailscale_hostname = "obscura-atlanta";
-      }
+      };
 
     };
     boot.tmp.cleanOnBoot = true;
