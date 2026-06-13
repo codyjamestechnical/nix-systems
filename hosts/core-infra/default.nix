@@ -10,9 +10,22 @@
         ../../docker/headscale.nix
         ../../modules/acme.nix
         ../../modules/docker.nix
+        ../../docker/wg-exit-nodes.nix
     ];
 
 
+    services.wg-exit-nodes = {
+      wg-exit-node-proton-toronto = {
+        enable = true;
+        tailscale_hostname = "proton-toronto";
+      };
+
+      wg-exit-node-proton-amsterdam = {
+        enable = true;
+        tailscale_hostname = "proton-amsterdam";
+      };
+
+    };
     boot.tmp.cleanOnBoot = true;
     zramSwap.enable = true;
 
