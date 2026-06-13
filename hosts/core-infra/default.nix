@@ -5,7 +5,6 @@
         ./networking.nix
         ../../modules/core.nix
         ../../docker/komodo-core.nix
-        ../../docker/wg-exit-node.nix
         ../../docker/beszel-agent.nix
         ../../docker/headscale.nix
         ../../modules/acme.nix
@@ -24,6 +23,11 @@
         enable = true;
         tailscale_hostname = "proton-amsterdam";
       };
+
+      wg-exit-node-obscura-atlanta = {
+        enable = true;
+        tailscale_hostname = "obscura-atlanta";
+      }
 
     };
     boot.tmp.cleanOnBoot = true;
