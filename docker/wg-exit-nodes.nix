@@ -86,7 +86,7 @@ in
       environment = {
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_USERSPACE = "false";
-        TS_HOSTNAME = "${inst.tailscale_hostname}"
+        TS_HOSTNAME = "${inst.tailscale_hostname}";
         TS_LOGIN_SERVER = "https://headscale.cjtech.io";
         # Note: If you want to use tailscale_tags, you can reference it here.
         # But I use headscale which only allows specifying tags when creating the auth key.
