@@ -74,6 +74,9 @@
     enable = true;
     interface = "0.0.0.0";
     user = "cody";
+    parameters = ''
+          --webservice-allowed-hostnames=*
+    '';
   };
 
   # OpenSSH daemon
