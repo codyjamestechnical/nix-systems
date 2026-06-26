@@ -64,20 +64,10 @@
     zip
     unzip
     cifs-utils
-    duplicati
 
   ];
 
   # Enabled Services
-  #
-  services.duplicati = {
-    enable = true;
-    interface = "0.0.0.0";
-    user = "cody";
-    parameters = ''
-          --webservice-allowed-hostnames=*
-    '';
-  };
 
   # OpenSSH daemon
   services.openssh.enable = true;

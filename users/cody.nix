@@ -19,7 +19,6 @@
         "docker"
         "libvirtd"
         "acme"
-        "root"
       ];
       shell = pkgs.zsh;
       # openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
