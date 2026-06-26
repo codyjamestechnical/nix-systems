@@ -2,11 +2,10 @@
 let
   cfg = {
     service_name = "arkeep-agent";
-    network_name = "arkeep-internal";
     secrets_dir = "/etc/nixos/secrets";
     volumes = [
       "/root/.arkeep:/var/lib/arkeep-agent"
-      "/docker-data:/backups/docker-data:rw"
+      "/docker-data:/hostfs/docker-data:rw"
     ];
   };
 in
