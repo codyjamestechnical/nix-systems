@@ -69,6 +69,12 @@
   ];
 
   # Enabled Services
+  #
+  services.duplicati = {
+    enable = true;
+    interface = "0.0.0.0";
+    user = "cody";
+  };
 
   # OpenSSH daemon
   services.openssh.enable = true;
