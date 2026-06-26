@@ -64,7 +64,8 @@
     zip
     unzip
     cifs-utils
-    
+    duplicati
+
   ];
 
   # Enabled Services
@@ -91,7 +92,7 @@
       compose = "sudo docker compose up -d";
       decompose = "sudo docker compose down";
       testmyecho = "echo '.#${config.networking.hostName}'";
-     
+
     };
   };
 
