@@ -10,6 +10,7 @@
         ../../modules/acme.nix
         ../../modules/docker.nix
         ../../docker/wg-exit-nodes.nix
+        ../../docker/arkeep-agent.nix
     ];
 
 
