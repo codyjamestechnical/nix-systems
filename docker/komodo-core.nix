@@ -73,7 +73,8 @@ in
 
     ### KOMODO PERIPHERY ###
     "${cfg.service_name}-periphery" = {
-      image = "ghcr.io/moghtech/komodo-periphery:latest";
+      image = "ghcr.io/moghtech/komodo-periphery:2";
+      init = true;
       labels = {
         "komodo.skip" = "";
       };
@@ -83,6 +84,7 @@ in
       ];
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
+        "${cfg.secrets_dir}/komodo-periphery/keys:/config/keys"
         # "/etc/komodo/ssl:/etc/komodo/ssl"
         # "/etc/komodo/repos:/etc/komodo/repos"
         # "/etc/komodo/stacks:/etc/komodo/stacks"
@@ -97,7 +99,8 @@ in
 
     ### KOMODO CORE ###
     "${cfg.service_name}-core" = {
-      image = "ghcr.io/moghtech/komodo-core:latest";
+      image = "ghcr.io/moghtech/komodo-core:2";
+      init = true;
       labels = {
         "komodo.skip" = "";
         "homepage.group" = "Infrastructure & Monitoring";
@@ -113,6 +116,9 @@ in
       ];
       dependsOn = [
         "${cfg.service_name}-mongo"
+      ];
+      volumes = [
+        "${cfg.base_dir}/keys:/config/keys"
       ];
       log-driver = "local";
       extraOptions = [
