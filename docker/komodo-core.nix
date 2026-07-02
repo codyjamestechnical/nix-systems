@@ -14,30 +14,30 @@ in
   virtualisation.oci-containers.containers = {
 
     ### CADDY ###
-    "${cfg.service_name}-caddy" = {
-      image = "caddy:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
-      environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
-      ];
-      volumes = [
-        "${cfg.base_dir}/caddy:/data:rw"
-        "${cfg.base_dir}/caddy/config:/config:rw"
-        "${cfg.base_dir}/caddyfile:/etc/caddy/Caddyfile:ro"
-        "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
-        "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
-      ];
-      log-driver = "journald";
-      extraOptions = [
-        "--cap-add=NET_ADMIN"
-        "--network-alias=caddy"
-        "--network=${cfg.network_name}"
+    # "${cfg.service_name}-caddy" = {
+    #   image = "caddy:latest";
+    #   labels = {
+    #     "komodo.skip" = "";
+    #   };
+    #   environmentFiles = [
+    #     "/docker-data/.env"
+    #     "${cfg.base_dir}/.env"
+    #   ];
+    #   volumes = [
+    #     "${cfg.base_dir}/caddy:/data:rw"
+    #     "${cfg.base_dir}/caddy/config:/config:rw"
+    #     "${cfg.base_dir}/caddyfile:/etc/caddy/Caddyfile:ro"
+    #     "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
+    #     "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
+    #   ];
+    #   log-driver = "journald";
+    #   extraOptions = [
+    #     "--cap-add=NET_ADMIN"
+    #     "--network-alias=caddy"
+    #     "--network=${cfg.network_name}"
 
-      ];
-    };
+    #   ];
+    # };
 
     ### TAILSCALE ###
     "${cfg.service_name}-tailscale" = {
@@ -58,7 +58,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network=container:${cfg.service_name}-caddy"
+        "--network=container:${cfg.service_name}-core"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
       ];
@@ -88,6 +88,8 @@ in
         # "/etc/komodo/repos:/etc/komodo/repos"
         # "/etc/komodo/stacks:/etc/komodo/stacks"
         "${cfg.secrets_dir}/komodo-passkey:/var/secrets/passkey:ro"
+        "/var/lib/acme/31337.im/fullchain.pem:/config/ssl/cert.pem:ro"
+        "/var/lib/acme/31337.im/key.pem:/config/ssl/key.pem:ro"
       ];
       log-driver = "local";
       extraOptions = [
