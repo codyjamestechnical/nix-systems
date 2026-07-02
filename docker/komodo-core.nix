@@ -74,7 +74,6 @@ in
     ### KOMODO PERIPHERY ###
     "${cfg.service_name}-periphery" = {
       image = "ghcr.io/moghtech/komodo-periphery:2";
-      init = true;
       labels = {
         "komodo.skip" = "";
       };
@@ -100,7 +99,6 @@ in
     ### KOMODO CORE ###
     "${cfg.service_name}-core" = {
       image = "ghcr.io/moghtech/komodo-core:2";
-      init = true;
       labels = {
         "komodo.skip" = "";
         "homepage.group" = "Infrastructure & Monitoring";
