@@ -46,7 +46,7 @@ in
         "komodo.skip" = "";
       };
       dependsOn = [
-        "${cfg.service_name}-caddy"
+        "${cfg.service_name}-core"
       ];
       environmentFiles = [
         "/docker-data/.env"
