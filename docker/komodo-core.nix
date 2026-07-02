@@ -88,8 +88,7 @@ in
         # "/etc/komodo/repos:/etc/komodo/repos"
         # "/etc/komodo/stacks:/etc/komodo/stacks"
         "${cfg.secrets_dir}/komodo-passkey:/var/secrets/passkey:ro"
-        "/var/lib/acme/31337.im/fullchain.pem:/config/ssl/cert.pem:ro"
-        "/var/lib/acme/31337.im/key.pem:/config/ssl/key.pem:ro"
+
       ];
       log-driver = "local";
       extraOptions = [
@@ -119,6 +118,8 @@ in
       ];
       volumes = [
         "${cfg.base_dir}/keys:/config/keys"
+        "/var/lib/acme/31337.im/fullchain.pem:/config/ssl/cert.pem:ro"
+        "/var/lib/acme/31337.im/key.pem:/config/ssl/key.pem:ro"
       ];
       log-driver = "local";
       extraOptions = [
