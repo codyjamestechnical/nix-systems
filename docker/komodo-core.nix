@@ -115,6 +115,7 @@ in
         "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
+      network_mode = "host";
       dependsOn = [
         "${cfg.service_name}-mongo"
       ];
