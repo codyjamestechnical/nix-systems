@@ -42,7 +42,6 @@ in
     ### TAILSCALE ###
     "${cfg.service_name}-tailscale" = {
       image = "tailscale/tailscale:latest";
-      ports = [ "41641:41641" ];
       labels = {
         "komodo.skip" = "";
       };
@@ -101,6 +100,7 @@ in
     ### KOMODO CORE ###
     "${cfg.service_name}-core" = {
       image = "ghcr.io/moghtech/komodo-core:2";
+      ports = [ "41641:41641" ];
       labels = {
         "komodo.skip" = "";
         "homepage.group" = "Infrastructure & Monitoring";
