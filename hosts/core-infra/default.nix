@@ -13,7 +13,24 @@
         ../../docker/arkeep-agent.nix
     ];
 
+    boot.kernel.sysctl = {
+        "net.ipv6.conf.all.forwarding" = 1;
+        "net.ipv6.conf.default.forwarding" = 1;
+        # Accept Router Advertisements even while forwarding is on,
+        # so the host still gets its own IPv6 via SLAAC.
+        "net.ipv6.conf.eth0.accept_ra" = 2;
+      };
 
+      virtualisation.docker = {
+        daemon.settings = {
+          ipv6 = true;
+          # A ULA (or your delegated GUA prefix) used as the default
+          # pool for user-defined networks that don't specify a subnet.
+          "fixed-cidr-v6" = "2a01:4ff:f0:f9f1::/64";
+          experimental = true;
+          ip6tables = true;   # needed for IPv6 NAT/filtering on modern Docker
+        };
+      };
     services.wg-exit-nodes = {
       wg-exit-node-proton-toronto = {
         enable = true;
