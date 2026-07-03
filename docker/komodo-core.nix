@@ -127,7 +127,7 @@ in
       extraOptions = [
         "--network-alias=komodo-core"
         "--network=${cfg.network_name}"
-        "--network=name=ipvlan6,ip6=2a01:4ff:f0:f9f1:0:1::2"
+        "--network=name=ipvlan6,ip6=2a01:4ff:f0:f9f1:1::2"
       ];
     };
 
@@ -187,7 +187,7 @@ in
             --driver ipvlan \
             --opt ipvlan_mode=l3 \
             --ipv6 \
-            --subnet "2a01:4ff:f0:f9f1:0:1::/80" \
+            --subnet "2a01:4ff:f0:f9f1:1::/80" \
             --opt parent=eth0 \
             ipvlan6
         fi
