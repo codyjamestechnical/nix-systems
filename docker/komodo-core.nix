@@ -170,7 +170,7 @@ in
       ExecStop = "docker network rm -f ${cfg.network_name}";
     };
     script = ''
-      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
+      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6 --internal --driver bridge
     '';
 
     wantedBy = [ "multi-user.target" ];
