@@ -42,6 +42,7 @@ in
     ### TAILSCALE ###
     "${cfg.service_name}-tailscale" = {
       image = "tailscale/tailscale:latest";
+      ports = [ "41641:41641" ];
       labels = {
         "komodo.skip" = "";
       };
