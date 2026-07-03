@@ -26,17 +26,17 @@
       # port-preserving 1:1 NAT so the tailscale container's UDP port
       # stays stable in both directions (beats docker's --random-fully MASQUERADE)
       extraCommands = ''
-        iptables -t nat -A PREROUTING  -i eth0 -p udp --dport 41641 \
-          -j DNAT --to-destination 172.20.0.2:41641
-        iptables -t nat -I POSTROUTING 1 -s 172.20.0.2 -p udp --sport 41641 \
-          -o eth0 -j SNAT --to-source <PUBLIC_IP>:41641
+        iptables -t nat -A PREROUTING  -i eth0 -p udp --dport 41642 \
+          -j DNAT --to-destination 172.20.0.2:41642
+        iptables -t nat -I POSTROUTING 1 -s 172.20.0.2 -p udp --sport 41642 \
+          -o eth0 -j SNAT --to-source 5.161.235.16:41642
       '';
 
       extraStopCommands = ''
-        iptables -t nat -D PREROUTING  -i eth0 -p udp --dport 41641 \
-          -j DNAT --to-destination 172.20.0.2:41641 2>/dev/null || true
-        iptables -t nat -D POSTROUTING -s 172.20.0.2 -p udp --sport 41641 \
-          -o eth0 -j SNAT --to-source <PUBLIC_IP>:41641 2>/dev/null || true
+        iptables -t nat -D PREROUTING  -i eth0 -p udp --dport 41642 \
+          -j DNAT --to-destination 172.20.0.2:41642 2>/dev/null || true
+        iptables -t nat -D POSTROUTING -s 172.20.0.2 -p udp --sport 41642 \
+          -o eth0 -j SNAT --to-source 5.161.235.16:41642 2>/dev/null || true
       '';
     };
     services.wg-exit-nodes = {
