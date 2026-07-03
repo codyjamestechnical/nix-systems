@@ -61,6 +61,7 @@ in
         "--network=container:${cfg.service_name}-core"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
+        "--port=41642"
       ];
       environment = {
         TS_HOSTNAME = "${cfg.service_name}";
@@ -100,7 +101,7 @@ in
     ### KOMODO CORE ###
     "${cfg.service_name}-core" = {
       image = "ghcr.io/moghtech/komodo-core:2";
-      ports = [ "41641:41641" ];
+      ports = [ "41642:41642" ];
       labels = {
         "komodo.skip" = "";
         "homepage.group" = "Infrastructure & Monitoring";
