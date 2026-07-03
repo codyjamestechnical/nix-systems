@@ -68,7 +68,7 @@ in
         TS_ACCEPT_DNS = "false";
         TS_USERSPACE = "false";
         TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
-        TS_TAILSCALED_EXTRA_ARGS = "--port=41642:41642";
+        TS_TAILSCALED_EXTRA_ARGS = "--port=41642";
       };
     };
 
