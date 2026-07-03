@@ -61,7 +61,6 @@ in
         "--network=container:${cfg.service_name}-core"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
-        "--port=41642"
       ];
       environment = {
         TS_HOSTNAME = "${cfg.service_name}";
@@ -69,6 +68,7 @@ in
         TS_ACCEPT_DNS = "false";
         TS_USERSPACE = "false";
         TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
+        TS_TAILSCALED_EXTRA_ARGS = "--ports=41642:41642";
       };
     };
 
