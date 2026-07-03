@@ -69,6 +69,7 @@ in
         TS_USERSPACE = "false";
         TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
         TS_TAILSCALED_EXTRA_ARGS = "--port=41642";
+        TS_DEBUG_MTU = "1200";
       };
     };
 
@@ -173,25 +174,25 @@ in
     wantedBy = [ "multi-user.target" ];
   };
 
-  systemd.services.docker-ipvlan-net = {
-      description = "Create IPv6-only Docker IPvlan network";
-      after = [ "docker.service" ];
-      requires = [ "docker.service" ];
-      wantedBy = [ "multi-user.target" ];
-      before = [ "docker-tailscale.service" ];
-      serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
-      path = [ pkgs.docker ];
-      script = ''
-        if ! docker network inspect ipvlan6 >/dev/null 2>&1; then
-          docker network create \
-            --driver ipvlan \
-            --opt ipvlan_mode=l3 \
-            --ipv6 \
-            --subnet "2a01:4ff:f0:f9f1:1::/80" \
-            --opt parent=eth0 \
-            ipvlan6
-        fi
-      '';
-    };
+  # systemd.services.docker-ipvlan-net = {
+  #     description = "Create IPv6-only Docker IPvlan network";
+  #     after = [ "docker.service" ];
+  #     requires = [ "docker.service" ];
+  #     wantedBy = [ "multi-user.target" ];
+  #     before = [ "docker-tailscale.service" ];
+  #     serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+  #     path = [ pkgs.docker ];
+  #     script = ''
+  #       if ! docker network inspect ipvlan6 >/dev/null 2>&1; then
+  #         docker network create \
+  #           --driver ipvlan \
+  #           --opt ipvlan_mode=l3 \
+  #           --ipv6 \
+  #           --subnet "2a01:4ff:f0:f9f1:1::/80" \
+  #           --opt parent=eth0 \
+  #           ipvlan6
+  #       fi
+  #     '';
+  #   };
 
 }
