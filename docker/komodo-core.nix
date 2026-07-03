@@ -124,9 +124,6 @@ in
         "/var/lib/acme/31337.im/key.pem:/config/ssl/key.pem:ro"
       ];
       log-driver = "local";
-      ports = [
-        "41642:41642"
-      ];
       extraOptions = [
         "--network-alias=komodo-core"
         "--network=${cfg.network_name}"
