@@ -26,7 +26,7 @@
           ipv6 = true;
           # A ULA (or your delegated GUA prefix) used as the default
           # pool for user-defined networks that don't specify a subnet.
-          "fixed-cidr-v6" = "2a01:4ff:f0:f9f1::/64";
+          # "fixed-cidr-v6" = "2a01:4ff:f0:f9f1::/64";
           experimental = true;
           ip6tables = true;   # needed for IPv6 NAT/filtering on modern Docker
         };
