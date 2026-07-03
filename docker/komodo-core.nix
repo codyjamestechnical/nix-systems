@@ -127,7 +127,7 @@ in
       extraOptions = [
         "--network-alias=komodo-core"
         "--network=${cfg.network_name}"
-        "--network=name=macvlan6,ip6=2a01:4ff:f0:f9f1::2"
+        "--network=name=ipvlan6,ip6=2a01:4ff:f0:f9f1::2"
       ];
     };
 
@@ -176,8 +176,8 @@ in
     wantedBy = [ "multi-user.target" ];
   };
 
-  systemd.services.docker-macvlan-net = {
-      description = "Create IPv6-only Docker macvlan network";
+  systemd.services.docker-ipvlan-net = {
+      description = "Create IPv6-only Docker IPvlan network";
       after = [ "docker.service" ];
       requires = [ "docker.service" ];
       wantedBy = [ "multi-user.target" ];
@@ -185,14 +185,15 @@ in
       serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
       path = [ pkgs.docker ];
       script = ''
-        if ! docker network inspect macvlan6 >/dev/null 2>&1; then
+        if ! docker network inspect ipvlan6 >/dev/null 2>&1; then
           docker network create \
-            --driver macvlan \
+            --driver ipvlan \
+            --opt ipvlan_mode=l2 \
             --ipv6 \
             --subnet "2a01:4ff:f0:f9f1::/64" \
             --gateway "2a01:4ff:f0:f9f1::1" \
             --opt parent=eth0 \
-            macvlan6
+            ipvlan6
         fi
       '';
     };
