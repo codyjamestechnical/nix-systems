@@ -127,8 +127,7 @@ in
       extraOptions = [
         "--network-alias=komodo-core"
         "--network=${cfg.network_name}"
-        "--network=macvlan6"
-        "--ip6=2a01:4ff:f0:f9f1::2"
+        "--network=name=macvlan6,ip6=2a01:4ff:f0:f9f1::2"
       ];
     };
 
