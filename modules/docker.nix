@@ -48,7 +48,9 @@
         userland-proxy = false;
         experimental = true;
         metrics-addr = "0.0.0.0:9323";
+        ip-forward = true;
         ipv6 = true;
+        ip6tables = true;   # needed for IPv6 NAT/filtering on modern Docker
         fixed-cidr-v6 = "fd00::/80";
         "hosts" = [
           "unix:///var/run/docker.sock"

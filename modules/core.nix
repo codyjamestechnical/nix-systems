@@ -33,6 +33,16 @@
     variant = "";
   };
 
+  # Enable IPv4/IPv6 forwarding and SLAAC on the host
+  boot.kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv6.conf.default.forwarding" = 1;
+      # Accept Router Advertisements even while forwarding is on,
+      # so the host still gets its own IPv6 via SLAAC.
+      "net.ipv6.conf.eth0.accept_ra" = 2;
+    };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
