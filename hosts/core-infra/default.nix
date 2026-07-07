@@ -11,6 +11,7 @@
         ../../modules/docker.nix
         ../../docker/wg-exit-nodes.nix
         ../../docker/arkeep-agent.nix
+        ../../docker/dockhand.nix
     ];
 
     networking.firewall = {
