@@ -1,5 +1,15 @@
 { config, pkgs, ... }:
 let
+  caddyfile = pkgs.writeText "Caddyfile" ''
+    (ssl) {
+        tls /ssl/fullchain.pem /ssl/privkey.pem
+    }
+    dockhand.31337.im, https://localhost {
+      import ssl
+      reverse_proxy dockhand-server:3000
+    }
+  '';
+
   cfg = {
     service_name = "dockhand";
     network_name = "dockhand-internal";
@@ -25,7 +35,7 @@ in
       ];
       volumes = [
         "/dev/net/tun:/dev/net/tun"
-        "${cfg.base_dir}/tailscale:/var/lib/tailscale:rw"
+        "${cfg.base_dir}/tailscale:/var/lib/tailscale"
       ];
       log-driver = "journald";
       extraOptions = [
@@ -45,27 +55,20 @@ in
     ### CADDY ###
     "${cfg.service_name}-caddy" = {
       image = "caddy:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
       environmentFiles = [
-        "/docker-data/.env"
         "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "${cfg.base_dir}/caddy/data:/data:rw"
-        "${cfg.base_dir}/caddy/config:/config:rw"
-        "${cfg.base_dir}/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
+        "${cfg.base_dir}/caddy/data:/data"
+        "${cfg.base_dir}/caddy/config:/config"
+        "${caddyfile}:/etc/caddy/Caddyfile:ro"
         "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
       ];
       log-driver = "journald";
-      ports = [
-
-      ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
-        "--network-alias=caddy"
+        "--network-alias=${cfg.service_name}-caddy"
         "--network=${cfg.network_name}"
       ];
     };
@@ -84,6 +87,21 @@ in
       ];
     };
 
+  };
+
+  ### NETWORK ###
+  systemd.services."docker-network-${cfg.network_name}" = {
+    path = [ pkgs.docker ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStop = "docker network rm -f ${cfg.network_name}";
+    };
+    script = ''
+      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
+    '';
+
+    wantedBy = [ "multi-user.target" ];
   };
 
   # One-shot service to remove TS_AUTHKEY from .env 1 minute after tailscale starts.
