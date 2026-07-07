@@ -53,6 +53,7 @@ in
         "${cfg.acme_key}:/etc/dockhand/certs/key.pem:ro"
       ];
       environment = {
+        HTTPS_MODE = "on";
         HTTPS_CERT_PATH = "/etc/dockhand/certs/cert.pem";
         HTTPS_KEY_PATH = "/etc/dockhand/certs/key.pem";
         PORT = "443";
