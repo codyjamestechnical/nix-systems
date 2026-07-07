@@ -38,7 +38,7 @@ in
         TS_STATE_DIR = "/var/lib/tailscale";
         TS_ACCEPT_DNS = "false";
         TS_USERSPACE = "false";
-        TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
+        TS_EXTRA_ARGS = "--login-server=https://headscale.cjtech.io";
       };
     };
 
