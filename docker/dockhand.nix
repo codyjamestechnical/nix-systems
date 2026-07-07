@@ -18,7 +18,7 @@ in
     "${cfg.service_name}-tailscale" = {
       image = "tailscale/tailscale:latest";
       dependsOn = [
-        "${cfg.service_name}-server"
+        "${cfg.service_name}-caddy"
       ];
       environmentFiles = [
         "${cfg.base_dir}/.env"
@@ -29,7 +29,7 @@ in
       ];
       log-driver = "journald";
       extraOptions = [
-        "--network=container:${cfg.service_name}-server"
+        "--network=container:${cfg.service_name}-caddy"
         "--cap-add=NET_ADMIN"
         "--cap-add=NET_RAW"
       ];
@@ -42,6 +42,34 @@ in
       };
     };
 
+    ### CADDY ###
+    "${cfg.service_name}-caddy" = {
+      image = "caddy:latest";
+      labels = {
+        "komodo.skip" = "";
+      };
+      environmentFiles = [
+        "/docker-data/.env"
+        "${cfg.base_dir}/.env"
+      ];
+      volumes = [
+        "${cfg.base_dir}/caddy/data:/data:rw"
+        "${cfg.base_dir}/caddy/config:/config:rw"
+        "${cfg.base_dir}/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
+        "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
+        "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
+      ];
+      log-driver = "journald";
+      ports = [
+
+      ];
+      extraOptions = [
+        "--cap-add=NET_ADMIN"
+        "--network-alias=caddy"
+        "--network=${cfg.network_name}"
+      ];
+    };
+
     ### DOCKHAND ###
     "${cfg.service_name}-server" = {
       image = "fnsys/dockhand:latest";
@@ -49,16 +77,11 @@ in
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
         "${cfg.base_dir}/data:/app/data"
-        "${cfg.acme_cert}:/etc/dockhand/certs/cert.pem:ro"
-        "${cfg.acme_key}:/etc/dockhand/certs/key.pem:ro"
       ];
-      environment = {
-        HTTPS_MODE = "on";
-        HTTPS_CERT_PATH = "/etc/dockhand/certs/cert.pem";
-        HTTPS_KEY_PATH = "/etc/dockhand/certs/key.pem";
-        PORT = "443";
-        ORIGIN = "https://dockhand.31337.im";
-      };
+      extraOptions = [
+        "--network-alias=${cfg.service_name}-server"
+        "--network=${cfg.network_name}"
+      ];
     };
 
   };
