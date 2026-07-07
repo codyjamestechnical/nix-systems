@@ -55,6 +55,8 @@ in
       environment = {
         HTTPS_CERT_PATH = "/etc/dockhand/certs/cert.pem";
         HTTPS_KEY_PATH = "/etc/dockhand/certs/key.pem";
+        PORT = "443";
+        ORIGIN = "https://dockhand.31337.im";
       };
     };
 
