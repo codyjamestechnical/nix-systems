@@ -11,6 +11,7 @@
         ../../docker/netdata.nix
         ../../docker/komodo-peripherie.nix
         ../../docker/beszel-agent.nix
+        ../../docker/arkeep-agent.nix
     ];
 
     # Bootloader.
@@ -27,6 +28,44 @@
     boot.zfs.extraPools = [ "cjt_pool" ];
     services.zfs.autoScrub.enable = true;
     services.zfs.trim.enable = true;
+
+    # WebZFS Dashboard
+    services.webzfs = {
+      enable = true;
+      openFirewall = true;
+    };
+
+    # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
+    # the same key on every subsequent start. The key is written outside the
+    # Nix store (which is world-readable) and survives rebuilds/reboots.
+    systemd.services.webzfs-secret-key = {
+      description = "Generate and persist the WebZFS SECRET_KEY";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "webzfs.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        UMask = "0077";
+      };
+      script = ''
+        set -eu
+        keyfile="/var/lib/webzfs/secret_key.env"
+        mkdir -p "$(dirname "$keyfile")"
+        if [ ! -s "$keyfile" ]; then
+          printf 'SECRET_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > "$keyfile"
+          chmod 600 "$keyfile"
+        fi
+      '';
+    };
+
+    # Feed the generated key into WebZFS. pydantic-settings gives environment
+    # variables priority over the bundled .env file, so this is the key the
+    # application actually uses.
+    systemd.services.webzfs = {
+      after = [ "webzfs-secret-key.service" ];
+      requires = [ "webzfs-secret-key.service" ];
+      serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
+    };
 
     #Samba Shares
     services.samba = {
@@ -122,7 +161,7 @@
             </service-group>
         '';
         };
-    };  
+    };
 
 
     services.samba-wsdd = {
@@ -132,8 +171,8 @@
 
 
     ### Create container macvlan network ###
-    systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers; 
-    let 
+    systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers;
+    let
         network_name = "net_macvlan";
         network_gateway = "10.0.35.1";
         network_subnet = "10.0.35.0/24";
@@ -142,7 +181,7 @@
         network_ip_range = "10.0.35.0/27";
         network_other_options = "";
         backendBin = "${pkgs.docker}/bin/${backend}";
-    in 
+    in
     {
         enable = true;
         serviceConfig.Type = "oneshot";
@@ -153,34 +192,6 @@
             ${backendBin} network create --subnet=${network_subnet} --gateway=${network_gateway} --aux-address 'host=${network_starting_ip}' --ip-range ${network_ip_range} --driver=macvlan -o parent=${network_parent_interface} ${network_name}
             ";
     };
-
-    # ### SYNCTHING
-    # services.syncthing = {
-    #     enable = true;
-    #     user = "root";
-    #     group = "root";
-    #     systemService = true;
-    #     settings = {
-    #         key = "/etc/nixos/secrets/syncthing/key.pem";
-    #         cert = "/etc/nixos/secrets/syncthing/cert.pem";
-    #         devices = {
-    #         "deimos-server" = { id = "KBCN6KF-4UE5NQF-EXHNPP5-CHOQQZR-7XVKWLU-ZA2QHQT-HFVVIFU-Y2H2AQG"; };
-    #         };
-    #         folders = {
-    #             "test" = {
-    #                 path = "/docker-data/syncthing-test";
-    #                 devices = [ "deimos-server" ];
-    #             };
-    #             # "docker-data" = {
-    #             #     path = "/docker-data";
-    #             #     devices = [ "mars-server" "deimos-server" ];
-    #             #     # By default, Syncthing doesn't sync file permissions. This line enables it for this folder.
-    #             #     ignorePerms = false;
-    #             # };
-    #         };
-    #     };
-    # };
-
 
     system.stateVersion = "24.11";
 }

@@ -10,7 +10,7 @@ let
     accept-dns = "true";
     login-server = "https://headscale.cjtech.io";
     advertise-exit-node = "false";
-    advertise-tags = "tag:servers";
+    advertise-tags = "";
     accept-routes = "true";
   };
   cfg = tailscale-config // defaultConfig;

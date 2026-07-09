@@ -4,9 +4,19 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
+    webzfs = {
+        url = "github:aaron/webzfs/nix-webzfs";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ssh-keys = {
       url = "https://github.com/codyjamestechnical.keys";
       flake = false;
+    };
+
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -14,64 +24,30 @@
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
-          ./hosts/mars-server/default.nix
-        ];
-      };
-
-      deimos-server = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        
         specialArgs = {
-          borgBackup = {
-            paths = "/root";
-            repo = "ssh://u429456-sub2@u429456-sub2.your-storagebox.de:23/./backup-deimos-server";
-          };
+
         };
         modules = [
-          ./hosts/deimos-server
-          ./modules/borg-backup.nix
-        ];
-      };
-
-      komodo-server = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        modules = [
-          ./hosts/komodo-server
+          ./hosts/mars-server
+          ./modules/tailscale.nix
+          ./modules/docker.nix
+          webzfs.nixosModules.webzfs
+          nixos-hardware.nixosModules.minisforum-um790-pro
         ];
       };
 
       core-infra = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-          tailscale-config = {
-            advertise-tags = "tag:core-infra,tag:servers";
-          };
+
         };
         modules = [
           ./hosts/core-infra
           ./modules/tailscale.nix
           ./modules/docker.nix
-          ./modules/prometheus-exporter.nix
-
         ];
       };
 
-      backup-server = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        specialArgs = {
-          tailscale-config = {
-            advertise-tags = "tag:core-infra,tag:servers";
-          };
-        };
-        modules = [
-          ./hosts/headscale-server
-          ./modules/tailscale.nix
-          ./modules/docker.nix
-
-        ];
-      };
-      
     };
   };
 }
