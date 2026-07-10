@@ -5,74 +5,33 @@ let
     network_name = "headscale-internal";
     base_dir = "/docker-data/headscale";
     secrets_dir = "/etc/nixos/secrets";
-    tailscale_tags = "tag:core-infra";
+    caddyfile = pkgs.writeText "Caddyfile" ''
+      (ssl) {
+        tls /ssl/fullchain.pem /ssl/privkey.pem
+      }
+
+      headplane.31337.im {
+        import ssl
+        redir / /admin
+        reverse_proxy /admin* headscale-headplane:3000
+      }
+
+      http://headplane.31337.im:9250 {
+        reverse_proxy headscale-tailscale-exporter:9250
+      }
+    '';
   };
 in
 {
+  imports = [
+    (import ./caddy.nix { inherit cfg; })
+    (import ./tailscale.nix { inherit cfg; })
+    (import ./docker-network.nix { inherit cfg; })
+  ];
+
   # Containers
   virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers = {
-
-    ### CADDY ###
-    "${cfg.service_name}-caddy" = {
-      image = "caddy:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
-      environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
-      ];
-      volumes = [
-        "${cfg.base_dir}/caddy/data:/data:rw"
-        "${cfg.base_dir}/caddy/config:/config:rw"
-        "${cfg.base_dir}/configs/caddy/caddyfile.txt:/etc/caddy/Caddyfile:ro"
-        "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
-        "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
-      ];
-      log-driver = "journald";
-      ports = [
-
-      ];
-      extraOptions = [
-        "--cap-add=NET_ADMIN"
-        "--network-alias=caddy"
-        "--network=${cfg.network_name}"
-      ];
-    };
-
-    ### TAILSCALE ###
-    "${cfg.service_name}-tailscale" = {
-      image = "tailscale/tailscale:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
-      dependsOn = [
-        "${cfg.service_name}-server"
-        "${cfg.service_name}-caddy"
-      ];
-      environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
-      ];
-      volumes = [
-        "/dev/net/tun:/dev/net/tun"
-        "${cfg.base_dir}/data/tailscale:/var/lib/tailscale:rw"
-      ];
-      log-driver = "journald";
-      extraOptions = [
-        "--network=container:${cfg.service_name}-caddy"
-        "--cap-add=NET_ADMIN"
-        "--cap-add=NET_RAW"
-      ];
-      environment = {
-        TS_HOSTNAME = "${cfg.service_name}";
-        TS_STATE_DIR = "/var/lib/tailscale";
-        TS_ACCEPT_DNS = "false";
-        TS_USERSPACE = "false";
-        TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
-      };
-    };
 
     ### HEADSCALE SERVER ###
     "${cfg.service_name}-server" = {
@@ -152,7 +111,7 @@ in
         "${cfg.service_name}-server"
       ];
       volumes = [
-        
+
       ];
       environment = {
         HEADSCALE_ADDRESS = "headscale.cjtech.io:50443";
@@ -172,19 +131,11 @@ in
     };
   };
 
-  ### NETWORK ###
-  systemd.services."docker-network-${cfg.network_name}" = {
-    path = [ pkgs.docker ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStop = "docker network rm -f ${cfg.network_name}";
-    };
-    script = ''
-      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
-    '';
-
-    wantedBy = [ "multi-user.target" ];
+  ### FIREWALL ###
+  networking.firewall = {
+    # open ports for headscale and caddy
+    allowedTCPPorts = [ 80 443 3478 ];
+    allowedUDPPorts = [ 80 443 3478 ];
   };
 
 }
