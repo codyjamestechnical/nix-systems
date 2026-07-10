@@ -14,7 +14,7 @@ let
     advertise-tags = "";
     accept-routes = "true";
   };
-  cfg = tailscale-config // defaultConfig;
+  cfg = defaultConfig // tailscale-config;
 in
 {
   ### IPv4/IPv6 FORWARDING ###
