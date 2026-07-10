@@ -5,7 +5,7 @@ let
     network_name = "dockhand-internal";
     base_dir = "/docker-data/dockhand";
     secrets_dir = "/etc/nixos/secrets";
-    caddyfile = caddyfileText = pkgs.writeText "Caddyfile" ''
+    caddyfile = pkgs.writeText "Caddyfile" ''
       (ssl) {
           tls /ssl/fullchain.pem /ssl/privkey.pem
       }
