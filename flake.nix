@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
     webzfs = {
-      url = "github:aaron/webzfs/nix-webzfs";
+      url = "github:NorthboundPaddler/nix-webzfs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
