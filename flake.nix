@@ -24,9 +24,6 @@
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-
-        };
         modules = [
           ./hosts/mars-server
           ./modules/tailscale.nix
@@ -38,9 +35,6 @@
 
       core-infra = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-
-        };
         modules = [
           ./hosts/core-infra
           ./modules/tailscale.nix
