@@ -7,7 +7,7 @@ let
     secrets_dir = "/etc/nixos/secrets";
 
     ## override tailscale config to attach it to the komodo-core instead of caddy
-    tailscale_dependsOn = [
+    tailscale_depends_on = [
       "${cfg.service_name}-core"
     ];
     tailscale_network = "container:${cfg.service_name}-core";
