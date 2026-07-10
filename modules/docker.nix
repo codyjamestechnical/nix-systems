@@ -1,24 +1,26 @@
 { config, pkgs, ... }:
 {
+  imports = [
+    ../users/docker.nix # Import docker user
+  ];
+
   # Create docker-data directory
   systemd.tmpfiles.rules = [
     "d /docker-data 0770 docker docker -"
   ];
 
-  users = {
-    defaultUserShell = pkgs.zsh;
-    groups = {
-      acme.gid = 984;
-    };
+  ### ZSH SHELL ALIASES ###
+  programs.zsh.shellAliases = {
+    # docker ps with formatted output
+    dps = "sudo docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
 
-    users.docker = {
-      isNormalUser = false;
-      isSystemUser = true;
-      group = "docker";
-      extraGroups = [
-        "acme"
-      ];
-    };
+    # docker exec
+    dexec = "sudo docker exec -it";
+
+    # docker compose up/down
+    compose = "sudo docker compose up -d";
+    recompose = "sudo docker compose down --remove-orphans && sudo docker compose up -d"; # down and remove orphans, then up
+    decompose = "sudo docker compose down";
   };
 
   ## Virtualization Options

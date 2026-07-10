@@ -6,13 +6,14 @@
     ./docker.nix
     ../users/cody.nix
   ];
-  # Enable networking
-  # networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  ### ENABLE ZRAM SWAP ###
+  zramSwap.enable = true;
+
+  ### TIMEZONE ###
   time.timeZone = "America/New_York";
 
-  # Select internationalisation properties.
+  ### LOCALE ###
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -27,38 +28,21 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable IPv4/IPv6 forwarding and SLAAC on the host
-  boot.kernel.sysctl = {
-      "net.ipv4.ip_forward" = 1;
-      "net.ipv6.conf.all.forwarding" = 1;
-      "net.ipv6.conf.default.forwarding" = 1;
-      # Accept Router Advertisements even while forwarding is on,
-      # so the host still gets its own IPv6 via SLAAC.
-      "net.ipv6.conf.eth0.accept_ra" = 2;
-    };
-
-  # Allow unfree packages
+  ### ALLOW UNFREE PACKAGES ###
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  ### SYSTEM PACKAGES ###
   environment.systemPackages = with pkgs; [
     pv
     direnv
     wget
     dua
     git
+    htop
     bfs
     eza
     pwgen
     helix
-    vscode
     zsh-powerlevel10k
     nurl
     oh-my-zsh
@@ -77,12 +61,12 @@
 
   ];
 
-  # Enabled Services
+  ### OpenSSH DEAMON ###
+  services.openssh = {
+    enable = true;
+  };
 
-  # OpenSSH daemon
-  services.openssh.enable = true;
-
-  #ZSH
+  ### ZSH ###
   programs.zsh = {
     enable = true;
     enableBashCompletion = true;
@@ -90,25 +74,28 @@
 
     autosuggestions.enable = true;
     shellAliases = {
-      runsrvc = "sudo systemctl start";
-      stopsrvc = "sudo systemctl stop";
-      resrvc = "sudo systemctl restart";
+      # Systemctl Service Management
+      startsvc = "sudo systemctl start";
+      stopsvc = "sudo systemctl stop";
+      restartsvc = "sudo systemctl restart";
+      logsvc = "sudo journalctl -xeu";
+
+      # File system aliases
       ls = "lsd -lA";
-      rebuild = "sudo git -C /etc/nixos/nix-systems pull && sudo nixos-rebuild switch --flake '/etc/nixos/nix-systems#${config.networking.hostName}'";
       cat = "bat";
-      dls = "sudo docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
-      recompose = "sudo docker compose down --remove-orphans && sudo docker compose up -d";
-      compose = "sudo docker compose up -d";
-      decompose = "sudo docker compose down";
-      testmyecho = "echo '.#${config.networking.hostName}'";
+
+      # Pull latest git changes and rebuild switch NixOS with flake
+      rebuild = "sudo git -C /etc/nixos/nix-systems pull && sudo nixos-rebuild switch --flake '/etc/nixos/nix-systems#${config.networking.hostName}'";
 
     };
   };
 
-  #MOSH
-  programs.mosh.enable = true;
+  ### MOSH ###
+  programs.mosh = {
+    enable = true;
+  };
 
-  #TMUX
+  ### TMUX ###
   programs.tmux = {
     enable = true;
     clock24 = true;
@@ -120,10 +107,15 @@
     "L+ /usr/libexec/platform-python - - - - ${pkgs.python3Minimal}/bin/python3"
   ];
 
-  # Disable Firewall
-  # networking.firewall.enable = false;
+  ### FIREWALL ###
+  networking.firewall = {
+    enable = true;
+    allowPing = true;
+  };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  nix.settings.auto-optimise-store = true;
+  ### NIX SETTINGS ###
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    auto-optimise-store = true;
+  };
 }

@@ -20,6 +20,7 @@
 #   caddy_ports         - list of published ports    (default [])
 #   caddy_env_files     - list of env files          (default the two shown below)
 #   caddy_extra_labels  - extra container labels      (default {})
+#   caddy_oci_backend   - OCI backend to use (default "docker")
 
 { cfg }:
 
@@ -31,8 +32,10 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
+  ociBackend = cfg.caddy_oci_backend or "docker";
 in
 {
+  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers."${cfg.service_name}-caddy" = {
     inherit image ports;
 

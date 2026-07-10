@@ -5,72 +5,34 @@ let
     network_name = "komodo-internal";
     base_dir = "/docker-data/komodo";
     secrets_dir = "/etc/nixos/secrets";
-    tailscale_tags = "tag:core-infra";
+
+    ## override tailscale config to attach it to the komodo-core instead of caddy
+    tailscale_dependsOn = [
+      "${cfg.service_name}-core"
+    ];
+    tailscale_network = "container:${cfg.service_name}-core";
+    # this is to help this container get a direct connection from tailscale
+    # clients since this is a very important container
+    tailscale_extra_tailscaled_args = "--port=41642";
   };
 in
 {
+  # Import tailscale and docker-network modules
+  imports = [
+    (import ./tailscale.nix { inherit cfg; })
+    (import ./docker-network.nix { inherit cfg; })
+  ];
+
+  ### FIREWALL ###
+  networking.firewall = {
+    # open UDP port for tailscale since we changed the port
+    # the default port is 41641, but we changed it to 41642 in tailscale_extra_tailscaled_args
+    allowedUDPPorts = [ 41642 ];
+  };
+
   # Containers
   virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers = {
-
-    ### CADDY ###
-    # "${cfg.service_name}-caddy" = {
-    #   image = "caddy:latest";
-    #   labels = {
-    #     "komodo.skip" = "";
-    #   };
-    #   environmentFiles = [
-    #     "/docker-data/.env"
-    #     "${cfg.base_dir}/.env"
-    #   ];
-    #   volumes = [
-    #     "${cfg.base_dir}/caddy:/data:rw"
-    #     "${cfg.base_dir}/caddy/config:/config:rw"
-    #     "${cfg.base_dir}/caddyfile:/etc/caddy/Caddyfile:ro"
-    #     "/var/lib/acme/31337.im/fullchain.pem:/ssl/fullchain.pem:ro"
-    #     "/var/lib/acme/31337.im/key.pem:/ssl/privkey.pem:ro"
-    #   ];
-    #   log-driver = "journald";
-    #   extraOptions = [
-    #     "--cap-add=NET_ADMIN"
-    #     "--network-alias=caddy"
-    #     "--network=${cfg.network_name}"
-
-    #   ];
-    # };
-
-    ### TAILSCALE ###
-    "${cfg.service_name}-tailscale" = {
-      image = "tailscale/tailscale:latest";
-      labels = {
-        "komodo.skip" = "";
-      };
-      dependsOn = [
-        "${cfg.service_name}-core"
-      ];
-      environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
-      ];
-      volumes = [
-        "/dev/net/tun:/dev/net/tun"
-        "${cfg.base_dir}/tailscale:/var/lib/tailscale:rw"
-      ];
-      log-driver = "journald";
-      extraOptions = [
-        "--network=container:${cfg.service_name}-core"
-        "--cap-add=NET_ADMIN"
-        "--cap-add=NET_RAW"
-      ];
-      environment = {
-        TS_HOSTNAME = "${cfg.service_name}";
-        TS_STATE_DIR = "/var/lib/tailscale";
-        TS_ACCEPT_DNS = "false";
-        TS_USERSPACE = "false";
-        TS_EXTRA_ARGS = "--advertise-tags=${cfg.tailscale_tags} --login-server=https://headscale.cjtech.io";
-        TS_TAILSCALED_EXTRA_ARGS = "--port=41642";
-      };
-    };
 
     ### KOMODO PERIPHERY ###
     "${cfg.service_name}-periphery" = {
@@ -156,21 +118,6 @@ in
         "--network=${cfg.network_name}"
       ];
     };
-  };
-
-  ### NETWORK ###
-  systemd.services."docker-network-${cfg.network_name}" = {
-    path = [ pkgs.docker ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStop = "docker network rm -f ${cfg.network_name}";
-    };
-    script = ''
-      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name} --ipv6
-    '';
-
-    wantedBy = [ "multi-user.target" ];
   };
 
   # systemd.services.docker-ipvlan-net = {

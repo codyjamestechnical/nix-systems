@@ -29,7 +29,20 @@ in
     (import ./docker-network.nix { inherit cfg; })
   ];
 
-  # Containers
+  ### ZSH SHELL ALIAS ###
+  programs.zsh.shellAliases = {
+      # headscale command alias so we don't have to use docker exec every time
+      headscale = "docker exec -it headscale-server headscale";
+  };
+
+  ### FIREWALL ###
+  networking.firewall = {
+    # open ports for headscale and caddy
+    allowedTCPPorts = [ 80 443 3478 ];
+    allowedUDPPorts = [ 80 443 3478 ];
+  };
+
+  ### OCI CONTAINERS ###
   virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers = {
 
@@ -129,13 +142,6 @@ in
         "--network=${cfg.network_name}"
       ];
     };
-  };
-
-  ### FIREWALL ###
-  networking.firewall = {
-    # open ports for headscale and caddy
-    allowedTCPPorts = [ 80 443 3478 ];
-    allowedUDPPorts = [ 80 443 3478 ];
   };
 
 }

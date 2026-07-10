@@ -95,6 +95,14 @@ in
       };
     }) enabledInstances;
 
+    ### IPv4/IPv6 FORWARDING ###
+    # Enable IPv4/IPv6 forwarding as exit nodes require it to work properly
+    boot.kernel.sysctl = {
+        "net.ipv4.ip_forward" = 1;
+        "net.ipv6.conf.all.forwarding" = 1;
+        "net.ipv6.conf.default.forwarding" = 1;
+    };
+
     systemd.services =
           # Generate the docker network services
           (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {

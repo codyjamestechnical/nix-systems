@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 let
-
-
-  cfg = rec {
+  cfg = {
     service_name = "dockhand";
     network_name = "dockhand-internal";
     base_dir = "/docker-data/dockhand";

@@ -17,21 +17,23 @@
 #   base_dir     - host path holding tailscale state and the .env file (required)
 #
 # Optional `cfg` fields (with defaults):
-#   tailscale_image           - container image      (default "tailscale/tailscale:latest")
-#   tailscale_depends_on      - dependsOn list        (default [ "<svc>-server" "<svc>-caddy" ])
-#   tailscale_env_files       - list of env files     (default the two shown below)
-#   tailscale_network         - network mode          (default "container:<svc>-caddy")
-#   tailscale_hostname        - TS_HOSTNAME           (default cfg.service_name)
-#   tailscale_state_host_path - host path for state   (default "<base_dir>/data/tailscale")
-#   tailscale_volumes         - full volumes override  (default tun + state mount)
-#   tailscale_login_server    - --login-server URL     (default "https://headscale.cjtech.io")
-#   tailscale_tags            - tags for --advertise-tags (default "")
-#   tailscale_accept_dns      - TS_ACCEPT_DNS          (default "false")
-#   tailscale_userspace       - TS_USERSPACE           (default "false")
-#   tailscale_extra_args      - full TS_EXTRA_ARGS override (default advertise-tags + login-server)
-#   tailscale_extra_labels    - extra container labels (default {})
-#   tailscale_authkey_cleanup - enable the authkey cleanup service (default true)
-#   authkey_cleanup_delay     - seconds to wait before removing the key (default 60)
+#   tailscale_image                 - container image      (default "tailscale/tailscale:latest")
+#   tailscale_depends_on            - dependsOn list        (default [ "<svc>-server" "<svc>-caddy" ])
+#   tailscale_env_files             - list of env files     (default the two shown below)
+#   tailscale_network               - network mode          (default "container:<svc>-caddy")
+#   tailscale_hostname              - TS_HOSTNAME           (default cfg.service_name)
+#   tailscale_state_host_path       - host path for state   (default "<base_dir>/data/tailscale")
+#   tailscale_volumes               - full volumes override  (default tun + state mount)
+#   tailscale_login_server          - --login-server URL     (default "https://headscale.cjtech.io")
+#   tailscale_tags                  - tags for --advertise-tags (default "")
+#   tailscale_accept_dns            - TS_ACCEPT_DNS          (default "false")
+#   tailscale_userspace             - TS_USERSPACE           (default "false")
+#   tailscale_extra_args            - full TS_EXTRA_ARGS override (default advertise-tags + login-server)
+#   tailscale_extra_tailscaled_args - full TS_TAILSCALED_EXTRA_ARGS override (default "")
+#   tailscale_extra_labels          - extra container labels (default {})
+#   tailscale_authkey_cleanup       - enable the authkey cleanup service (default true)
+#   authkey_cleanup_delay           - seconds to wait before removing the key (default 60)
+#   tailscale_oci_backend           - OCI backend to use (default "docker")
 
 { cfg }:
 
@@ -59,12 +61,15 @@ let
   userspace = cfg.tailscale_userspace or "false";
   extraArgs =
     cfg.tailscale_extra_args or "--advertise-tags=${tags} --login-server=${loginServer}";
+  extraTailscaledArgs = cfg.tailscale_extra_tailscaled_args or "";
   extraLabels = cfg.tailscale_extra_labels or { };
 
   cleanupEnabled = cfg.tailscale_authkey_cleanup or true;
   cleanupDelay = cfg.authkey_cleanup_delay or 60;
+  ociBackend = cfg.tailscale_oci_backend or "docker";
 in
 {
+  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers."${cfg.service_name}-tailscale" = {
     inherit image dependsOn volumes;
 
@@ -88,7 +93,14 @@ in
       TS_ACCEPT_DNS = acceptDns;
       TS_USERSPACE = userspace;
       TS_EXTRA_ARGS = extraArgs;
+      TS_TAILSCALED_EXTRA_ARGS = extraTailscaledArgs;
     };
+  };
+
+  ### FIREWALL ###
+  networking.firewall = {
+    # open UDP port for tailscale
+    allowedUDPPorts = [ 41641 ];
   };
 
   systemd.services = lib.optionalAttrs cleanupEnabled {
