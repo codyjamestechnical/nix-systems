@@ -20,7 +20,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware... }@inputs: {
+  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware,... }@inputs: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
