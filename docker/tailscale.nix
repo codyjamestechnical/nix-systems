@@ -50,7 +50,7 @@ let
   ];
   network = cfg.tailscale_network or "container:${cfg.service_name}-caddy";
   hostname = cfg.tailscale_hostname or cfg.service_name;
-  stateHostPath = cfg.tailscale_state_host_path or "${cfg.base_dir}/data/tailscale";
+  stateHostPath = cfg.tailscale_state_host_path or "${cfg.base_dir}/tailscale";
   volumes = cfg.tailscale_volumes or [
     "/dev/net/tun:/dev/net/tun"
     "${stateHostPath}:/var/lib/tailscale:rw"
@@ -80,11 +80,6 @@ in
     environmentFiles = envFiles;
 
     log-driver = "journald";
-
-    volumes = [
-      "/dev/net/tun:/dev/net/tun"
-      "${cfg.base_dir}/tailscale:/var/lib/tailscale"
-    ];
 
     extraOptions = [
       "--network=${network}"
