@@ -23,7 +23,7 @@
         ipv4.routes = [ { address = "172.31.1.1"; prefixLength = 32; } ];
         ipv6.routes = [
           # { address = "fe80::1"; prefixLength = 128; }
-          { address = "::"; prefixLength = 0; via = "fe80::1"; options = { onlink = "true"; }; }
+          { address = "::"; prefixLength = 0; via = "fe80::1"; options = { onlink = ""; }; }
         ];
       };
 
