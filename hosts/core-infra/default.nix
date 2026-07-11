@@ -3,15 +3,19 @@
     imports = [
         ./hardware-configuration.nix
         ./networking.nix
-        ../../modules/core.nix
-        ../../docker/komodo-core.nix
-        ../../docker/beszel-agent.nix
-        ../../docker/headscale.nix
-        ../../modules/acme.nix
-        ../../modules/docker.nix
-        ../../docker/wg-exit-nodes.nix
-        ../../docker/arkeep-agent.nix
-        ../../docker/dockhand.nix
+
+        # MODULES
+        ../../modules/core.nix ## CORE
+        ../../modules/acme.nix ## ACME
+        ../../modules/docker.nix ## DOCKER
+
+        # DOCKER SERVICES
+        ../../docker/wg-exit-nodes.nix ## WG EXIT NODES
+        ../../docker/arkeep-agent.nix ## ARKEEP AGENT
+        ../../docker/dockhand.nix ## DOCKHAND
+        ../../docker/komodo-core.nix ## KOMODO CORE
+        ../../docker/beszel-agent.nix ## BESZEL AGENT
+        ../../docker/headscale.nix ## HEADSCALE
     ];
 
     ### NETWORKING ###
@@ -62,5 +66,5 @@
     #     in ["${automount_opts},credentials=/etc/nixos/secrets/smb-secrets"];
     # };
 
-    system.stateVersion = "25.11";
+    system.stateVersion = "26.05";
 }

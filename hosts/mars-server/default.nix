@@ -3,33 +3,40 @@
     imports = [
         ./hardware-configuration.nix
 
-        ../../modules/core.nix
-        ../../modules/acme.nix
-        ../../modules/docker.nix
-        ../../users/docker.nix
-        ../../users/cody.nix
-        ../../docker/netdata.nix
-        ../../docker/komodo-peripherie.nix
-        ../../docker/beszel-agent.nix
-        ../../docker/arkeep-agent.nix
+        # MODULES
+        ../../modules/core.nix ## CORE
+        ../../modules/acme.nix ## ACME
+        ../../modules/docker.nix ## DOCKER
+
+        # DOCKER SERVICES
+        ../../docker/netdata.nix ## NETDATA
+        ../../docker/komodo-periphery.nix ## KOMODO PERIPHERY
+        ../../docker/beszel-agent.nix ## BESZEL AGENT
+        ../../docker/arkeep-agent.nix ## ARKEEP AGENT
     ];
 
-    # Bootloader.
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
+    ### BOOTLOADER ###
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+    };
 
-    #Network
+    ### NETWORK ###
     networking.hostName = "mars-server";
     networking.hostId = "deadb33f";
 
-    # ZFS Pool Setup
+    ### ZFS POOL SETUP ###
     boot.supportedFilesystems = [ "zfs" ];
-    boot.zfs.forceImportRoot = false;
-    boot.zfs.extraPools = [ "cjt_pool" ];
-    services.zfs.autoScrub.enable = true;
-    services.zfs.trim.enable = true;
+    boot.zfs = {
+      forceImportRoot = false;
+      extraPools = [ "cjt_pool" ];
+    };
+    services.zfs = {
+      autoScrub.enable = true;
+      trim.enable = true;
+    };
 
-    # WebZFS Dashboard
+    ### WEBZFS DASHBOARD ###
     services.webzfs = {
       enable = true;
       openFirewall = true;
@@ -67,7 +74,7 @@
       serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
     };
 
-    #Samba Shares
+    ### SAMBA SHARES ###
     services.samba = {
         enable = true;
         package = pkgs.samba4Full;
@@ -122,6 +129,13 @@
         };
     };
 
+    ### SAMBA WSDD ###
+    services.samba-wsdd = {
+        enable = true;
+        openFirewall = true;
+    };
+
+
 # services.avahi = {
 #     publish.enable = true;
 #     publish.userServices = true;
@@ -136,6 +150,7 @@
 #     openFirewall = true;
 # };
 
+    ### AVAHI ###
     services.avahi = {
         enable = true;
         nssmdns4 = true;
@@ -164,13 +179,12 @@
     };
 
 
-    services.samba-wsdd = {
-        enable = true;
-        openFirewall = true;
-    };
 
 
-    ### Create container macvlan network ###
+
+    ### DOCKER MACVLAN NETWORK ###
+    # Create a macvlan network for Docker containers
+    # for local LAN access when tailscale is not available
     systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers;
     let
         network_name = "net_macvlan";

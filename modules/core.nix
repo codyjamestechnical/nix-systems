@@ -2,8 +2,6 @@
 
 {
   imports = [
-    ./acme.nix
-    ./docker.nix
     ../users/cody.nix
   ];
 
@@ -111,6 +109,20 @@
   networking.firewall = {
     enable = true;
     allowPing = true;
+  };
+
+  ### STORAGE OPTIMIZATION ###
+  # Enable auto-optimisation of the Nix store
+  nix.optimise = {
+    store = true;
+    dates = [ "05:00" ];
+  };
+
+  ### GARBAGE COLLECTION AUTOMATION ###
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
   };
 
   ### NIX SETTINGS ###

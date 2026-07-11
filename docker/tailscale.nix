@@ -59,8 +59,7 @@ let
   loginServer = cfg.tailscale_login_server or "https://headscale.cjtech.io";
   acceptDns = cfg.tailscale_accept_dns or "false";
   userspace = cfg.tailscale_userspace or "false";
-  extraArgs =
-    cfg.tailscale_extra_args or "--advertise-tags=${tags} --login-server=${loginServer}";
+  extraArgs = cfg.tailscale_extra_args or "--advertise-tags=${tags} --login-server=${loginServer}";
   extraTailscaledArgs = cfg.tailscale_extra_tailscaled_args or "";
   extraLabels = cfg.tailscale_extra_labels or { };
 
