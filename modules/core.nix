@@ -114,7 +114,7 @@
   ### STORAGE OPTIMIZATION ###
   # Enable auto-optimisation of the Nix store
   nix.optimise = {
-    store = true;
+    automatic = true;
     dates = [ "05:00" ];
   };
 
