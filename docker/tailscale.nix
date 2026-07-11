@@ -81,6 +81,11 @@ in
 
     log-driver = "journald";
 
+    volumes = [
+      "/dev/net/tun:/dev/net/tun"
+      "${cfg.base_dir}/tailscale:/var/lib/tailscale"
+    ];
+
     extraOptions = [
       "--network=${network}"
       "--cap-add=NET_ADMIN"
