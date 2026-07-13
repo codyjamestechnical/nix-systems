@@ -32,3 +32,10 @@ in
 
   };
 }
+
+### BESZEL AGENT ENV SECRETS TEMPLATE ###
+# This file should be stored in ${cfg.secrets_dir}/beszel-agent.env
+# LISTEN=45876
+# KEY=
+# TOKEN=
+# HUB_URL=
