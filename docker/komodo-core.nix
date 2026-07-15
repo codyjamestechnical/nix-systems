@@ -30,7 +30,7 @@ in
     allowedUDPPorts = [ 41642 ];
   };
 
-  # Containers
+  ### OCI CONTAINERS ###
   virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers = {
 
@@ -142,3 +142,115 @@ in
   #   };
 
 }
+
+
+### KOMODO CORE & PERIPHERY ENV TEMPLATE ###
+# # place this file in ${cfg.base_dir}/.env
+#
+# ## Tailscale auth key for setup. This will be auto deleted after the first run.
+# TAILSCALE_AUTHKEY=
+#
+# ## Configure a secure passkey to authenticate between Core / Periphery.
+# KOMODO_PASSKEY=
+#
+# #=-------------------------=#
+# #= Komodo Core Environment =#
+# #=-------------------------=#
+#
+# ## Full variable list + descriptions are available here:
+# ## https://github.com/mbecker20/komodo/blob/main/config/core.config.toml
+#
+# ## Note. Secret variables also support `${VARIABLE}_FILE` syntax to pass docker compose secrets.
+# ## Docs: https://docs.docker.com/compose/how-tos/use-secrets/#examples
+#
+# ## Used for Oauth / Webhook url suggestion / Caddy reverse proxy.
+# KOMODO_HOST=https://komodo.31337.im
+# KOMODO_PORT=443
+#
+# ## Displayed in the browser tab.
+# KOMODO_TITLE=CJT Komodo
+#
+# ## Create a server matching this address as the "first server".
+# ## Use `https://host.docker.internal:8120` when using systemd-managed Periphery.
+# KOMODO_FIRST_SERVER=https://periphery:8120
+#
+# ## Make all buttons just double-click, rather than the full confirmation dialog.
+# KOMODO_DISABLE_CONFIRM_DIALOG=true
+#
+# ## Rate Komodo polls your servers for
+# ## status / container status / system stats / alerting.
+# ## Options: 1-sec, 5-sec, 15-sec, 1-min, 5-min.
+# ## Default: 15-sec
+# KOMODO_MONITORING_INTERVAL=1-min
+# ## Rate Komodo polls Resources for updates,
+# ## like outdated commit hash.
+# ## Options: 1-min, 5-min, 15-min, 30-min, 1-hr.
+# ## Default: 5-min
+# KOMODO_RESOURCE_POLL_INTERVAL=5-min
+#
+# ## Used to auth incoming webhooks. Alt: KOMODO_WEBHOOK_SECRET_FILE
+# KOMODO_WEBHOOK_SECRET= [[KOMODO WEBHOOK SECRET]]
+# ## Used to generate jwt. Alt: KOMODO_JWT_SECRET_FILE
+# KOMODO_JWT_SECRET= [[KOMODO JWT SECRET]]
+#
+# ## Enable login with username + password.
+# KOMODO_LOCAL_AUTH=true
+# ## Disable new user signups.
+# KOMODO_DISABLE_USER_REGISTRATION=false
+# ## All new logins are auto enabled
+# KOMODO_ENABLE_NEW_USERS=false
+# ## Disable non-admins from creating new resources.
+# KOMODO_DISABLE_NON_ADMIN_CREATE=false
+# ## Allows all users to have Read level access to all resources.
+# KOMODO_TRANSPARENT_MODE=false
+#
+# ## Time to live for jwt tokens.
+# ## Options: 1-hr, 12-hr, 1-day, 3-day, 1-wk, 2-wk
+# KOMODO_JWT_TTL=2-wk
+#
+# ## Github Oauth
+# KOMODO_GITHUB_OAUTH_ENABLED=false
+# # KOMODO_GITHUB_OAUTH_ID= # Alt: KOMODO_GITHUB_OAUTH_ID_FILE
+# # KOMODO_GITHUB_OAUTH_SECRET= # Alt: KOMODO_GITHUB_OAUTH_SECRET_FILE
+#
+# ## Google Oauth
+# KOMODO_GOOGLE_OAUTH_ENABLED=false
+# # KOMODO_GOOGLE_OAUTH_ID= # Alt: KOMODO_GOOGLE_OAUTH_ID_FILE
+# # KOMODO_GOOGLE_OAUTH_SECRET= # Alt: KOMODO_GOOGLE_OAUTH_SECRET_FILE
+#
+# ## Generic OIDC
+# KOMODO_OIDC_ENABLED=true
+# KOMODO_OIDC_PROVIDER=https://auth.31337.im
+# KOMODO_OIDC_CLIENT_ID=
+# KOMODO_OIDC_CLIENT_SECRET=
+# KOMODO_OIDC_USE_FULL_EMAIL=true
+#
+# ## Aws - Used to launch Builder instances and ServerTemplate instances.
+# KOMODO_AWS_ACCESS_KEY_ID= # Alt: KOMODO_AWS_ACCESS_KEY_ID_FILE
+# KOMODO_AWS_SECRET_ACCESS_KEY= # Alt: KOMODO_AWS_SECRET_ACCESS_KEY_FILE
+#
+# ## Hetzner - Used to launch ServerTemplate instances
+# ## Hetzner Builder not supported due to Hetzner pay-by-the-hour pricing model
+# KOMODO_HETZNER_TOKEN= # Alt: KOMODO_HETZNER_TOKEN_FILE
+#
+# KOMODO_SSL_ENABLED=true
+#
+# ## Database Connection Info
+# KOMODO_DATABASE_ADDRESS=mongo:27017
+# KOMODO_DATABASE_USERNAME=admin
+# KOMODO_DATABASE_PASSWORD=admin
+#
+# Mongo InitDB credentials
+# MONGO_INITDB_ROOT_USERNAME=admin
+# MONGO_INITDB_ROOT_PASSWORD=admin
+#
+# #=------------------------------=#
+# #= Komodo Periphery Environment =#
+# #=------------------------------=#
+#
+# ## Full variable list + descriptions are available here:
+# ## https://github.com/mbecker20/komodo/blob/main/config/periphery.config.toml
+#
+# PERIPHERY_SSL_ENABLED=true
+# PERIPHERY_INCLUDE_DISK_MOUNTS=/etc/hostname
+# PERIPHERY_PASSKEYS_FILE=/var/secrets/passkey

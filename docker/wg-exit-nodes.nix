@@ -1,3 +1,22 @@
+# This module provides a declarative way to configure Wireguard Exit Node instances for tailscale using OCI containers.
+# by default it uses the /docker-data/[instance name]/config directory for the wg-quick configuration files.
+# all you need to do is define the instances using the example below and place the wg-quick configuration files in the config directory
+# and add the TAILSCALE_AUTHKEY to the .env file in /docker-data/[instance name]/ directory. The TAILSCALE_AUTHKEY
+# will be deleted after the container has started for the first time, this fixes an issue with Headscale and keeping it there.
+#
+# For the example below, the wg config file should be placed in /docker-data/wg-exit-node-proton-toronto/config
+# and the TAILSCALE_AUTHKEY should be placed in the /docker-data/wg-exit-node-proton-toronto/.env file.
+#
+# ### TAILSCALE EXIT NODES -> WG VPN ###
+# services.wg-exit-nodes = {
+
+#   # Proton VPN Toronto
+#   wg-exit-node-proton-toronto = {
+#     enable = true;
+#     tailscale_hostname = "proton-toronto";
+#   };
+# };
+
 { config, pkgs, lib, ... }:
 
 with lib;
@@ -56,10 +75,7 @@ in
     enabledInstances = filterAttrs (name: inst: inst.enable) cfg;
   in mkIf (enabledInstances != {}) {
 
-    # Enable docker backend for OCI containers if at least one instance is enabled
     virtualisation.oci-containers.backend = "docker";
-
-    # Generate container configurations dynamically
     virtualisation.oci-containers.containers = mapAttrs' (name: inst: nameValuePair inst.service_name {
       image = "ghcr.io/juhovh/tailguard:latest";
       labels = {

@@ -1,6 +1,25 @@
 {config, pkgs, lib, ...}:
 let
   cfg = config.modules.acme;
+
+  mkCert = domain: {
+    name = domain;
+    value = {
+      domain = "*.${domain}";
+      dnsProvider = cfg.dnsProvider;
+      environmentFile = cfg.environmentFile;
+      dnsPropagationCheck = cfg.dnsPropagationCheck;
+      postRun = ''
+        openssl pkcs12 -export \
+          -out /var/lib/acme/${domain}/${domain}.pfx \
+          -inkey /var/lib/acme/${domain}/key.pem \
+          -in /var/lib/acme/${domain}/fullchain.pem \
+          -passout pass: && \
+        chmod 640 /var/lib/acme/${domain}/${domain}.pfx && \
+        chown acme:acme /var/lib/acme/${domain}/${domain}.pfx
+      '';
+    };
+  };
 in
 {
   options.modules.acme = {
@@ -16,22 +35,23 @@ in
       description = "Email address for ACME.";
     };
 
-    domain = lib.mkOption {
-      type = lib.types.str;
-      default = "31337.im";
-      description = "Domain for ACME.";
+    domains = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ "31337.im" ];
+      description = "Domains to issue wildcard certificates for.";
+      example = [ "31337.im" "example.com" ];
     };
 
     dnsProvider = lib.mkOption {
       type = lib.types.str;
       default = "cloudflare";
-      description = "DNS provider for ACME.";
+      description = "DNS provider for ACME (shared across all domains).";
     };
 
     environmentFile = lib.mkOption {
       type = lib.types.str;
       default = "/etc/nixos/secrets/${cfg.dnsProvider}-token";
-      description = "Environment file for ACME.";
+      description = "Environment file for ACME (shared across all domains).";
     };
 
     dnsPropagationCheck = lib.mkOption {
@@ -39,25 +59,16 @@ in
       default = true;
       description = "DNS propagation check for ACME.";
     };
-
   };
 
   config = lib.mkIf cfg.enable {
     security.acme = {
       acceptTerms = true;
-      defaults.email = cfg.email;
       defaults = {
-        # Restart all containers that use the caddy image after renewal
-        # postRun = "docker ps -a --filter 'ancestor=caddy' --format '{{.ID}}' | xargs docker restart";
-        postRun = "openssl pkcs12 -export -out /var/lib/acme/${cfg.domain}/${cfg.domain}.pfx -inkey /var/lib/acme/${cfg.domain}/key.pem -in /var/lib/acme/${cfg.domain}/fullchain.pem -passout pass: && chmod 640 /var/lib/acme/${cfg.domain}/${cfg.domain}.pfx && chown acme:acme /var/lib/acme/${cfg.domain}/${cfg.domain}.pfx";
+        email = cfg.email;
         renewInterval = "monthly";
       };
-      certs."${cfg.domain}" = {
-        domain = "*.${cfg.domain}";
-        dnsProvider = "${cfg.dnsProvider}";
-        environmentFile = "${cfg.environmentFile}";
-        dnsPropagationCheck = cfg.dnsPropagationCheck;
-      };
+      certs = lib.listToAttrs (map mkCert cfg.domains);
     };
   };
 }
