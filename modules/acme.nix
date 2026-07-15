@@ -1,4 +1,14 @@
 {config, pkgs, lib, ...}:
+# This module creates ACME certificates for the domains listed in the domains portion of the configuration using a single config for the dns provider for all domains.
+# It simplifies the process of creating certificates for multiple domains by using a single dns provider for all of them.
+# the module does require that the dns provider auth is set via the environmentFile option in /etc/nixos/secrets/[[dns provider name here]]-token
+#
+# example
+# modules.acme = {
+#   domains = [ "example.com" "example2.com" ]; # the module will create a wildcard certificate for example.com and example2.com
+# };
+#
+
 let
   cfg = config.modules.acme;
 
@@ -9,6 +19,7 @@ let
       dnsProvider = cfg.dnsProvider;
       environmentFile = cfg.environmentFile;
       dnsPropagationCheck = cfg.dnsPropagationCheck;
+      # Create a PKCS12 certificate from the fullchain and key
       postRun = ''
         openssl pkcs12 -export \
           -out /var/lib/acme/${domain}/${domain}.pfx \
