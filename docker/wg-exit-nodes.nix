@@ -114,40 +114,40 @@ in
     ### IPv4/IPv6 FORWARDING ###
     # Enable IPv4/IPv6 forwarding as exit nodes require it to work properly
     boot.kernel.sysctl = {
-        "net.ipv4.ip_forward" = 1;
-        "net.ipv6.conf.all.forwarding" = 1;
-        "net.ipv6.conf.default.forwarding" = 1;
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv6.conf.default.forwarding" = 1;
     };
 
     systemd.services =
-          # Generate the docker network services
-          (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
-            path = [ pkgs.docker ];
-            serviceConfig = {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              ExecStop = "${pkgs.docker}/bin/docker network rm -f ${inst.network_name}";
-            };
-            script = ''
-              docker network inspect ${inst.network_name} || docker network create ${inst.network_name} --ipv6
-            '';
-            wantedBy = [ "multi-user.target" ];
-          }) enabledInstances)
+      # Generate the docker network services
+      (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
+        path = [ pkgs.docker ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStop = "${pkgs.docker}/bin/docker network rm -f ${inst.network_name}";
+        };
+        script = ''
+          docker network inspect ${inst.network_name} || docker network create ${inst.network_name} --ipv6
+        '';
+        wantedBy = [ "multi-user.target" ];
+      }) enabledInstances)
 
-          // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
-          (mapAttrs' (name: inst: nameValuePair "docker-${inst.service_name}" {
-            postStart = ''
-              # Schedule a transient systemd timer to delete the key in 1 minute
-              ${pkgs.systemd}/bin/systemd-run \
-                --on-active=1m \
-                --timer-property=AccuracySec=1s \
-                ${pkgs.bash}/bin/bash -c "
-                  if [ -f '${inst.base_dir}/.env' ]; then
-                    ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
-                  fi
-                "
-            '';
-          }) enabledInstances);
+      // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
+      (mapAttrs' (name: inst: nameValuePair "docker-${inst.service_name}" {
+        postStart = ''
+          # Schedule a transient systemd timer to delete the key in 1 minute
+          ${pkgs.systemd}/bin/systemd-run \
+            --on-active=1m \
+            --timer-property=AccuracySec=1s \
+            ${pkgs.bash}/bin/bash -c "
+              if [ -f '${inst.base_dir}/.env' ]; then
+                ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
+              fi
+            "
+        '';
+      }) enabledInstances);
 
 
   };
