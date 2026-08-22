@@ -178,10 +178,6 @@
         };
     };
 
-
-
-
-
     ### DOCKER MACVLAN NETWORK ###
     # Create a macvlan network for Docker containers
     # for local LAN access when tailscale is not available
@@ -207,5 +203,5 @@
             ";
     };
 
-    system.stateVersion = "24.11";
+    system.stateVersion = "26.05";
 }

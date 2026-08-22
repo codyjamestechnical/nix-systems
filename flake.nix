@@ -18,12 +18,21 @@
       url = "github:NixOS/nixos-hardware";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    app-manager = {
+      url = "github:kem-a/AppManager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.7.0";
+
   };
 
-  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware,... }@inputs: {
+  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware, nix-flatpak, ... }@inputs: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/mars-server
           ./modules/tailscale.nix
@@ -35,10 +44,22 @@
 
       core-infra = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/core-infra
           ./modules/tailscale.nix
           ./modules/docker.nix
+        ];
+      };
+
+      laptop = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/laptop
+          ./modules/app-manager.nix
+          ./modules/desktop-base.nix
+          nix-flatpak.nixosModules.nix-flatpak
         ];
       };
 
