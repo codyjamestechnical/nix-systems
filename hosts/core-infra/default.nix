@@ -51,6 +51,12 @@
         tailscale_hostname = "obscura-atlanta";
       };
 
+      # Obscura VPN Atlanta
+      wg-exit-node-obscura-chicago = {
+        enable = true;
+        tailscale_hostname = "obscura-chicago";
+      };
+
     };
 
     ### CLEANUP TMP ON BOOT ###
