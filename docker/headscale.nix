@@ -116,6 +116,7 @@ in
       };
     };
 
+  };
 }
 
 ### HEADSCALE ENV TEMPLATE ###
