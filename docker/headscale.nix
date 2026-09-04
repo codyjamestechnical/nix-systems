@@ -48,7 +48,7 @@ in
 
     ### HEADSCALE SERVER ###
     "${cfg.service_name}-server" = {
-      image = "ghcr.io/juanfont/headscale:v0.28.0";
+      image = "ghcr.io/juanfont/headscale:v0.29.3";
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
@@ -85,7 +85,7 @@ in
 
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
-      image = "ghcr.io/tale/headplane:0.6.2";
+      image = "ghcr.io/tale/headplane:0.7.1";
       dependsOn = [
         "${cfg.service_name}-server"
       ];
@@ -116,32 +116,13 @@ in
       };
     };
 
-
-  ### TAILSCALE EXPORTER FOR PROMETHEUS ###
-    "${cfg.service_name}-tailscale-exporter" = {
-      image = "adinhodovic/tailscale-exporter:latest";
-      dependsOn = [
-        "${cfg.service_name}-server"
-      ];
-      volumes = [
-
-      ];
-      environment = {
-        HEADSCALE_ADDRESS = "headscale.cjtech.io:50443";
-        HEADSCALE_INSECURE = "false";
-        LISTEN_ADDRESS = "0.0.0.0:9250";
-      };
-      environmentFiles = [
-        "/docker-data/.env"
-        "${cfg.base_dir}/.env"
-      ];
-      log-driver = "journald";
-      extraOptions = [
-        # "--network=container:${cfg.service_name}-caddy"
-        "--network-alias=headscale-tailscale-exporter"
-        "--network=${cfg.network_name}"
-      ];
-    };
-  };
-
 }
+
+### HEADSCALE ENV TEMPLATE ###
+# # # place this file in ${cfg.base_dir}/.env
+#
+# ## Tailscale auth key for setup. This will be auto deleted after the first run.
+# TAILSCALE_AUTHKEY=
+#
+# ## API key for Headscale.
+# HEADSCALE_APIKEY=
