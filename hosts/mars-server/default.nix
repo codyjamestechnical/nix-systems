@@ -9,7 +9,6 @@
         ../../modules/docker.nix ## DOCKER
 
         # DOCKER SERVICES
-        ../../docker/netdata.nix ## NETDATA
         ../../docker/komodo-periphery.nix ## KOMODO PERIPHERY
         ../../docker/beszel-agent.nix ## BESZEL AGENT
         ../../docker/arkeep-agent.nix ## ARKEEP AGENT
@@ -34,7 +33,7 @@
       forceImportRoot = false;
       extraPools = [ "cjt_pool" "nvme_pool"];
     };
-    
+
     services.zfs = {
       autoScrub.enable = true;
       trim.enable = true;
