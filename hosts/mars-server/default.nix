@@ -20,7 +20,7 @@
         efi.canTouchEfiVariables = true;
     };
 
-    boot.kernalPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
 
     ### NETWORK ###
     networking.hostName = "mars-server";
