@@ -32,6 +32,7 @@
       #     );
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIEB06+mXFpYiRLegmXjiZzPuF1rTs+ySVCn5mJ0hpZ cody@cjtech.io"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7GF3+KjXW+H9A3ojMTn4lpEp0WE+2P/EE5aWGwmOk7 cody@cjtech.io"
       ];
       packages = with pkgs; [
 
