@@ -21,9 +21,12 @@
         efi.canTouchEfiVariables = true;
     };
 
+    boot.kernalPackages = pkgs.linuxPackages_latest;
+
     ### NETWORK ###
     networking.hostName = "mars-server";
     networking.hostId = "deadb33f";
+
 
     ### ZFS POOL SETUP ###
     boot.supportedFilesystems = [ "zfs" ];
