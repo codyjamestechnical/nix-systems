@@ -39,49 +39,49 @@
       trim.enable = true;
     };
 
-    # ### WEBZFS DASHBOARD ###
-    # services.webzfs = {
-    #   enable = true;
-    #   openFirewall = true;
-    #   package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    # };
+    ### WEBZFS DASHBOARD ###
+    services.webzfs = {
+      enable = true;
+      openFirewall = true;
+      package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    };
 
-    # # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
-    # # the same key on every subsequent start. The key is written outside the
-    # # Nix store (which is world-readable) and survives rebuilds/reboots.
-    # systemd.services.webzfs-secret-key = {
-    #   description = "Generate and persist the WebZFS SECRET_KEY";
-    #   wantedBy = [ "multi-user.target" ];
-    #   before = [ "webzfs.service" ];
-    #   serviceConfig = {
-    #     Type = "oneshot";
-    #     RemainAfterExit = true;
-    #     UMask = "0077";
-    #   };
-    #   script = ''
-    #     set -eu
-    #     keyfile="/var/lib/webzfs/secret_key.env"
-    #     mkdir -p "$(dirname "$keyfile")"
-    #     if [ ! -s "$keyfile" ]; then
-    #       printf 'SECRET_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > "$keyfile"
-    #       chmod 600 "$keyfile"
-    #     fi
-    #   '';
-    # };
+    # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
+    # the same key on every subsequent start. The key is written outside the
+    # Nix store (which is world-readable) and survives rebuilds/reboots.
+    systemd.services.webzfs-secret-key = {
+      description = "Generate and persist the WebZFS SECRET_KEY";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "webzfs.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        UMask = "0077";
+      };
+      script = ''
+        set -eu
+        keyfile="/var/lib/webzfs/secret_key.env"
+        mkdir -p "$(dirname "$keyfile")"
+        if [ ! -s "$keyfile" ]; then
+          printf 'SECRET_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > "$keyfile"
+          chmod 600 "$keyfile"
+        fi
+      '';
+    };
 
-    # # Feed the generated key into WebZFS. pydantic-settings gives environment
-    # # variables priority over the bundled .env file, so this is the key the
-    # # application actually uses.
-    # systemd.services.webzfs = {
-    #   after = [ "webzfs-secret-key.service" ];
-    #   requires = [ "webzfs-secret-key.service" ];
-    #   serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
-    # };
+    # Feed the generated key into WebZFS. pydantic-settings gives environment
+    # variables priority over the bundled .env file, so this is the key the
+    # application actually uses.
+    systemd.services.webzfs = {
+      after = [ "webzfs-secret-key.service" ];
+      requires = [ "webzfs-secret-key.service" ];
+      serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
+    };
 
     ### SAMBA SHARES ###
     services.samba = {
         enable = true;
-        package = pkgs.samba4Full;
+        package = pkgs.samba4Full { enableCephFS = false; };
         openFirewall = true;
         settings = {
             global = {

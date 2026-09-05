@@ -37,7 +37,7 @@
           ./hosts/mars-server
           ./modules/tailscale.nix
           ./modules/docker.nix
-          # webzfs.nixosModules.webzfs
+          webzfs.nixosModules.webzfs
           nixos-hardware.nixosModules.minisforum-um790-pro
         ];
       };
