@@ -32,8 +32,9 @@
     boot.supportedFilesystems = [ "zfs" ];
     boot.zfs = {
       forceImportRoot = false;
-      extraPools = [ "cjt_pool" ];
+      extraPools = [ "cjt_pool" "nvme_pool"];
     };
+    
     services.zfs = {
       autoScrub.enable = true;
       trim.enable = true;
