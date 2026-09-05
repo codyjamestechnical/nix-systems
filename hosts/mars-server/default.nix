@@ -81,7 +81,7 @@
     ### SAMBA SHARES ###
     services.samba = {
         enable = true;
-        package = pkgs.samba4Full { enableCephFS = false; };
+        package = pkgs.samba4Full.override { enableCephFS = false; };
         openFirewall = true;
         settings = {
             global = {
