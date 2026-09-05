@@ -43,6 +43,7 @@
     services.webzfs = {
       enable = true;
       openFirewall = true;
+      package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
     };
 
     # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
