@@ -42,6 +42,7 @@
     ### WEBZFS DASHBOARD ###
     services.webzfs = {
       enable = true;
+      host = "0.0.0.0";
       openFirewall = true;
       package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
     };
