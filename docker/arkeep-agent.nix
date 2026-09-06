@@ -1,37 +1,51 @@
-# Requires arkeep-agent.env set in the secrets directory.
-{ config, pkgs, ... }:
+# Requires arkeep-agent.env in the secrets directory.
+{ config, lib, ... }:
 let
-  cfg = {
-    service_name = "arkeep-agent";
-    secrets_dir = "/etc/nixos/secrets";
-    volumes = [
-      "/root/.arkeep:/var/lib/arkeep-agent"
-      "/docker-data:/hostfs/docker-data:rw"
-    ];
-  };
+  cfg = config.services.arkeep-agent;
+
+  baseVolumes = [
+    "/root/.arkeep:/var/lib/arkeep-agent"
+    "/docker-data:/hostfs/docker-data:rw"
+  ];
 in
 {
-  ### OCI CONTAINERS ###
-  virtualisation.oci-containers.backend = "docker";
-  virtualisation.oci-containers.containers = {
-
-    ### ARKEEP AGENT ###
-    "${cfg.service_name}" = {
-      image = "ghcr.io/arkeep-io/arkeep-agent:latest";
-      extraOptions = [
-        "--network=host"
-      ];
-      volumes = cfg.volumes;
-      environmentFiles = [
-        "${cfg.secrets_dir}/arkeep-agent.env"
-      ];
-      labels = {
-        "komodo.skip" = "";
-      };
+  options.services.arkeep-agent = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to run the Arkeep agent container.";
     };
 
+    secretsDir = lib.mkOption {
+      type = lib.types.str;
+      default = "/etc/nixos/secrets";
+      description = "Directory containing arkeep-agent.env";
+    };
+
+    extraVolumes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "/srv/data:/hostfs/srv-data:ro" ];
+      description = ''
+        Additional bind mounts for the container. These are appended to the
+        always-present base mounts:
+        ${lib.concatStringsSep "\n" (map (v: "  - ${v}") baseVolumes)}
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.containers.arkeep-agent = {
+      image = "ghcr.io/arkeep-io/arkeep-agent:latest";
+      extraOptions = [ "--network=host" ];
+      volumes = baseVolumes ++ cfg.extraVolumes;
+      environmentFiles = [ "${cfg.secretsDir}/arkeep-agent.env" ];
+      labels."komodo.skip" = "";
+    };
   };
 }
+
 
 ### ARKEEP-AGENT.ENV TEMPLATE ###
 # ARKEEP_SERVER_ADDR=[arkeep url without scheme]:9090

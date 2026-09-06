@@ -79,6 +79,11 @@
       serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
     };
 
+    ### ARKEEP PHOTO DIRECTORY ADDITION ###
+    services.arkeep-agent.extraVolumes = [
+        "/cjt_pool/Photo_Library:/photo-library:ro"
+    ];
+
     ### SAMBA SHARES ###
     services.samba = {
         enable = true;
