@@ -81,7 +81,7 @@
 
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
     services.arkeep-agent.extraVolumes = [
-        "/cjt_pool/Photo_Library:/photo-library:ro"
+        "/cjt_pool/Photo_Library:/hostfs/photo-library:ro"
     ];
 
     ### SAMBA SHARES ###
