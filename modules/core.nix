@@ -56,7 +56,7 @@
     zip
     unzip
     cifs-utils
-
+    superfile
   ];
 
   ### OpenSSH DEAMON ###
