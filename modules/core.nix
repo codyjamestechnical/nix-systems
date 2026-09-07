@@ -81,6 +81,7 @@
       # File system aliases
       ls = "lsd -lA";
       cat = "bat";
+      spf = "superfile"
 
       # Pull latest git changes and rebuild switch NixOS with flake
       rebuild = "sudo git -C /etc/nixos/nix-systems pull && sudo nixos-rebuild switch --flake '/etc/nixos/nix-systems#${config.networking.hostName}'";
