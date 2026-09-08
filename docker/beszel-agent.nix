@@ -20,10 +20,19 @@ in
       ];
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock:ro"
+        "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro"
+        "/var/run/systemd/private:/var/run/systemd/private:ro"
         "${cfg.base_dir}:/extra-filesystems/Docker_Data:ro"
       ];
       environmentFiles = [
         "${cfg.secrets_dir}/beszel-agent.env"
+      ];
+      devices = [
+        "/dev/zfs:/dev/zfs"
+      ];
+      extraOptions = [
+        "--cap-add=NET_ADMIN"
+        "--cap-add=SYS_RAWIO"
       ];
       labels = {
         "komodo.skip" = "";
