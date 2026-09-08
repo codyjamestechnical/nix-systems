@@ -57,6 +57,7 @@
     unzip
     cifs-utils
     superfile
+    smartmontools
   ];
 
   ### OpenSSH DEAMON ###
