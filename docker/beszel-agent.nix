@@ -17,6 +17,8 @@ in
       image = "henrygd/beszel-agent";
       extraOptions = [
         "--network=host"
+        "--cap-add=NET_ADMIN"
+        "--cap-add=SYS_RAWIO"
       ];
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -29,10 +31,6 @@ in
       ];
       devices = [
         "/dev/zfs:/dev/zfs"
-      ];
-      extraOptions = [
-        "--cap-add=NET_ADMIN"
-        "--cap-add=SYS_RAWIO"
       ];
       labels = {
         "komodo.skip" = "";
