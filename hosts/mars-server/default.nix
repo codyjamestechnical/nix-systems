@@ -92,12 +92,13 @@
           "/dev/nvme1:/dev/nvme1"
         ];
     };
-    
+
     # Create a udev rule that changes NVMe devices to disk group ownership
     # for Beszel to be able to show them correctly
-    udev.extraRules = ``
+    udev.extraRules = ''
       KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
-    ``
+    ''
+
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
     services.arkeep-agent.extraVolumes = [
         "/cjt_pool/Photo_Library:/hostfs/photo-library:ro"
