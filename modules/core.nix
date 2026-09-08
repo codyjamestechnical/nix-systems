@@ -64,6 +64,9 @@
     enable = true;
   };
 
+  ### Enable S.M.A.R.T Drive Monitoring ###
+  services.smartd.enable = true;
+
   ### ZSH ###
   programs.zsh = {
     enable = true;
