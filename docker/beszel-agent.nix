@@ -14,7 +14,7 @@ in
 
     ### BESZEL AGENT ###
     "${cfg.service_name}" = {
-      image = "henrygd/beszel-agent";
+      image = "henrygd/beszel-agent:alpine";
       extraOptions = [
         "--network=host"
         "--cap-add=NET_ADMIN"
