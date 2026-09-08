@@ -97,7 +97,7 @@
     # for Beszel to be able to show them correctly
     udev.extraRules = ''
       KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
-    ''
+    '';
 
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
     services.arkeep-agent.extraVolumes = [
