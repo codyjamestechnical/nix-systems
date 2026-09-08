@@ -63,7 +63,7 @@ in
 
       extraOptions = [
         "--network=host"
-        "--cap-add=NET_ADMIN"
+        "--cap-add=SYS_ADMIN"
         "--cap-add=SYS_RAWIO"
       ];
 
