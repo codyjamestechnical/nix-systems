@@ -95,7 +95,7 @@
 
     # Create a udev rule that changes NVMe devices to disk group ownership
     # for Beszel to be able to show them correctly
-    udev.extraRules = ''
+    services.udev.extraRules = ''
       KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
     '';
 
