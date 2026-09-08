@@ -90,7 +90,7 @@
           "/dev/sde:/dev/sde"
           "/dev/nvme0:/dev/nvme0"
           "/dev/nvme1:/dev/nvme1"
-        ]
+        ];
     };
 
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
