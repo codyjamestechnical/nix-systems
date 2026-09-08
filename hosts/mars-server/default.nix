@@ -79,6 +79,9 @@
       serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
     };
 
+    ### ENABLE ZFS IN BESZEL AGENT ###
+    services.beszel-agent.zfsEnabled = true;
+
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
     services.arkeep-agent.extraVolumes = [
         "/cjt_pool/Photo_Library:/hostfs/photo-library:ro"
