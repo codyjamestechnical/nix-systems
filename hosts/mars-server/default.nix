@@ -1,23 +1,23 @@
 { inputs, config, pkgs, ... }:
 {
     imports = [
-        ./hardware-configuration.nix
+      ./hardware-configuration.nix
 
-        # MODULES
-        ../../modules/core.nix ## CORE
-        ../../modules/acme.nix ## ACME
-        ../../modules/docker.nix ## DOCKER
+      # MODULES
+      ../../modules/core.nix ## CORE
+      ../../modules/acme.nix ## ACME
+      ../../modules/docker.nix ## DOCKER
 
-        # DOCKER SERVICES
-        ../../docker/komodo-periphery.nix ## KOMODO PERIPHERY
-        ../../docker/beszel-agent.nix ## BESZEL AGENT
-        ../../docker/arkeep-agent.nix ## ARKEEP AGENT
+      # DOCKER SERVICES
+      ../../docker/komodo-periphery.nix ## KOMODO PERIPHERY
+      ../../docker/beszel-agent.nix ## BESZEL AGENT
+      ../../docker/arkeep-agent.nix ## ARKEEP AGENT
     ];
 
     ### BOOTLOADER ###
     boot.loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
     };
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -79,8 +79,19 @@
       serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
     };
 
-    ### ENABLE ZFS IN BESZEL AGENT ###
-    services.beszel-agent.zfsEnabled = true;
+    ### BESZEL AGENT CONFIG ###
+    services.beszel-agent = { 
+        zfsEnabled = true;
+        extraDevices = [
+          "/dev/sda:/dev/sda"
+          "/dev/sdb:/dev/sdb"
+          "/dev/sdc:/dev/sdc"
+          "/dev/sdd:/dev/sdd"
+          "/dev/sde:/dev/sde"
+          "/dev/nvme0:/dev/nvme0"
+          "/dev/nvme1:/dev/nvme1"
+        ]
+    };
 
     ### ARKEEP PHOTO DIRECTORY ADDITION ###
     services.arkeep-agent.extraVolumes = [
@@ -93,52 +104,52 @@
         package = pkgs.samba4Full.override { enableCephFS = false; };
         openFirewall = true;
         settings = {
-            global = {
-                "workgroup" = "WORKGROUP";
-                "server string" = "mars-server";
-                "netbios name" = "mars-server";
-                "security" = "user";
-                #"use sendfile" = "yes";
-                # "max protocol" = "smb3";
-                # note: localhost is the ipv6 localhost ::1
-                "hosts allow" = "10.0.10. 10.0.30. 127.0.0.1 localhost";
-                "hosts deny" = "0.0.0.0/0";
-                "guest account" = "nobody";
-                "map to guest" = "bad user";
-                "log file" = "/var/log/samba/client.%I";
-                "log level" = "2";
-                "wins support" = "yes";
-                "local master" = "yes";
-                "preferred master" = "yes";
-                "server min protocol" = "SMB3_00";
-            };
-            "docker-data" = {
-                "path" = "/docker-data";
-                "browseable" = "yes";
-                "read only" = "no";
-                "guest ok" = "yes";
-                "create mask" = "0777";
-                "directory mask" = "0777";
-                "force user" = "cody";
-            };
-            "Movies" = {
-                "path" = "/mnt/cjt_pool/Media-Files/TV";
-                "browseable" = "yes";
-                "read only" = "no";
-                "guest ok" = "yes";
-                "create mask" = "0777";
-                "directory mask" = "0777";
-                "force user" = "cody";
-            };
-            "TV-Shows" = {
-                "path" = "/mnt/cjt_pool/Media-Files/TV";
-                "browseable" = "yes";
-                "read only" = "no";
-                "guest ok" = "yes";
-                "create mask" = "0777";
-                "directory mask" = "0777";
-                "force user" = "cody";
-            };
+          global = {
+            "workgroup" = "WORKGROUP";
+            "server string" = "mars-server";
+            "netbios name" = "mars-server";
+            "security" = "user";
+            #"use sendfile" = "yes";
+            # "max protocol" = "smb3";
+            # note: localhost is the ipv6 localhost ::1
+            "hosts allow" = "10.0.10. 10.0.30. 127.0.0.1 localhost";
+            "hosts deny" = "0.0.0.0/0";
+            "guest account" = "nobody";
+            "map to guest" = "bad user";
+            "log file" = "/var/log/samba/client.%I";
+            "log level" = "2";
+            "wins support" = "yes";
+            "local master" = "yes";
+            "preferred master" = "yes";
+            "server min protocol" = "SMB3_00";
+          };
+          "docker-data" = {
+            "path" = "/docker-data";
+            "browseable" = "yes";
+            "read only" = "no";
+            "guest ok" = "yes";
+            "create mask" = "0777";
+            "directory mask" = "0777";
+            "force user" = "cody";
+          };
+          "Movies" = {
+            "path" = "/mnt/cjt_pool/Media-Files/TV";
+            "browseable" = "yes";
+            "read only" = "no";
+            "guest ok" = "yes";
+            "create mask" = "0777";
+            "directory mask" = "0777";
+            "force user" = "cody";
+          };
+          "TV-Shows" = {
+            "path" = "/mnt/cjt_pool/Media-Files/TV";
+            "browseable" = "yes";
+            "read only" = "no";
+            "guest ok" = "yes";
+            "create mask" = "0777";
+            "directory mask" = "0777";
+            "force user" = "cody";
+          };
         };
     };
 
@@ -165,30 +176,30 @@
 
     ### AVAHI ###
     services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      nssmdns6 = true;
+      publish = {
         enable = true;
-        nssmdns4 = true;
-        nssmdns6 = true;
-        publish = {
-            enable = true;
-            addresses = true;
-            domain = true;
-            hinfo = true;
-            userServices = true;
-            workstation = true;
-        };
-        extraServiceFiles = {
-        smb = ''
-            <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
-            <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-            <service-group>
-            <name replace-wildcards="yes">%h</name>
-            <service>
-                <type>_smb._tcp</type>
-                <port>445</port>
-            </service>
-            </service-group>
-        '';
-        };
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+      };
+      extraServiceFiles = {
+      smb = ''
+        <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+        <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+        <service-group>
+        <name replace-wildcards="yes">%h</name>
+        <service>
+            <type>_smb._tcp</type>
+            <port>445</port>
+        </service>
+        </service-group>
+      '';
+      };
     };
 
     ### DOCKER MACVLAN NETWORK ###
