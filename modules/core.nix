@@ -62,6 +62,8 @@
   ### OpenSSH DEAMON ###
   services.openssh = {
     enable = true;
+    settings.PasswordAuthentication = false;
+    settings.PermitRootLogin = "yes";
   };
 
   ### Enable S.M.A.R.T Drive Monitoring ###
