@@ -21,6 +21,7 @@
     };
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.extraModulePackages = with config.boot.kernelPackages; [ r8125 ];
 
     ### NETWORK ###
     networking.hostName = "mars-server";
