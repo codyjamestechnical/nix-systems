@@ -54,6 +54,10 @@
         ipv6 = true;
         ip6tables = true;   # needed for IPv6 NAT/filtering on modern Docker
         fixed-cidr-v6 = "fd00::/80";
+        "default-address-pools" = [
+          { base = "172.17.0.0/12"; size = 24; }
+          { base = "192.168.0.0/16"; size = 24; }
+        ];
         "hosts" = [
           "unix:///var/run/docker.sock"
           "tcp://0.0.0.0:2375"
