@@ -104,6 +104,7 @@ in
         TS_USERSPACE = "false";
         TS_HOSTNAME = "${inst.tailscale_hostname}";
         TS_LOGIN_SERVER = "https://headscale.cjtech.io";
+        TS_ACCEPT_DNS = "true";
         # Note: If you want to use tailscale_tags, you can reference it here.
         # But I use headscale which only allows specifying tags when creating the auth key.
         # e.g.:
