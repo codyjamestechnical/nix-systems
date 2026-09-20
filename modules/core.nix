@@ -82,7 +82,7 @@
       logsvc = "sudo journalctl -xeu";
 
       # File system aliases
-      lsa = "lsd -lA";
+      ls = "lsd -lA";
       cat = "bat";
       spf = "superfile";
 
