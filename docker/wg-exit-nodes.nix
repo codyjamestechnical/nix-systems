@@ -144,8 +144,8 @@ in
           TS_USERSPACE = "false";
           TS_HOSTNAME = "${inst.tailscale_hostname}";
           TS_LOGIN_SERVER = "https://headscale.cjtech.io";
-          # TS_ACCEPT_DNS = "true";
-          TS_EXTRA_ARGS = "--accept-dns=true --advertise-exit-node";
+          TS_ACCEPT_DNS = "true";
+          TS_EXTRA_ARGS = "--advertise-exit-node";
         };
       }) enabledInstances);
 
