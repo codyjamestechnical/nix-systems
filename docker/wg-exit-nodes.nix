@@ -139,6 +139,17 @@ in
           "--network=container:${inst.service_name}-gluetun"
           "--device=/dev/net/tun"
         ];
+        # gluetun's low-priority ip rules (99/101) push replies to tailnet peers out tun0.
+         # Send the tailnet ranges to Tailscale's table 52 ahead of gluetun's rules.
+         entrypoint = "/bin/sh";
+         cmd = [
+           "-c"
+           ''
+             ip rule add to 100.64.0.0/10 table 52 priority 90 2>/dev/null || true
+             ip -6 rule add to fd7a:115c:a1e0::/48 table 52 priority 90 2>/dev/null || true
+             exec /usr/local/bin/containerboot
+           ''
+         ];
         environment = {
           TS_STATE_DIR = "/var/lib/tailscale";
           TS_USERSPACE = "false";
