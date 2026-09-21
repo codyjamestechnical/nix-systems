@@ -115,7 +115,7 @@ in
         environment = {
           VPN_SERVICE_PROVIDER = "custom";
           VPN_TYPE = "wireguard";
-          DOT = "on";
+          DOT = "off";
         };
       }) enabledInstances)
 
