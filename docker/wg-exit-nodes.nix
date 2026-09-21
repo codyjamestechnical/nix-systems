@@ -34,6 +34,12 @@ let
     iptables -A FORWARD -i tailscale0 -o tun0 -j ACCEPT
     iptables -A FORWARD -i tun0 -o tailscale0 -j ACCEPT
     iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
+    ip6tables -A OUTPUT -o tailscale0 -d fd7a:115c:a1e0::/48 -j ACCEPT
+    ip6tables -I FORWARD 1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    ip6tables -A FORWARD -i tailscale0 -o tun0 -j ACCEPT
+    ip6tables -A FORWARD -i tun0 -o tailscale0 -j ACCEPT
+    ip6tables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
+
   '';
 
   # Define the schema/options for a single instance
