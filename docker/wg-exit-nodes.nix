@@ -121,9 +121,7 @@ in
         environment = {
           VPN_SERVICE_PROVIDER = "custom";
           VPN_TYPE = "wireguard";
-          DOT = "off";
-          DNS_UPSTREAM_RESOLVER_TYPE = "plain";
-          DNS_UPSTREAM_PLAIN_ADDRESSES = "100.100.100.100:53,76.76.2.22:53";
+          DOT = "on";
         };
       }) enabledInstances)
 
