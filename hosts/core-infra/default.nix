@@ -33,16 +33,10 @@
     ### TAILSCALE EXIT NODES -> WG VPN ###
     services.wg-exit-nodes = {
 
-      # Proton VPN Toronto
-      wg-exit-node-proton-toronto = {
+      # Obscura VPN Amsterdam
+      wg-exit-node-obscura-amsterdam = {
         enable = true;
-        tailscale_hostname = "proton-toronto";
-      };
-
-      # Proton VPN Amsterdam
-      wg-exit-node-proton-amsterdam = {
-        enable = true;
-        tailscale_hostname = "proton-amsterdam";
+        tailscale_hostname = "obscura-amsterdam";
       };
 
       # Obscura VPN Atlanta
