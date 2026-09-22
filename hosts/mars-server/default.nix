@@ -21,7 +21,18 @@
     };
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
-    boot.extraModulePackages = with config.boot.kernelPackages; [ r8125 ];
+    # Swap Realtek generic driver for the proprietary one
+    boot.blacklistedKernelModules = [ "r8169" ];
+    boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+    boot.kernelModules = [ "r8125" ];
+
+    # Disable PCIe ASPM to avoid driver issues with Realtek card
+    boot.kernelParams = [ "pcie_aspm=off" ];
+
+    # Disable Energy Efficient Ethernet (EEE) and ASPM to prevent link drops for Realtek
+    boot.extraModprobeConfig = ''
+      options r8125 eee_enable=0 aspm=0
+    '';
 
     ### NETWORK ###
     networking.hostName = "mars-server";
@@ -81,7 +92,7 @@
     };
 
     ### BESZEL AGENT CONFIG ###
-    services.beszel-agent = { 
+    services.beszel-agent = {
         zfsEnabled = true;
         extraDevices = [
           "/dev/sda:/dev/sda"
