@@ -105,6 +105,12 @@
         ];
     };
 
+    ### TAILSCALE ###
+    modules.tailscale = {
+      enable = true;
+      advertiseExitNode = true;
+    };
+
     # # Create a udev rule that changes NVMe devices to disk group ownership
     # # for Beszel to be able to show them correctly
     # services.udev.extraRules = ''
