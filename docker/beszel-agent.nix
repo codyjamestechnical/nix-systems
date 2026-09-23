@@ -56,7 +56,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.backend = ociBackend;
 
     virtualisation.oci-containers.containers.${cfg.serviceName} = {
       image = cfg.image;

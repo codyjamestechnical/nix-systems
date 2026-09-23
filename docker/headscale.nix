@@ -43,7 +43,7 @@ in
   };
 
   ### OCI CONTAINERS ###
-  virtualisation.oci-containers.backend = "docker";
+  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers = {
 
     ### HEADSCALE SERVER ###

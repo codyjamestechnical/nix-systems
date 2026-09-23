@@ -93,7 +93,7 @@ in
     enabledInstances = filterAttrs (name: inst: inst.enable) cfg;
   in mkIf (enabledInstances != {}) {
 
-    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.backend = ociBackend;
     virtualisation.oci-containers.containers =
       # Gluetun: owns the network namespace and runs the custom WireGuard tunnel
       (mapAttrs' (name: inst: nameValuePair "${inst.service_name}-gluetun" {

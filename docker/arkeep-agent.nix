@@ -35,7 +35,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.backend = ociBackend;
     virtualisation.oci-containers.containers.arkeep-agent = {
       image = "ghcr.io/arkeep-io/arkeep-agent:latest";
       extraOptions = [ "--network=host" ];

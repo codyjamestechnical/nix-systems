@@ -24,7 +24,7 @@ in
   ];
 
   # Containers
-  virtualisation.oci-containers.backend = "docker";
+  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers = {
 
     ### ARCANE ###
