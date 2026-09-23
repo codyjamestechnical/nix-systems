@@ -55,7 +55,7 @@
     description = "Automatically start containers with --restart=always tag";
     serviceConfig = {
       Type = "idle";
-      User = "docker";
+      User = "podman";
       ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
       ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=always'';
     };
