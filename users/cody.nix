@@ -9,14 +9,18 @@
   users = {
     defaultUserShell = pkgs.zsh;
     # $ISBN&PN&FIRSTLETTER$
+    groups = {
+      cody.gid = 1001;
+    };
     users.cody = {
       isNormalUser = true;
       description = "Cody";
+      uid = 1001;
       hashedPasswordFile = "/etc/nixos/secrets/cody_password";
       extraGroups = [
         "networkmanager"
         "wheel"
-        "docker"
+        "podman"
         "libvirtd"
         "acme"
       ];

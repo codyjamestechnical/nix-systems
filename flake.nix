@@ -35,10 +35,17 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/mars-server
+          ## MODULES ##
+          ./modules/core.nix
           ./modules/tailscale.nix
+          ./modules/acme.nix
           ./modules/docker.nix
           webzfs.nixosModules.webzfs
-          nixos-hardware.nixosModules.minisforum-um790-pro
+          nixos-hardware.nixosModules.minisforum-um790-pro # Hardware special config
+          ## CORE DOCKER STACKS ##
+          ./docker/komodo-periphery.nix
+          ./docker/beszel-agent.nix
+          ./docker/arkeep-agent.nix
         ];
       };
 
@@ -47,8 +54,37 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/core-infra
+          ## MODULES ##
+          ./modules/core.nix
           ./modules/tailscale.nix
+          ./modules/acme.nix
           ./modules/docker.nix
+          ## CORE DOCKER STACKS ##
+          ./docker/wg-exit-nodes.nix
+          ./docker/arkeep-agent.nix
+          ./docker/komodo-core.nix
+          ./docker/beszel-agent.nix
+          ./docker/headscale.nix
+
+        ];
+      };
+
+      deimos-server = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/deimos-server
+          ## MODULES ##
+          ./modules/core.nix
+          ./modules/tailscale.nix
+          ./modules/acme.nix
+          ./modules/podman.nix
+          ## CORE DOCKER STACKS ##
+          ./docker/wg-exit-nodes.nix
+          ./docker/arkeep-agent.nix
+          ./docker/arcane.nix
+          ./docker/beszel-agent.nix
+          #./docker/headscale.nix
         ];
       };
 

@@ -3,19 +3,6 @@
     imports = [
         ./hardware-configuration.nix
         ./networking.nix
-
-        # MODULES
-        ../../modules/core.nix ## CORE
-        ../../modules/acme.nix ## ACME
-        ../../modules/docker.nix ## DOCKER
-
-        # DOCKER SERVICES
-        ../../docker/wg-exit-nodes.nix ## WG EXIT NODES
-        ../../docker/arkeep-agent.nix ## ARKEEP AGENT
-        ../../docker/dockhand.nix ## DOCKHAND
-        ../../docker/komodo-core.nix ## KOMODO CORE
-        ../../docker/beszel-agent.nix ## BESZEL AGENT
-        ../../docker/headscale.nix ## HEADSCALE
     ];
 
     ### NETWORKING ###

@@ -1,18 +1,37 @@
 { config, pkgs, ... }:
 {
   imports = [
-    ../users/docker.nix # Import docker user
+    ../users/podman.nix ## import podman user
   ];
-  
+
+  # Create docker-data directory
+  systemd.tmpfiles.rules = [
+    "d /docker-data 0770 docker docker -"
+  ];
+
+  ### ZSH SHELL ALIASES ###
+  programs.zsh.shellAliases = {
+    # docker ps with formatted output
+    dps = "sudo podman ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
+
+    # docker exec
+    dexec = "sudo podman exec -it";
+
+    # docker compose up/down
+    compose = "sudo podman compose up -d";
+    recompose = "sudo podman compose down --remove-orphans && sudo podman compose up -d"; # down and remove orphans, then up
+    decompose = "sudo podman compose down";
+  };
+
   virtualisation.podman = {
     enable = true;
-    dockerCompat = false; # Creates a symlink from docker to podman
+    dockerCompat = true; # Creates a symlink from docker to podman
     virtualisation.podman.autoPrune.enable = true;
     defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
   };
 
   # add podman and podman-compose
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     podman-compose
     dive
     podman-tui
@@ -34,6 +53,6 @@
       ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=always'';
     };
   };
-  
+
 
 }

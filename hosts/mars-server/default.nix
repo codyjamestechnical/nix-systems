@@ -2,16 +2,6 @@
 {
     imports = [
       ./hardware-configuration.nix
-
-      # MODULES
-      ../../modules/core.nix ## CORE
-      ../../modules/acme.nix ## ACME
-      ../../modules/docker.nix ## DOCKER
-
-      # DOCKER SERVICES
-      ../../docker/komodo-periphery.nix ## KOMODO PERIPHERY
-      ../../docker/beszel-agent.nix ## BESZEL AGENT
-      ../../docker/arkeep-agent.nix ## ARKEEP AGENT
     ];
 
     ### BOOTLOADER ###
@@ -35,9 +25,11 @@
     '';
 
     ### NETWORK ###
-    networking.hostName = "mars-server";
-    networking.hostId = "deadb33f";
-    networking.networkmanager.enable = true;
+    networking = {
+      hostName = "mars-server";
+      hostId = "deadb33f";
+      networkmanager.enable = true;
+    };
 
     ### ZFS POOL SETUP ###
     boot.supportedFilesystems = [ "zfs" ];
@@ -182,21 +174,6 @@
         enable = true;
         openFirewall = true;
     };
-
-
-# services.avahi = {
-#     publish.enable = true;
-#     publish.userServices = true;
-#     publish.hinfo = true;
-#     # ^^ Needed to allow samba to automatically register mDNS records (without the need for an `extraServiceFile`
-#     nssmdns4 = true;
-#     nssmdns6 = true;
-#     ipv6 = true;
-#     hostName = "mars";
-#     # ^^ Not one hundred percent sure if this is needed- if it aint broke, don't fix it
-# 	enable = true;
-#     openFirewall = true;
-# };
 
     ### AVAHI ###
     services.avahi = {
