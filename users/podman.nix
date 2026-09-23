@@ -3,7 +3,6 @@
   users = {
     defaultUserShell = pkgs.zsh;
     groups = {
-      acme.gid = 1000;
       podman.gid = 1000;
     };
 
