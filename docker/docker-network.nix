@@ -24,7 +24,6 @@ let
   ipv6Arg = if (cfg.network_ipv6 or true) then " --ipv6" else "";
   extraArgs = cfg.network_extra_args or "";
   createArgs = ipv6Arg + (if extraArgs != "" then " ${extraArgs}" else "");
-  isDocker = config.virtualisation.docker.enable;
   ociBin = "${config.virtualisation.oci-containers.backend}";
 in
 {
