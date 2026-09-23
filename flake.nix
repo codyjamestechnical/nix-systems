@@ -78,7 +78,7 @@
           ./modules/core.nix
           ./modules/tailscale.nix
           ./modules/acme.nix
-          # ./modules/podman.nix
+          ./modules/podman.nix
           ## CORE DOCKER STACKS ##
           # ./docker/wg-exit-nodes.nix
           # ./docker/arkeep-agent.nix
