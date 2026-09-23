@@ -19,6 +19,7 @@ let
     create_volumes = [
       "${cfg.base_dir}/data:/app/data"
     ];
+
     # Extract host paths (the part before the first ':')
     hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) create_volumes;
 
