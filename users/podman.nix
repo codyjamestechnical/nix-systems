@@ -13,7 +13,6 @@
       uid = 1000;
       extraGroups = [
         "acme"
-        "podman"
       ];
     };
   };
