@@ -80,10 +80,10 @@
           ./modules/acme.nix
           ./modules/podman.nix
           ## CORE DOCKER STACKS ##
-          ./docker/wg-exit-nodes.nix
-          ./docker/arkeep-agent.nix
-          ./docker/arcane.nix
-          ./docker/beszel-agent.nix
+          # ./docker/wg-exit-nodes.nix
+          # ./docker/arkeep-agent.nix
+          # ./docker/arcane.nix
+          # ./docker/beszel-agent.nix
           #./docker/headscale.nix
         ];
       };
