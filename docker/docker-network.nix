@@ -18,7 +18,7 @@
 
 { cfg }:
 
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   ipv6Arg = if (cfg.network_ipv6 or true) then " --ipv6" else "";
