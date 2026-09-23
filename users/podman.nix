@@ -9,6 +9,7 @@
     users.podman = {
       isNormalUser = false;
       isSystemUser = true;
+      linger = true;
       group = "podman";
       uid = 1000;
       extraGroups = [

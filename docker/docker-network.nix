@@ -27,7 +27,7 @@ let
 in
 {
   systemd.services."docker-network-${cfg.network_name}" = {
-    path = [ pkgs.docker ];
+    path = [ pkgs.oci-containers.backend ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
