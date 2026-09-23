@@ -35,7 +35,7 @@ let
   ociBackend = cfg.caddy_oci_backend or "docker";
 in
 {
-  virtualisation.oci-containers.backend = ociBackend;
+  # virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers."${cfg.service_name}-caddy" = {
     inherit image ports;
 

@@ -68,7 +68,7 @@ let
   ociBackend = cfg.tailscale_oci_backend or "docker";
 in
 {
-  virtualisation.oci-containers.backend = ociBackend;
+  # virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers."${cfg.service_name}-tailscale" = {
     inherit image dependsOn volumes;
 

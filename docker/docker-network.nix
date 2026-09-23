@@ -24,17 +24,19 @@ let
   ipv6Arg = if (cfg.network_ipv6 or true) then " --ipv6" else "";
   extraArgs = cfg.network_extra_args or "";
   createArgs = ipv6Arg + (if extraArgs != "" then " ${extraArgs}" else "");
+  isDocker = config.virtualisation.docker.enable;
+  ociBin = "${config.virtualisation.oci-containers.backend}";
 in
 {
-  systemd.services."docker-network-${cfg.network_name}" = {
-    path = [ pkgs.oci-containers.backend ];
+  systemd.services."${ociBin}-network-${cfg.network_name}" = {
+    path = [ pkgs."${ociBin}" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "docker network rm -f ${cfg.network_name}";
+      ExecStop = "${ociBin} network rm -f ${cfg.network_name}";
     };
     script = ''
-      docker network inspect ${cfg.network_name} || docker network create ${cfg.network_name}${createArgs}
+      ${ociBin} network inspect ${cfg.network_name} || ${ociBin} network create ${cfg.network_name}${createArgs}
     '';
 
     wantedBy = [ "multi-user.target" ];
