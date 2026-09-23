@@ -23,6 +23,7 @@
 #   caddy_oci_backend   - OCI backend to use (default "docker")
 
 { cfg }:
+{ config, lib, pkgs, ... }:
 
 let
   image = cfg.caddy_image or "caddy:latest";
@@ -32,26 +33,36 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  ociBackend = cfg.caddy_oci_backend or "docker";
+  volumes = [
+    "${cfg.base_dir}/caddy/data:/data:rw"
+    "${cfg.base_dir}/caddy/config:/config:rw"
+    "${cfg.caddyfile}:/etc/caddy/Caddyfile:ro"
+    "${sslCert}:/ssl/fullchain.pem:ro"
+    "${sslKey}:/ssl/privkey.pem:ro"
+  ];
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+
+  # Extract host paths (the part before the first ':')
+  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) volumes;
+
+  # Filter to absolute paths and ignore devices (like /dev/net/tun)
+  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p) && !(lib.hasPrefix "/var/lib/acme/" p)) hostPaths;
+
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
 in
 {
-  # virtualisation.oci-containers.backend = ociBackend;
+  # Dynamically apply the generated tmpfiles rules
+  systemd.tmpfiles.rules = volumeTmpfilesRules;
+
   virtualisation.oci-containers.containers."${cfg.service_name}-caddy" = {
-    inherit image ports;
+    inherit image ports volumes;
 
     labels = {
       "komodo.skip" = "";
     } // extraLabels;
 
     environmentFiles = envFiles;
-
-    volumes = [
-      "${cfg.base_dir}/caddy/data:/data:rw"
-      "${cfg.base_dir}/caddy/config:/config:rw"
-      "${cfg.caddyfile}:/etc/caddy/Caddyfile:ro"
-      "${sslCert}:/ssl/fullchain.pem:ro"
-      "${sslKey}:/ssl/privkey.pem:ro"
-    ];
 
     log-driver = "journald";
 

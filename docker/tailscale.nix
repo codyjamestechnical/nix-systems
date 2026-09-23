@@ -33,11 +33,10 @@
 #   tailscale_extra_labels          - extra container labels (default {})
 #   tailscale_authkey_cleanup       - enable the authkey cleanup service (default true)
 #   authkey_cleanup_delay           - seconds to wait before removing the key (default 60)
-#   tailscale_oci_backend           - OCI backend to use (default "docker")
 
 { cfg }:
 
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   image = cfg.tailscale_image or "tailscale/tailscale:latest";
@@ -65,10 +64,21 @@ let
 
   cleanupEnabled = cfg.tailscale_authkey_cleanup or true;
   cleanupDelay = cfg.authkey_cleanup_delay or 60;
-  ociBackend = cfg.tailscale_oci_backend or "docker";
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+
+  # Extract host paths (the part before the first ':')
+  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) volumes;
+
+  # Filter to absolute paths and ignore devices (like /dev/net/tun)
+  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p)) hostPaths;
+
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
 in
 {
-  # virtualisation.oci-containers.backend = ociBackend;
+  # Dynamically apply the generated tmpfiles rules
+  systemd.tmpfiles.rules = volumeTmpfilesRules;
+
   virtualisation.oci-containers.containers."${cfg.service_name}-tailscale" = {
     inherit image dependsOn volumes;
 
