@@ -115,8 +115,8 @@ in
   systemd.services = lib.optionalAttrs cleanupEnabled {
     "${cfg.service_name}-tailscale-authkey-cleanup" = {
       description = "Remove TS_AUTHKEY from ${cfg.service_name} .env after tailscale authenticates";
-      after = [ "docker-${cfg.service_name}-tailscale.service" ];
-      wantedBy = [ "docker-${cfg.service_name}-tailscale.service" ];
+      after = [ "${ociBin}-${cfg.service_name}-tailscale.service" ];
+      wantedBy = [ "${ociBin}-${cfg.service_name}-tailscale.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "cleanup-ts-authkey-${cfg.service_name}" ''
