@@ -11,7 +11,7 @@ let
       }
       arcane.31337.im, https://localhost {
         import ssl
-        reverse_proxy arcane-server:3000
+        reverse_proxy arcane-server:3552
       }
     '';
   };
