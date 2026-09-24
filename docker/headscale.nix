@@ -21,6 +21,15 @@ let
       }
     '';
   };
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1001/podman/podman.sock";
+  # List of volumes to create if they don't exist
+  create_volumes = [
+    "${cfg.base_dir}/data/headscale/lib"
+    "${cfg.base_dir}/data/headscale/run"
+  ];
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   imports = [
@@ -28,6 +37,9 @@ in
     (import ./tailscale.nix { inherit cfg; })
     (import ./docker-network.nix { inherit cfg; })
   ];
+
+  # Dynamically apply the generated tmpfiles rules
+  systemd.tmpfiles.rules = volumeTmpfilesRules;
 
   ### ZSH SHELL ALIAS ###
   programs.zsh.shellAliases = {
@@ -43,7 +55,6 @@ in
   };
 
   ### OCI CONTAINERS ###
-  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers = {
 
     ### HEADSCALE SERVER ###
@@ -93,7 +104,7 @@ in
         "${cfg.base_dir}/data/headscale/lib:/var/lib/headscale:rw"
         "${cfg.base_dir}/configs/headscale:/etc/headscale:rw"
         "${cfg.base_dir}/configs/headplane:/etc/headplane:rw"
-        "/var/run/docker.sock:/var/run/docker.sock:ro"
+        "${dockerSocket}:/var/run/docker.sock:ro"
       ];
       environmentFiles = [
         "/docker-data/.env"

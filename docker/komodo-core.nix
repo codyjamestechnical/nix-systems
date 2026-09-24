@@ -46,7 +46,7 @@ in
         "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "${ociBin}:/var/run/docker.sock"
+        "${dockerSocket}:/var/run/docker.sock"
         "${cfg.secrets_dir}/komodo-periphery/keys:/config/keys"
         # "/etc/komodo/ssl:/etc/komodo/ssl"
         # "/etc/komodo/repos:/etc/komodo/repos"
