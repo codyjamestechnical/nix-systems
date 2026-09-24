@@ -39,6 +39,9 @@ let
     ip6tables -A FORWARD -i tailscale0 -o tun0 -j ACCEPT
     ip6tables -A FORWARD -i tun0 -o tailscale0 -j ACCEPT
     ip6tables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
+    # Add MSS Clamping for nested VPNs
+    iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+    ip6tables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
   '';
 
@@ -173,9 +176,17 @@ in
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
       "net.ipv6.conf.default.forwarding" = 1;
+
+      # Enable TCP BBR Congestion Control
+        "net.core.default_qdisc" = "fq";
+        "net.ipv4.tcp_congestion_control" = "bbr";
+
+        # Increase UDP socket buffers (2.5MB) for WireGuard/Tailscale
+        "net.core.rmem_max" = 2500000;
+        "net.core.wmem_max" = 2500000;
     };
 
-    systemd.services =
+    systemd.services = {
       # Generate the docker network services
       (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
         path = [ pkgs.docker ];
@@ -205,6 +216,36 @@ in
         '';
       }) enabledInstances);
 
+      # This is recommended by Tailscale if the device is acting as an exit node.
+      # https://tailscale.com/docs/reference/best-practices/performance#ethtool-configuration
+      optimize-netdev-offload = {
+          description = "Set ethtool offload settings for the default network device";
+          # Ensure this runs only after the network is actually up and routed
+          after = [ "network-online.target" ];
+          wants = [ "network-online.target" ];
+          wantedBy = [ "multi-user.target" ];
+
+          # Provide the necessary binaries to the script's environment
+          path = with pkgs; [ iproute2 ethtool coreutils ];
+
+          script = ''
+            # Find the default network interface
+            NETDEV=$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")
+
+            # Apply ethtool settings if the interface was successfully found
+            if [ -n "$NETDEV" ]; then
+              echo "Applying ethtool settings to $NETDEV..."
+              ethtool -K "$NETDEV" rx-udp-gro-forwarding on rx-gro-list off
+            else
+              echo "Could not determine default network device." >&2
+              exit 1
+            fi
+          '';
+
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+          };
 
   };
 }
