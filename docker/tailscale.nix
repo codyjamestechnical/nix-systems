@@ -73,7 +73,7 @@ let
   hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p)) hostPaths;
 
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") hostDirs;
 in
 {
   # Dynamically apply the generated tmpfiles rules

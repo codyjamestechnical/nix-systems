@@ -17,19 +17,13 @@ let
   };
 
   ociBin = "${config.virtualisation.oci-containers.backend}";
+  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1001/podman/podman.sock";
   # List of volumes to create if they don't exist
   create_volumes = [
-    "${cfg.base_dir}/data:/app/data"
+    "${cfg.base_dir}/data"
   ];
-
-  # Extract host paths (the part before the first ':')
-  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) create_volumes;
-
-  # Filter to absolute paths and ignore devices (like /dev/net/tun)
-  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p) && !(lib.hasPrefix "/var/" p)) hostPaths;
-
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   imports = [
@@ -51,7 +45,7 @@ in
         "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "/run/user/1001/podman/podman.sock:/var/run/docker.sock"
+        "${dockerSocket}:/var/run/docker.sock"
         "${cfg.base_dir}/data:/app/data"
       ];
       extraOptions = [

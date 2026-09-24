@@ -39,7 +39,7 @@ let
     "${cfg.base_dir}/caddy/config"
   ];
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") create_volumes;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   # Dynamically apply the generated tmpfiles rules

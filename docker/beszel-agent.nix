@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 let
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+  dockerSocket = if ociBin == "podman" then "/run/user/1001/podman/podman.sock" else "/var/run/docker.sock";
   cfg = config.services.beszel-agent;
   inherit (lib) mkOption mkEnableOption mkIf types;
 in
@@ -56,8 +58,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.backend = ociBackend;
-
     virtualisation.oci-containers.containers.${cfg.serviceName} = {
       image = cfg.image;
 
@@ -68,7 +68,7 @@ in
       ];
 
       volumes = [
-        "/var/run/docker.sock:/var/run/docker.sock:ro"
+        "${dockerSocket}:/var/run/docker.sock:ro"
         "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro"
         "/var/run/systemd/private:/var/run/systemd/private:ro"
         "${cfg.baseDir}:/extra-filesystems/Docker_Data:ro"

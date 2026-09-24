@@ -4,9 +4,16 @@ let
   cfg = config.services.arkeep-agent;
 
   baseVolumes = [
-    "/root/.arkeep:/var/lib/arkeep-agent"
+    "/home/arkeep-agent:/var/lib/arkeep-agent"
     "/docker-data:/hostfs/docker-data:rw"
   ];
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+  # List of volumes to create if they don't exist
+  create_volumes = [
+    "/srv/arkeep-agent"
+  ];
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   options.services.arkeep-agent = {
@@ -35,7 +42,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    virtualisation.oci-containers.backend = ociBackend;
+    # Dynamically apply the generated tmpfiles rules
+    systemd.tmpfiles.rules = volumeTmpfilesRules;
+
     virtualisation.oci-containers.containers.arkeep-agent = {
       image = "ghcr.io/arkeep-io/arkeep-agent:latest";
       extraOptions = [ "--network=host" ];
