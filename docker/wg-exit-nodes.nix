@@ -161,6 +161,7 @@ in
           TS_HOSTNAME = "${inst.tailscale_hostname}";
           TS_ACCEPT_DNS = "true";
           TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.cjtech.io";
+          TS_DEBUG_FIREWALL_MODE = "nftables";
         };
       }) enabledInstances);
 
