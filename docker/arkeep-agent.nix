@@ -4,7 +4,7 @@ let
   cfg = config.services.arkeep-agent;
 
   baseVolumes = [
-    "/home/arkeep-agent:/var/lib/arkeep-agent"
+    "/srv/arkeep-agent:/var/lib/arkeep-agent"
     "/docker-data:/hostfs/docker-data:rw"
   ];
   ociBin = "${config.virtualisation.oci-containers.backend}";
