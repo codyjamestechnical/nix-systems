@@ -51,7 +51,7 @@ in
         "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "/run/user/1000/podman/podman.sock:/var/run/docker.sock"
+        "/run/user/1001/podman/podman.sock:/var/run/docker.sock"
         "${cfg.base_dir}/data:/app/data"
       ];
       extraOptions = [
