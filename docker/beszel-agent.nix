@@ -2,6 +2,12 @@
 let
   ociBin = "${config.virtualisation.oci-containers.backend}";
   dockerSocket = if ociBin == "podman" then "/run/user/1001/podman/podman.sock" else "/var/run/docker.sock";
+  # List of volumes to create if they don't exist
+  create_volumes = [
+    "${cfg.base_dir}/extra-filesystems/Docker_Data"
+  ];
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
   cfg = config.services.beszel-agent;
   inherit (lib) mkOption mkEnableOption mkIf types;
 in
@@ -58,6 +64,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Dynamically apply the generated tmpfiles rules
+    systemd.tmpfiles.rules = volumeTmpfilesRules;
     virtualisation.oci-containers.containers.${cfg.serviceName} = {
       image = cfg.image;
 
