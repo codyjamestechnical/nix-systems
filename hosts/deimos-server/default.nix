@@ -16,7 +16,7 @@
     };
 
     ### TAILSCALE EXIT NODES -> WG VPN ###
-    # services.wg-exit-nodes = {
+    services.wg-exit-nodes = {
 
     #   # Obscura VPN Amsterdam
     #   wg-exit-node-obscura-amsterdam = {
@@ -36,7 +36,7 @@
         tailscale_hostname = "obscura-chicago";
       };
 
-    # };
+    };
 
     ### CLEANUP TMP ON BOOT ###
     boot.tmp.cleanOnBoot = true;
