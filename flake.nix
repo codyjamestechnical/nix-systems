@@ -83,7 +83,7 @@
           # ./docker/wg-exit-nodes.nix
           ./docker/komodo-core.nix
           ./docker/arkeep-agent.nix
-          ./docker/arcane.nix
+          # ./docker/arcane.nix
           ./docker/beszel-agent.nix
           #./docker/headscale.nix
         ];
