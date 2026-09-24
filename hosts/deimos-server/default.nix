@@ -12,6 +12,7 @@
     networking = {
         hostName = "deimos-server";
         networkmanager.enable = true;
+        nameservers = [ "1.1.1.1" "9.9.9.9" ];
     };
 
     ### TAILSCALE EXIT NODES -> WG VPN ###
