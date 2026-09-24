@@ -6,7 +6,7 @@ let
   inherit (lib) mkOption mkEnableOption mkIf types;
   # List of volumes to create if they don't exist
   create_volumes = [
-    "${cfg.base_dir}/extra-filesystems/Docker_Data"
+    "/docker-data/.beszel/extra-filesystems/Docker_Data"
   ];
   # Generate the tmpfiles rules mapping
   volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
