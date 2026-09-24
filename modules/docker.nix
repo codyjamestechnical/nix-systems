@@ -25,6 +25,9 @@
 
   ## Virtualization Options
   virtualisation = {
+    oci-containers = {
+      backend = "podman";
+    };
     docker = {
       enable = true;
       #     enable = true;
