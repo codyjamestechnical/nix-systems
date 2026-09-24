@@ -5,6 +5,11 @@
     ../users/cody.nix
   ];
 
+  boot.kernelModules = [
+      "ip6_tables"
+      "ip6table_filter"
+  ];
+
   ### ENABLE ZRAM SWAP ###
   zramSwap.enable = true;
 
