@@ -33,20 +33,13 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  create_volumes = [
-    "${cfg.base_dir}/caddy/data:/data"
-    "${cfg.base_dir}/caddy/config:/config"
-  ];
   ociBin = "${config.virtualisation.oci-containers.backend}";
-
-  # Extract host paths (the part before the first ':')
-  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) create_volumes;
-
-  # Filter to absolute paths and ignore devices (like /dev/net/tun)
-  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p) && !(lib.hasPrefix "/var/" p)) hostPaths;
-
+  create_volumes = [
+    "${cfg.base_dir}/caddy/data"
+    "${cfg.base_dir}/caddy/config"
+  ];
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   # Dynamically apply the generated tmpfiles rules
