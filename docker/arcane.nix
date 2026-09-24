@@ -47,6 +47,9 @@ in
     ### ARCANE ###
     "${cfg.service_name}-server" = {
       image = "ghcr.io/getarcaneapp/manager:latest";
+      environmentFiles = [
+        "${cfg.base_dir}/.env"
+      ];
       volumes = [
         "/run/user/1000/podman/podman.sock:/var/run/docker.sock"
         "${cfg.base_dir}/data:/app/data"
