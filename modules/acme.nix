@@ -78,6 +78,7 @@ in
       defaults = {
         email = cfg.email;
         renewInterval = "monthly";
+        dnsResolver = "1.1.1.1:53";
       };
       certs = lib.listToAttrs (map mkCert cfg.domains);
     };
