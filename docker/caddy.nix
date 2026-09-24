@@ -53,7 +53,7 @@ in
   systemd.tmpfiles.rules = volumeTmpfilesRules;
 
   virtualisation.oci-containers.containers."${cfg.service_name}-caddy" = {
-    inherit image ports volumes;
+    inherit image ports;
 
     labels = {
       "komodo.skip" = "";
