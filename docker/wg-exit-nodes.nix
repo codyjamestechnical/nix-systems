@@ -110,6 +110,7 @@ in
         log-driver = "journald";
         extraOptions = [
           "--cap-add=NET_ADMIN"
+          "--cap-add=NET_RAW"
           "--network-alias=${inst.service_name}"
           "--network=${inst.network_name}"
           "--sysctl=net.ipv4.ip_forward=1"
@@ -141,6 +142,7 @@ in
         log-driver = "journald";
         extraOptions = [
           "--cap-add=NET_ADMIN"
+          "--cap-add=NET_RAW"
           "--network=container:${inst.service_name}-gluetun"
           "--device=/dev/net/tun"
         ];
@@ -157,11 +159,11 @@ in
          ];
         environment = {
           TS_STATE_DIR = "/var/lib/tailscale";
-          TS_USERSPACE = "false";
+          TS_USERSPACE = "true";
           TS_HOSTNAME = "${inst.tailscale_hostname}";
           TS_ACCEPT_DNS = "true";
           TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.cjtech.io";
-          TS_DEBUG_FIREWALL_MODE = "nftables";
+          # TS_DEBUG_FIREWALL_MODE = "nftables";
         };
       }) enabledInstances);
 
