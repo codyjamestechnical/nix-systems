@@ -33,23 +33,21 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  volumes = [
-    "${cfg.base_dir}/caddy/data:/data:rw"
-    "${cfg.base_dir}/caddy/config:/config:rw"
-    "${cfg.caddyfile}:/etc/caddy/Caddyfile:ro"
-    "${sslCert}:/ssl/fullchain.pem:ro"
-    "${sslKey}:/ssl/privkey.pem:ro"
+  create_volumes = [
+    "${cfg.base_dir}/caddy/data:/data"
+    "${cfg.base_dir}/caddy/config:/config"
   ];
   ociBin = "${config.virtualisation.oci-containers.backend}";
 
   # Extract host paths (the part before the first ':')
-  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) volumes;
+  hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) create_volumes;
 
   # Filter to absolute paths and ignore devices (like /dev/net/tun)
-  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p) && !(lib.hasPrefix "/var/lib/acme/" p)) hostPaths;
+  hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p) && !(lib.hasPrefix "/var/" p)) hostPaths;
 
   # Generate the tmpfiles rules mapping
   volumeTmpfilesRules = map (dir: "d ${dir} 0750 ${ociBin} ${ociBin} -") hostDirs;
+};
 in
 {
   # Dynamically apply the generated tmpfiles rules
@@ -61,6 +59,14 @@ in
     labels = {
       "komodo.skip" = "";
     } // extraLabels;
+
+    volumes = [
+      "${cfg.base_dir}/caddy/data:/data:rw"
+      "${cfg.base_dir}/caddy/config:/config:rw"
+      "${cfg.caddyfile}:/etc/caddy/Caddyfile:ro"
+      "${sslCert}:/ssl/fullchain.pem:ro"
+      "${sslKey}:/ssl/privkey.pem:ro"
+    ];
 
     environmentFiles = envFiles;
 

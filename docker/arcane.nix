@@ -48,7 +48,7 @@ in
     "${cfg.service_name}-server" = {
       image = "ghcr.io/getarcaneapp/manager:latest";
       volumes = [
-        "/var/run/docker.sock:/var/run/docker.sock"
+        "/run/user/podman/podman.sock:/var/run/docker.sock"
         "${cfg.base_dir}/data:/app/data"
       ];
       extraOptions = [
