@@ -186,7 +186,7 @@ in
         "net.core.wmem_max" = 2500000;
     };
 
-    systemd.services = {
+    systemd.services =
       # Generate the docker network services
       (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
         path = [ pkgs.docker ];
