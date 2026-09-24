@@ -159,11 +159,11 @@ in
          ];
         environment = {
           TS_STATE_DIR = "/var/lib/tailscale";
-          TS_USERSPACE = "true";
+          TS_USERSPACE = "false";
           TS_HOSTNAME = "${inst.tailscale_hostname}";
           TS_ACCEPT_DNS = "true";
           TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.cjtech.io";
-          # TS_DEBUG_FIREWALL_MODE = "nftables";
+          TS_DEBUG_FIREWALL_MODE = "nftables";
         };
       }) enabledInstances);
 
