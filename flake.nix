@@ -80,7 +80,7 @@
           ./modules/acme.nix
           ./modules/podman.nix
           ## CORE DOCKER STACKS ##
-          # ./docker/wg-exit-nodes.nix
+          ./docker/wg-exit-nodes.nix
           ./docker/komodo-core.nix
           ./docker/arkeep-agent.nix
           # ./docker/arcane.nix

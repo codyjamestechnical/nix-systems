@@ -31,10 +31,10 @@
     #   };
 
     #   # Obscura VPN Atlanta
-    #   wg-exit-node-obscura-chicago = {
-    #     enable = true;
-    #     tailscale_hostname = "obscura-chicago";
-    #   };
+      wg-exit-node-obscura-chicago = {
+        enable = true;
+        tailscale_hostname = "obscura-chicago";
+      };
 
     # };
 
