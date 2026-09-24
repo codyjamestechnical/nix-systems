@@ -61,8 +61,8 @@
           ./modules/docker.nix
           ## CORE DOCKER STACKS ##
           ./docker/wg-exit-nodes.nix
-          ./docker/arkeep-agent.nix
-          ./docker/komodo-core.nix
+          # ./docker/arkeep-agent.nix
+          # ./docker/komodo-core.nix
           ./docker/beszel-agent.nix
           ./docker/headscale.nix
 
@@ -81,6 +81,7 @@
           ./modules/podman.nix
           ## CORE DOCKER STACKS ##
           # ./docker/wg-exit-nodes.nix
+          ./docker/komodo-core.nix
           ./docker/arkeep-agent.nix
           ./docker/arcane.nix
           ./docker/beszel-agent.nix
