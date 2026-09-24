@@ -1,5 +1,7 @@
 { pkgs, lib, ... }:
 let
+  ociBin = "${config.virtualisation.oci-containers.backend}";
+  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1001/podman/podman.sock";
   cfg = {
     service_name = "komodo";
     network_name = "komodo-internal";
@@ -11,10 +13,14 @@ let
       "${cfg.service_name}-core"
     ];
     tailscale_network = "container:${cfg.service_name}-core";
-    # this is to help this container get a direct connection from tailscale
-    # clients since this is a very important container
-    tailscale_extra_tailscaled_args = "--port=41642";
   };
+  # List of volumes to create if they don't exist
+  create_volumes = [
+    "${cfg.base_dir}/mongodb/config"
+    "${cfg.base_dir}/mongodb/data"
+  ];
+  # Generate the tmpfiles rules mapping
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
 in
 {
   # Import tailscale and docker-network modules
@@ -23,15 +29,10 @@ in
     (import ./docker-network.nix { inherit cfg; })
   ];
 
-  ### FIREWALL ###
-  networking.firewall = {
-    # open UDP port for tailscale since we changed the port
-    # the default port is 41641, but we changed it to 41642 in tailscale_extra_tailscaled_args
-    allowedUDPPorts = [ 41642 ];
-  };
+  # Dynamically apply the generated tmpfiles rules
+  systemd.tmpfiles.rules = volumeTmpfilesRules;
 
   ### OCI CONTAINERS ###
-  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers = {
 
     ### KOMODO PERIPHERY ###
@@ -45,15 +46,14 @@ in
         "${cfg.base_dir}/.env"
       ];
       volumes = [
-        "/var/run/docker.sock:/var/run/docker.sock"
+        "${ociBin}:/var/run/docker.sock"
         "${cfg.secrets_dir}/komodo-periphery/keys:/config/keys"
         # "/etc/komodo/ssl:/etc/komodo/ssl"
         # "/etc/komodo/repos:/etc/komodo/repos"
         # "/etc/komodo/stacks:/etc/komodo/stacks"
         "${cfg.secrets_dir}/komodo-passkey:/var/secrets/passkey:ro"
-
       ];
-      log-driver = "local";
+      log-driver = "journald";
       extraOptions = [
         "--network-alias=periphery"
         "--network=${cfg.network_name}"
@@ -63,7 +63,6 @@ in
     ### KOMODO CORE ###
     "${cfg.service_name}-core" = {
       image = "ghcr.io/moghtech/komodo-core:2";
-      ports = [ "41642:41642" ];
       labels = {
         "komodo.skip" = "";
         "homepage.group" = "Infrastructure & Monitoring";
@@ -85,7 +84,7 @@ in
         "/var/lib/acme/31337.im/fullchain.pem:/config/ssl/cert.pem:ro"
         "/var/lib/acme/31337.im/key.pem:/config/ssl/key.pem:ro"
       ];
-      log-driver = "local";
+      log-driver = "journald";
       extraOptions = [
         "--network-alias=komodo-core"
         "--network=${cfg.network_name}"
@@ -112,7 +111,7 @@ in
         "--wiredTigerCacheSizeGB"
         "0.25"
       ];
-      log-driver = "local";
+      log-driver = "journald";
       extraOptions = [
         "--network-alias=mongo"
         "--network=${cfg.network_name}"
