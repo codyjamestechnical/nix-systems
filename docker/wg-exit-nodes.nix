@@ -216,7 +216,7 @@ in
         wantedBy = [ "multi-user.target" ];
       }) enabledInstances)
 
-      // # MERGE: Make gluetun wait for its network to exist before starting
+      # MERGE: Make gluetun wait for its network to exist before starting
       # (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}-gluetun" {
       #   after = [ "${ociBin}-network-${inst.network_name}.service" ];
       #   requires = [ "${ociBin}-network-${inst.network_name}.service" ];
