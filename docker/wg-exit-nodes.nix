@@ -129,7 +129,7 @@ in
       }) enabledInstances)
 
       // # Tailscale: joins gluetun's network namespace so all its traffic exits via the VPN
-      (mapAttrs' (name: inst: nameValuePair inst.service_name {
+      (mapAttrs' (name: inst: nameValuePair inst.service_name ({
         image = "tailscale/tailscale:latest";
         dependsOn = [ "${inst.service_name}-gluetun" ];
         labels = {
@@ -168,7 +168,9 @@ in
           TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.cjtech.io";
           # TS_DEBUG_FIREWALL_MODE = "nftables";
         };
-      }) enabledInstances);
+      } // optionalAttrs (config.virtualisation.oci-containers.backend == "podman") {
+        podman.user = "podman";
+      })) enabledInstances);
 
     ### IPv4/IPv6 FORWARDING ###
     # Enable IPv4/IPv6 forwarding as exit nodes require it to work properly
