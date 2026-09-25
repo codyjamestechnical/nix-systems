@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   ociBin = "${config.virtualisation.oci-containers.backend}";
-  dockerSocket = if ociBin == "podman" then "/run/user/1001/podman/podman.sock" else "/var/run/docker.sock";
+  dockerSocket = if ociBin == "podman" then "/run/user/1000/podman/podman.sock" else "/var/run/docker.sock";
   cfg = config.services.beszel-agent;
   inherit (lib) mkOption mkEnableOption mkIf types;
   # List of volumes to create if they don't exist
@@ -79,6 +79,7 @@ in
         "${dockerSocket}:/var/run/docker.sock:ro"
         "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro"
         "/var/run/systemd/private:/var/run/systemd/private:ro"
+
         "${cfg.baseDir}:/extra-filesystems/Docker_Data:ro"
       ] ++ cfg.extraVolumes;
 

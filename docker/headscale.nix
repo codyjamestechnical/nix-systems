@@ -22,7 +22,7 @@ let
     '';
   };
   ociBin = "${config.virtualisation.oci-containers.backend}";
-  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1001/podman/podman.sock";
+  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
   # List of volumes to create if they don't exist
   create_volumes = [
     "${cfg.base_dir}/data/headscale/lib"

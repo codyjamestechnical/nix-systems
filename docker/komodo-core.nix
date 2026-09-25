@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   ociBin = "${config.virtualisation.oci-containers.backend}";
-  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1001/podman/podman.sock";
+  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
   cfg = {
     service_name = "komodo";
     network_name = "komodo-internal";
