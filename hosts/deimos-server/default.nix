@@ -12,6 +12,30 @@
     networking = {
         hostName = "deimos-server";
         networkmanager.enable = true;
+
+        # Netcup does not offer DHCPv6/SLAAC. IPv6 must be configured
+        # statically from the /64 assigned in the netcup SCP, with the
+        # link-local gateway fe80::1.
+        networkmanager.ensureProfiles.profiles = {
+            wan = {
+                connection = {
+                    id = "wan";
+                    type = "ethernet";
+                    interface-name = "ens3"; # verify with `ip a`
+                    autoconnect = true;
+                    autoconnect-priority = 100;
+                };
+                ipv4 = {
+                    method = "auto";
+                };
+                ipv6 = {
+                    method = "manual";
+                    # Replace with your prefix from the netcup SCP:
+                    address1 = "2a0a:4cc0:2000:34bf::1/64";
+                    gateway = "fe80::1";
+                };
+            };
+        };
     };
 
     ### TAILSCALE EXIT NODES -> WG VPN ###
