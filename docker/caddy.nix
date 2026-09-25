@@ -33,7 +33,7 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  podmanpodman.user = cfg.podman_user or "podman";
+  podmanUser = cfg.podman_user or "podman";
 
   ociBackend = "${config.virtualisation.oci-containers.backend}";
   isPodman = ociBackend == "podman";
