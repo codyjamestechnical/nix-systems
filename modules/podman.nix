@@ -90,5 +90,5 @@
   #     ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
   #     ExecStart = ''systemctl --user enable podman.socket'';
   #   };
-  };
+  # };
 }
