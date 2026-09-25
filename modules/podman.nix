@@ -73,22 +73,8 @@
     };
   };
 
-  # enable podman socket for podman user
-  systemd.user.sockets.podman = {
-    wantedBy = [ "sockets.target" ];
-  };
-
-  # # Automatically start containers on boot
-  # systemd.services.podman-autostart = {
-  #   enable = true;
-  #   after = [ "podman.service" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   description = "Enable podman docker socket";
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     User = "podman";
-  #     ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
-  #     ExecStart = ''systemctl --user enable podman.socket'';
-  #   };
-  # };
+  # Enable the rootless podman socket for user sessions (equivalent to
+  # `systemctl --user enable podman.socket`). Combined with
+  # users.users.podman.linger = true, this starts at boot for the podman user.
+  systemd.user.sockets.podman.wantedBy = [ "sockets.target" ];
 }
