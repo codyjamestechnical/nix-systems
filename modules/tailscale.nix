@@ -56,6 +56,17 @@ in
       "net.ipv6.conf.default.forwarding" = 1;
     };
 
+    ### Force tailscaled to use nftables ###
+    # This avoids the "iptables-compat" translation layer issues.
+    systemd.services.tailscaled.serviceConfig.Environment = [
+      "TS_DEBUG_FIREWALL_MODE=nftables"
+    ];
+
+    ### Prevent systemd from waiting for network online ###
+    # (Optional but recommended for faster boot with VPNs)
+    systemd.network.wait-online.enable = false;
+    boot.initrd.systemd.network.wait-online.enable = false;
+
     systemd.services.optimize-netdev-offload = {
       description = "Set ethtool offload settings for the default network device";
       # Ensure this runs only after the network is actually up and routed
