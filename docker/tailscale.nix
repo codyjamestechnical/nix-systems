@@ -112,7 +112,7 @@ in
       TS_TAILSCALED_EXTRA_ARGS = extraTailscaledArgs;
     };
   } // lib.optionalAttrs isPodman {
-    User = podmanUser;
+    podman.user = podmanUser;
   };
 
   ### FIREWALL ###

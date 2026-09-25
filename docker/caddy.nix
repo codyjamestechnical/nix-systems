@@ -33,7 +33,7 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  podmanUser = cfg.podman_user or "podman";
+  podmanpodman.user = cfg.podman_user or "podman";
 
   ociBackend = "${config.virtualisation.oci-containers.backend}";
   isPodman = ociBackend == "podman";
@@ -75,6 +75,6 @@ in
       "--network=${cfg.network_name}"
     ];
   } // lib.optionalAttrs isPodman {
-    User = podmanUser;
+    podman.user = podmanUser;
   };
 }

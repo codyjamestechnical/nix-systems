@@ -98,9 +98,9 @@ in
         "/etc/headscale/config.yaml"
       ];
     } // lib.optionalAttrs isPodman {
-      User = cfg.podman_user;
+      podman.user = cfg.podman_user;
     };
-    
+
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.7.1";
@@ -136,7 +136,7 @@ in
     };
 
   } // lib.optionalAttrs isPodman {
-    User = cfg.podman_user;
+    podman.user = cfg.podman_user;
   };
 }
 

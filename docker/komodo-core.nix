@@ -62,7 +62,7 @@ in
         "--network=${cfg.network_name}"
       ];
     } // lib.optionalAttrs isPodman {
-      User = cfg.podman_user;
+      podman.user = cfg.podman_user;
     };
 
     ### KOMODO CORE ###
@@ -96,7 +96,7 @@ in
         # "--network=name=ipvlan6,ip6=2a01:4ff:f0:f9f1:1::2"
       ];
     } // lib.optionalAttrs isPodman {
-      User = cfg.podman_user;
+      podman.user = cfg.podman_user;
     };
 
     ### MONGODB ###
@@ -124,7 +124,7 @@ in
         "--network=${cfg.network_name}"
       ];
     } // lib.optionalAttrs isPodman {
-      User = cfg.podman_user;
+      podman.user = cfg.podman_user;
     };
   };
 
