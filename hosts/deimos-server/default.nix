@@ -41,17 +41,17 @@
     ### TAILSCALE EXIT NODES -> WG VPN ###
     services.wg-exit-nodes = {
 
-    #   # Obscura VPN Amsterdam
-    #   wg-exit-node-obscura-amsterdam = {
-    #     enable = true;
-    #     tailscale_hostname = "obscura-amsterdam";
-    #   };
+      # Obscura VPN Amsterdam
+      wg-exit-node-obscura-amsterdam = {
+        enable = true;
+        tailscale_hostname = "obscura-amsterdam";
+      };
 
-    #   # Obscura VPN Atlanta
-    #   wg-exit-node-obscura-atlanta = {
-    #     enable = true;
-    #     tailscale_hostname = "obscura-atlanta";
-    #   };
+      # Obscura VPN Atlanta
+      wg-exit-node-obscura-atlanta = {
+        enable = true;
+        tailscale_hostname = "obscura-atlanta";
+      };
 
     #   # Obscura VPN Atlanta
       wg-exit-node-obscura-chicago = {
