@@ -200,6 +200,7 @@ in
       # network must be created by the same user the containers run as.
       (mapAttrs' (name: inst: nameValuePair "${ociBin}-network-${inst.network_name}" {
         serviceConfig = {
+          path = [ pkgs."${ociBin}" ];
           Type = "oneshot";
           RemainAfterExit = true;
           ExecStop = "${ociBin} network rm -f ${inst.network_name}";
@@ -216,10 +217,10 @@ in
       }) enabledInstances)
 
       // # MERGE: Make gluetun wait for its network to exist before starting
-      (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}-gluetun" {
-        after = [ "${ociBin}-network-${inst.network_name}.service" ];
-        requires = [ "${ociBin}-network-${inst.network_name}.service" ];
-      }) enabledInstances)
+      # (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}-gluetun" {
+      #   after = [ "${ociBin}-network-${inst.network_name}.service" ];
+      #   requires = [ "${ociBin}-network-${inst.network_name}.service" ];
+      # }) enabledInstances)
 
       // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
       (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}" {
