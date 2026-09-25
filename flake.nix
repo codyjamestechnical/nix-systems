@@ -61,7 +61,7 @@
           ./modules/docker.nix
           ## CORE DOCKER STACKS ##
           ./docker/wg-exit-nodes.nix
-          # ./docker/arkeep-agent.nix
+          ./docker/arkeep-agent.nix
           # ./docker/komodo-core.nix
           ./docker/beszel-agent.nix
           ./docker/headscale.nix
