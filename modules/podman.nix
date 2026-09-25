@@ -24,8 +24,18 @@
   };
 
   virtualisation = {
-    containers.enable = true;
-    containers.registries.search = [ "docker.io" ];
+    containers= { 
+      enable = true;
+      registries.search = [ "docker.io" ];
+      containersConf.settings = {
+        containers = {
+          annotations = [
+            "run.oci.keep_original_groups=1"
+          ];
+        };
+      };
+    };
+    
     podman = {
       enable = true;
       dockerCompat = true; # Creates a symlink from docker to podman
