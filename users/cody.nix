@@ -21,6 +21,7 @@
         "networkmanager"
         "wheel"
         "podman"
+        "docker"
         "libvirtd"
         "acme"
       ];
