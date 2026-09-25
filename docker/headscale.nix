@@ -64,7 +64,6 @@ in
     ### HEADSCALE SERVER ###
     "${cfg.service_name}-server" = {
       image = "ghcr.io/juanfont/headscale:v0.29.3";
-      podman = mkIf isPodman { user = rootlessUser; };
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
@@ -104,7 +103,6 @@ in
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.7.1";
-      podman = mkIf isPodman { user = rootlessUser; };
       dependsOn = [
         "${cfg.service_name}-server"
       ];
