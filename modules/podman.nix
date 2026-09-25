@@ -24,7 +24,7 @@
   };
 
   virtualisation = {
-    containers= { 
+    containers= {
       enable = true;
       registries.search = [ "docker.io" ];
       containersConf.settings = {
@@ -35,7 +35,7 @@
         };
       };
     };
-    
+
     podman = {
       enable = true;
       dockerCompat = true; # Creates a symlink from docker to podman
