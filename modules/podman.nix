@@ -74,8 +74,8 @@
   };
 
   # enable podman socket for podman user
-  systemd.user.services."podman.socket" = {
-    unitConfig.ConditionUser = "podman";
+  systemd.user.sockets.podman = {
+    wantedBy = [ "sockets.target" ];
   };
 
   # # Automatically start containers on boot
