@@ -32,10 +32,6 @@ let
   # Rootless podman: containers run as this user, so networks must be created
   # in the same user's rootless podman instance (not via the root docker socket).
   rootlessUser = "podman";
-  netBin =
-    if isPodman
-    then "${config.virtualisation.podman.package}/bin/podman"
-    else "${pkgs.docker}/bin/docker";
 
   # iptables rules gluetun applies after its own firewall rules so tailscale
   # traffic can enter/leave via tailscale0 and be forwarded out over tun0.
@@ -191,22 +187,22 @@ in
       "net.ipv6.conf.default.forwarding" = 1;
 
       # Enable TCP BBR Congestion Control
-        "net.core.default_qdisc" = "fq";
-        "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
 
-        # Increase UDP socket buffers (2.5MB) for WireGuard/Tailscale
-        "net.core.rmem_max" = 2500000;
-        "net.core.wmem_max" = 2500000;
+      # Increase UDP socket buffers (2.5MB) for WireGuard/Tailscale
+      "net.core.rmem_max" = 2500000;
+      "net.core.wmem_max" = 2500000;
     };
 
     systemd.services =
       # Generate the container network services. With rootless podman the
       # network must be created by the same user the containers run as.
-      (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
+      (mapAttrs' (name: inst: nameValuePair "${ociBin}-network-${inst.network_name}" {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          ExecStop = "${netBin} network rm -f ${inst.network_name}";
+          ExecStop = "${ociBin} network rm -f ${inst.network_name}";
         } // optionalAttrs isPodman {
           User = rootlessUser;
         };
@@ -214,15 +210,9 @@ in
           HOME = config.users.users.${rootlessUser}.home;
         };
         script = ''
-          ${netBin} network inspect ${inst.network_name} || ${netBin} network create ${inst.network_name} --ipv6
+          ${ociBin} network inspect ${inst.network_name} || ${ociBin} network create ${inst.network_name} --ipv6
         '';
         wantedBy = [ "multi-user.target" ];
-      }) enabledInstances)
-
-      // # MERGE: Make gluetun wait for its network to exist before starting
-      (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}-gluetun" {
-        after = [ "docker-network-${inst.network_name}.service" ];
-        requires = [ "docker-network-${inst.network_name}.service" ];
       }) enabledInstances)
 
       // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
