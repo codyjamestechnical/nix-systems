@@ -96,16 +96,11 @@ in
     enabledInstances = filterAttrs (name: inst: inst.enable) cfg;
   in mkIf (enabledInstances != {}) {
 
-    virtualisation.oci-containers.containers = let
-      # Default settings applied to every container in this module.
-      # Containers can still override these by setting the attribute themselves.
-      containerDefaults = optionalAttrs (config.virtualisation.oci-containers.backend == "podman") {
-        podman.user = "podman";
-      };
-    in mapAttrs (_: container: containerDefaults // container) (
+    virtualisation.oci-containers.containers =
       # Gluetun: owns the network namespace and runs the custom WireGuard tunnel
       (mapAttrs' (name: inst: nameValuePair "${inst.service_name}-gluetun" {
         image = "qmcgaw/gluetun:latest";
+        podman.user = "podman";
         labels = {
           "komodo.skip" = "";
         };
@@ -137,6 +132,7 @@ in
       // # Tailscale: joins gluetun's network namespace so all its traffic exits via the VPN
       (mapAttrs' (name: inst: nameValuePair inst.service_name {
         image = "tailscale/tailscale:latest";
+        podman.user = "podman";
         dependsOn = [ "${inst.service_name}-gluetun" ];
         labels = {
           "komodo.skip" = "";
@@ -174,8 +170,7 @@ in
           TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.cjtech.io";
           # TS_DEBUG_FIREWALL_MODE = "nftables";
         };
-      }) enabledInstances)
-    );
+      }) enabledInstances);
 
     ### IPv4/IPv6 FORWARDING ###
     # Enable IPv4/IPv6 forwarding as exit nodes require it to work properly
