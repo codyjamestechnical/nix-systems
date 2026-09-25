@@ -27,7 +27,7 @@ let
   cfg = config.services.wg-exit-nodes;
   podmanUser = "podman";
   ociBackend = config.virtualisation.oci-containers.backend;
-  isPodman = ociBackend == "podman"
+  isPodman = ociBackend == "podman";
   ociBin =
     if isPodman
     then "${config.virtualisation.podman.package}/bin/podman"
