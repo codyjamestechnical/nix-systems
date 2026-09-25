@@ -26,6 +26,17 @@ with lib;
 let
   cfg = config.services.wg-exit-nodes;
 
+  ociBin = config.virtualisation.oci-containers.backend;
+  isPodman = ociBin == "podman";
+
+  # Rootless podman: containers run as this user, so networks must be created
+  # in the same user's rootless podman instance (not via the root docker socket).
+  rootlessUser = "podman";
+  netBin =
+    if isPodman
+    then "${config.virtualisation.podman.package}/bin/podman"
+    else "${pkgs.docker}/bin/docker";
+
   # iptables rules gluetun applies after its own firewall rules so tailscale
   # traffic can enter/leave via tailscale0 and be forwarded out over tun0.
   gluetunPostRules = pkgs.writeText "gluetun-post-rules.txt" ''
@@ -100,7 +111,7 @@ in
       # Gluetun: owns the network namespace and runs the custom WireGuard tunnel
       (mapAttrs' (name: inst: nameValuePair "${inst.service_name}-gluetun" {
         image = "qmcgaw/gluetun:latest";
-        podman.user = "podman";
+        podman = mkIf isPodman { user = rootlessUser; };
         labels = {
           "komodo.skip" = "";
         };
@@ -132,7 +143,7 @@ in
       // # Tailscale: joins gluetun's network namespace so all its traffic exits via the VPN
       (mapAttrs' (name: inst: nameValuePair inst.service_name {
         image = "tailscale/tailscale:latest";
-        podman.user = "podman";
+        podman = mkIf isPodman { user = rootlessUser; };
         dependsOn = [ "${inst.service_name}-gluetun" ];
         labels = {
           "komodo.skip" = "";
@@ -189,30 +200,40 @@ in
     };
 
     systemd.services =
-      # Generate the docker network services
+      # Generate the container network services. With rootless podman the
+      # network must be created by the same user the containers run as.
       (mapAttrs' (name: inst: nameValuePair "docker-network-${inst.network_name}" {
-        path = [ pkgs.docker ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          ExecStop = "${pkgs.docker}/bin/docker network rm -f ${inst.network_name}";
+          ExecStop = "${netBin} network rm -f ${inst.network_name}";
+        } // optionalAttrs isPodman {
+          User = rootlessUser;
+        };
+        environment = optionalAttrs isPodman {
+          HOME = config.users.users.${rootlessUser}.home;
         };
         script = ''
-          docker network inspect ${inst.network_name} || docker network create ${inst.network_name} --ipv6
+          ${netBin} network inspect ${inst.network_name} || ${netBin} network create ${inst.network_name} --ipv6
         '';
         wantedBy = [ "multi-user.target" ];
       }) enabledInstances)
 
+      // # MERGE: Make gluetun wait for its network to exist before starting
+      (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}-gluetun" {
+        after = [ "docker-network-${inst.network_name}.service" ];
+        requires = [ "docker-network-${inst.network_name}.service" ];
+      }) enabledInstances)
+
       // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
-      (mapAttrs' (name: inst: nameValuePair "docker-${inst.service_name}" {
+      (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}" {
+        # Background the delayed cleanup so ExecStartPost returns immediately.
+        # This runs as the container service's user, which owns the .env file.
         postStart = ''
-          # Schedule a transient systemd timer to delete the key in 1 minute
-          ${pkgs.systemd}/bin/systemd-run \
-            --on-active=1m \
-            --timer-property=AccuracySec=1s \
-            ${pkgs.bash}/bin/bash -c "
-              if [ -f '${inst.base_dir}/.env' ]; then
-                ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
+          (
+            ${pkgs.coreutils}/bin/sleep 60
+            if [ -f '${inst.base_dir}/.env' ]; then
+              ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
               fi
             "
         '';
