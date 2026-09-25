@@ -5,6 +5,7 @@ let
     network_name = "headscale-internal";
     base_dir = "/docker-data/headscale";
     secrets_dir = "/etc/nixos/secrets";
+    podman_user = "podman";
     caddyfile = pkgs.writeText "Caddyfile" ''
       (ssl) {
         tls /ssl/fullchain.pem /ssl/privkey.pem
@@ -21,15 +22,18 @@ let
       }
     '';
   };
-  ociBin = "${config.virtualisation.oci-containers.backend}";
-  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
+  ociBackend = "${config.virtualisation.oci-containers.backend}";
+  isPodman = ociBackend == "podman";
+  dockerSocket = if ociBackend == "docker" then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
+
   # List of volumes to create if they don't exist
   create_volumes = [
     "${cfg.base_dir}/data/headscale/lib"
     "${cfg.base_dir}/data/headscale/run"
   ];
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
+  userMapping = if isPodman then cfg.podman_user else ociBackend;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${userMapping} ${userMapping} -") create_volumes;
 in
 {
   imports = [
@@ -60,6 +64,7 @@ in
     ### HEADSCALE SERVER ###
     "${cfg.service_name}-server" = {
       image = "ghcr.io/juanfont/headscale:v0.29.3";
+      podman = mkIf isPodman { user = rootlessUser; };
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
@@ -92,11 +97,14 @@ in
         "--config"
         "/etc/headscale/config.yaml"
       ];
+    } // lib.optionalAttrs isPodman {
+      User = cfg.podman_user;
     };
-
+    
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
       image = "ghcr.io/tale/headplane:0.7.1";
+      podman = mkIf isPodman { user = rootlessUser; };
       dependsOn = [
         "${cfg.service_name}-server"
       ];
@@ -127,6 +135,8 @@ in
       };
     };
 
+  } // lib.optionalAttrs isPodman {
+    User = cfg.podman_user;
   };
 }
 

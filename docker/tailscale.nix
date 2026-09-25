@@ -1,9 +1,9 @@
 # Reusable Tailscale module.
 #
 # Defines the tailscale sidecar container AND the one-shot systemd service
-# that strips TS_AUTHKEY from the service's .env shortly after the container
-# authenticates (after the first successful auth the key is no longer needed,
-# since state is persisted).
+# that strips TS_AUTHKEY from the service's .env once tailscale is confirmed
+# running and logged in (after the first successful auth the key is no longer
+# needed, since state is persisted).
 #
 # Because it registers a top-level systemd service, this must be added to the
 # module's `imports` list, NOT to the `containers` attrset. It is a curried
@@ -32,7 +32,7 @@
 #   tailscale_extra_tailscaled_args - full TS_TAILSCALED_EXTRA_ARGS override (default "")
 #   tailscale_extra_labels          - extra container labels (default {})
 #   tailscale_authkey_cleanup       - enable the authkey cleanup service (default true)
-#   authkey_cleanup_delay           - seconds to wait before removing the key (default 60)
+#   authkey_cleanup_timeout         - seconds to keep polling for a logged-in tailscale before giving up (default 600)
 
 { cfg }:
 
@@ -62,9 +62,17 @@ let
   extraTailscaledArgs = cfg.tailscale_extra_tailscaled_args or "";
   extraLabels = cfg.tailscale_extra_labels or { };
 
+  podmanUser = cfg.podman_user or "podman";
+
   cleanupEnabled = cfg.tailscale_authkey_cleanup or true;
-  cleanupDelay = cfg.authkey_cleanup_delay or 60;
-  ociBin = "${config.virtualisation.oci-containers.backend}";
+  cleanupTimeout = cfg.authkey_cleanup_timeout or 600;
+
+  ociBackend = "${config.virtualisation.oci-containers.backend}";
+  isPodman = ociBackend == "podman";
+  ociBin =
+    if isPodman
+    then "${config.virtualisation.podman.package}/bin/podman"
+    else "${pkgs.docker}/bin/docker";
 
   # Extract host paths (the part before the first ':')
   hostPaths = map (v: builtins.head (lib.strings.splitString ":" v)) volumes;
@@ -73,7 +81,7 @@ let
   hostDirs = builtins.filter (p: lib.hasPrefix "/" p && !(lib.hasPrefix "/dev/" p)) hostPaths;
 
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") hostDirs;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBackend} ${ociBackend} -") hostDirs;
 in
 {
   # Dynamically apply the generated tmpfiles rules
@@ -81,7 +89,6 @@ in
 
   virtualisation.oci-containers.containers."${cfg.service_name}-tailscale" = {
     inherit image dependsOn volumes;
-
     labels = {
       "komodo.skip" = "";
     } // extraLabels;
@@ -104,6 +111,8 @@ in
       TS_EXTRA_ARGS = extraArgs;
       TS_TAILSCALED_EXTRA_ARGS = extraTailscaledArgs;
     };
+  } // lib.optionalAttrs isPodman {
+    User = podmanUser;
   };
 
   ### FIREWALL ###
@@ -115,14 +124,27 @@ in
   systemd.services = lib.optionalAttrs cleanupEnabled {
     "${cfg.service_name}-tailscale-authkey-cleanup" = {
       description = "Remove TS_AUTHKEY from ${cfg.service_name} .env after tailscale authenticates";
-      after = [ "${ociBin}-${cfg.service_name}-tailscale.service" ];
-      wantedBy = [ "${ociBin}-${cfg.service_name}-tailscale.service" ];
+      after = [ "${ociBackend}-${cfg.service_name}-tailscale.service" ];
+      wantedBy = [ "${ociBackend}-${cfg.service_name}-tailscale.service" ];
       serviceConfig = {
         Type = "oneshot";
+        # `tailscale status` inside the container only exits 0 once tailscaled
+        # is running and logged in. Poll every 5s until then; give up after
+        # the timeout, leaving the key in place for the next attempt.
         ExecStart = pkgs.writeShellScript "cleanup-ts-authkey-${cfg.service_name}" ''
-          sleep ${toString cleanupDelay}
-          ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY/d' "${cfg.base_dir}/.env"
+          tries=0
+          while [ "$tries" -lt ${toString (cleanupTimeout / 5)} ]; do
+            sleep 5
+            tries=$((tries + 1))
+            if ${ociBin} exec ${cfg.service_name}-tailscale tailscale status --peers=false >/dev/null 2>&1; then
+              ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY/d' "${cfg.base_dir}/.env"
+              exit 0
+            fi
+          done
+          echo "warning: tailscale never became healthy within ${toString cleanupTimeout}s; leaving TS_AUTHKEY in place"
         '';
+      } // lib.optionalAttrs isPodman {
+        User = podmanUser;
       };
     };
   };

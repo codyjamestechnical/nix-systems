@@ -1,12 +1,14 @@
 { config, pkgs, lib, ... }:
 let
-  ociBin = "${config.virtualisation.oci-containers.backend}";
-  dockerSocket = if ociBin == "docker" then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
+  ociBackend = "${config.virtualisation.oci-containers.backend}";
+  isPodman = ociBackend == "podman";
+  dockerSocket = if !isPodman then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
   cfg = {
     service_name = "komodo";
     network_name = "komodo-internal";
     base_dir = "/docker-data/komodo";
     secrets_dir = "/etc/nixos/secrets";
+    podman_user = "podman";
 
     ## override tailscale config to attach it to the komodo-core instead of caddy
     tailscale_depends_on = [
@@ -20,7 +22,8 @@ let
     "${cfg.base_dir}/mongodb/data"
   ];
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
+  userMapping = if isPodman then cfg.podman_user else ociBackend;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${userMapping} ${userMapping} -") create_volumes;
 in
 {
   # Import tailscale and docker-network modules
@@ -58,6 +61,8 @@ in
         "--network-alias=periphery"
         "--network=${cfg.network_name}"
       ];
+    } // lib.optionalAttrs isPodman {
+      User = cfg.podman_user;
     };
 
     ### KOMODO CORE ###
@@ -90,6 +95,8 @@ in
         "--network=${cfg.network_name}"
         # "--network=name=ipvlan6,ip6=2a01:4ff:f0:f9f1:1::2"
       ];
+    } // lib.optionalAttrs isPodman {
+      User = cfg.podman_user;
     };
 
     ### MONGODB ###
@@ -116,29 +123,10 @@ in
         "--network-alias=mongo"
         "--network=${cfg.network_name}"
       ];
+    } // lib.optionalAttrs isPodman {
+      User = cfg.podman_user;
     };
   };
-
-  # systemd.services.docker-ipvlan-net = {
-  #     description = "Create IPv6-only Docker IPvlan network";
-  #     after = [ "docker.service" ];
-  #     requires = [ "docker.service" ];
-  #     wantedBy = [ "multi-user.target" ];
-  #     before = [ "docker-tailscale.service" ];
-  #     serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
-  #     path = [ pkgs.docker ];
-  #     script = ''
-  #       if ! docker network inspect ipvlan6 >/dev/null 2>&1; then
-  #         docker network create \
-  #           --driver ipvlan \
-  #           --opt ipvlan_mode=l3 \
-  #           --ipv6 \
-  #           --subnet "2a01:4ff:f0:f9f1:1::/80" \
-  #           --opt parent=eth0 \
-  #           ipvlan6
-  #       fi
-  #     '';
-  #   };
 
 }
 

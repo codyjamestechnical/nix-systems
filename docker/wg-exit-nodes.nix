@@ -25,14 +25,10 @@ with lib;
 
 let
   cfg = config.services.wg-exit-nodes;
-
-  ociBin = config.virtualisation.oci-containers.backend;
-  isPodman = ociBin == "podman";
-
-  # Rootless podman: containers run as this user, so networks must be created
-  # in the same user's rootless podman instance (not via the root docker socket).
-  rootlessUser = "podman";
-  netBin =
+  podmanUser = "podman";
+  ociBackend = config.virtualisation.oci-containers.backend;
+  isPodman = ociBackend == "podman"
+  ociBin =
     if isPodman
     then "${config.virtualisation.podman.package}/bin/podman"
     else "${pkgs.docker}/bin/docker";
@@ -111,7 +107,7 @@ in
       # Gluetun: owns the network namespace and runs the custom WireGuard tunnel
       (mapAttrs' (name: inst: nameValuePair "${inst.service_name}-gluetun" {
         image = "qmcgaw/gluetun:latest";
-        podman = mkIf isPodman { user = rootlessUser; };
+        podman = mkIf (isPodman) { user = podmanUser; };
         labels = {
           "komodo.skip" = "";
         };
@@ -143,7 +139,7 @@ in
       // # Tailscale: joins gluetun's network namespace so all its traffic exits via the VPN
       (mapAttrs' (name: inst: nameValuePair inst.service_name {
         image = "tailscale/tailscale:latest";
-        podman = mkIf isPodman { user = rootlessUser; };
+        podman = mkIf (isPodman) { user = podmanUser; };
         dependsOn = [ "${inst.service_name}-gluetun" ];
         labels = {
           "komodo.skip" = "";
@@ -202,33 +198,44 @@ in
     systemd.services =
       # Generate the container network services. With rootless podman the
       # network must be created by the same user the containers run as.
-      (mapAttrs' (name: inst: nameValuePair "${ociBin}-network-${inst.network_name}" {
+      (mapAttrs' (name: inst: nameValuePair "${ociBackend}-network-${inst.network_name}" {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          ExecStop = "${netBin} network rm -f ${inst.network_name}";
+          ExecStop = "${ociBin} network rm -f ${inst.network_name}";
         } // optionalAttrs isPodman {
-          User = rootlessUser;
+          User = podmanUser;
         };
         environment = optionalAttrs isPodman {
-          HOME = config.users.users.${rootlessUser}.home;
+          HOME = config.users.users.${podmanUser}.home;
         };
         script = ''
-          ${netBin} network inspect ${inst.network_name} || ${netBin} network create ${inst.network_name} --ipv6
+          ${ociBin} network inspect ${inst.network_name} || ${ociBin} network create ${inst.network_name} --ipv6
         '';
         wantedBy = [ "multi-user.target" ];
       }) enabledInstances)
 
-      // # MERGE: Extend the container services to delete TS_AUTHKEY after 1 minute
-      (mapAttrs' (name: inst: nameValuePair "${ociBin}-${inst.service_name}" {
-        # Background the delayed cleanup so ExecStartPost returns immediately.
+      // # MERGE: Extend the container services to delete TS_AUTHKEY once
+      # tailscale is confirmed running and logged in.
+      (mapAttrs' (name: inst: nameValuePair "${ociBackend}-${inst.service_name}" {
+        # Background the cleanup so ExecStartPost returns immediately.
         # This runs as the container service's user, which owns the .env file.
+        # `tailscale status` inside the container only exits 0 once tailscaled
+        # is running and logged in. Polls every 5s, gives up after ~10 minutes
+        # (leaving the key in place for the next attempt).
         postStart = ''
           (
-            ${pkgs.coreutils}/bin/sleep 60
-            if [ -f '${inst.base_dir}/.env' ]; then
-              ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
-            fi
+            tries=0
+            while [ "$tries" -lt 120 ]; do
+              ${pkgs.coreutils}/bin/sleep 5
+              tries=$((tries + 1))
+              if ${ociBin} exec ${inst.service_name} tailscale status --peers=false >/dev/null 2>&1; then
+                if [ -f '${inst.base_dir}/.env' ]; then
+                  ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
+                fi
+                break
+              fi
+            done
           ) &
         '';
       }) enabledInstances);

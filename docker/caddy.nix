@@ -33,13 +33,18 @@ let
   ports = cfg.caddy_ports or [ ];
   envFiles = cfg.caddy_env_files or [];
   extraLabels = cfg.caddy_extra_labels or { };
-  ociBin = "${config.virtualisation.oci-containers.backend}";
+  podmanUser = cfg.podman_user or "podman";
+
+  ociBackend = "${config.virtualisation.oci-containers.backend}";
+  isPodman = ociBackend == "podman";
+
   create_volumes = [
     "${cfg.base_dir}/caddy/data"
     "${cfg.base_dir}/caddy/config"
   ];
   # Generate the tmpfiles rules mapping
-  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${ociBin} ${ociBin} -") create_volumes;
+  userMapping = if isPodman then podmanUser else ociBackend;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${userMapping} ${userMapping} -") create_volumes;
 in
 {
   # Dynamically apply the generated tmpfiles rules
@@ -69,5 +74,7 @@ in
       "--network-alias=${networkAlias}"
       "--network=${cfg.network_name}"
     ];
+  } // lib.optionalAttrs isPodman {
+    User = podmanUser;
   };
 }
