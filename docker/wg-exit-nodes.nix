@@ -234,8 +234,8 @@ in
             ${pkgs.coreutils}/bin/sleep 60
             if [ -f '${inst.base_dir}/.env' ]; then
               ${pkgs.gnused}/bin/sed -i '/^TS_AUTHKEY=/d' '${inst.base_dir}/.env'
-              fi
-            "
+            fi
+          ) &
         '';
       }) enabledInstances);
 
