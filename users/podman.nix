@@ -7,8 +7,8 @@
     };
 
     users.podman = {
-      isNormalUser = true;
-      isSystemUser = false;
+      isNormalUser = false;
+      isSystemUser = true;
       linger = true;
       group = "podman";
       uid = 1000;

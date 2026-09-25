@@ -73,5 +73,22 @@
     };
   };
 
+  # enable podman socket for podman user
+  systemd.user.services."podman.socket" = {
+    unitConfig.ConditionUser = "podman";
+  };
 
+  # # Automatically start containers on boot
+  # systemd.services.podman-autostart = {
+  #   enable = true;
+  #   after = [ "podman.service" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   description = "Enable podman docker socket";
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     User = "podman";
+  #     ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
+  #     ExecStart = ''systemctl --user enable podman.socket'';
+  #   };
+  };
 }
