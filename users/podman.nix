@@ -18,4 +18,8 @@
     };
   };
 
+  # Enable the rootless podman socket for user sessions (equivalent to
+  # `systemctl --user enable podman.socket`). Combined with
+  # users.users.podman.linger = true, this starts at boot for the podman user.
+  systemd.user.sockets.podman.wantedBy = [ "sockets.target" ];
 }
