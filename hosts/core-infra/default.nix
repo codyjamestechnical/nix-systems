@@ -18,7 +18,7 @@
       };
 
     ### TAILSCALE EXIT NODES -> WG VPN ###
-    services.wg-exit-nodes = {
+    # services.wg-exit-nodes = {
 
     #   # Obscura VPN Amsterdam
     #   wg-exit-node-obscura-amsterdam = {
