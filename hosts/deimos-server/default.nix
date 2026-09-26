@@ -8,6 +8,9 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
+    # Enable Qemu Guest Agent shince this is a VM
+    services.qemuGuest.enable = true;
+
     ### NETWORKING ###
     networking = {
         hostName = "deimos-server";
@@ -61,8 +64,7 @@
 
     };
 
-    ### CLEANUP TMP ON BOOT ###
-    boot.tmp.cleanOnBoot = true;
+
 
     system.stateVersion = "26.05";
 }

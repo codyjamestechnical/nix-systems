@@ -17,6 +17,9 @@
       "ip6table_nat"
   ];
 
+  ### CLEANUP TMP ON BOOT ###
+  boot.tmp.cleanOnBoot = true;
+
   ### ENABLE ZRAM SWAP ###
   zramSwap.enable = true;
 
