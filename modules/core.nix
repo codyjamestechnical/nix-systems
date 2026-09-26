@@ -103,10 +103,10 @@
       spf = "superfile";
 
       # Speed Tests
-      speed-atlanta = "iperf3 -c atl.speedtest.clouvider.net -p 5200-5209";
-      speed-germany = "iperf3 -c speedtest.fra1.de.leaseweb.net -p 5201-5210";
-      speed-amsterdam = "iperf3 -c ams.speedtest.clouvider.net -p 5200-5209";
-      speed-canada = "iperf3 -c speedtest.mtl2.ca.leaseweb.net -p 5201-5210";
+      speed-atlanta = "iperf3 -c atl.speedtest.clouvider.net -p 5200-5209 && ping -U -c 10 atl.speedtest.clouvider.net";
+      speed-germany = "iperf3 -c speedtest.fra1.de.leaseweb.net -p 5201-5210 && ping -U -c 10 speedtest.fra1.de.leaseweb.net";
+      speed-amsterdam = "iperf3 -c ams.speedtest.clouvider.net -p 5200-5209 && ping -U -c 10 ams.speedtest.clouvider.net";
+      speed-canada = "iperf3 -c speedtest.mtl2.ca.leaseweb.net -p 5201-5210 && ping -U -c 10 speedtest.mtl2.ca.leaseweb.net";
 
       # Pull latest git changes and rebuild switch NixOS with flake
       rebuild = "sudo git -C /etc/nixos/nix-systems pull && sudo nixos-rebuild switch --flake '/etc/nixos/nix-systems#${config.networking.hostName}'";
