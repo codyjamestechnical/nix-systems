@@ -13,12 +13,6 @@
       cody.gid = 1001;
     };
 
-    ### ZSH SHELL ALIAS ###
-    programs.zsh.shellAliases = {
-        # alias the podman command to use the podman user
-        podman = "sudo -u podman podman";
-    };
-
     users.cody = {
       isNormalUser = true;
       description = "Cody";
@@ -54,8 +48,8 @@
 
   ### ZSH SHELL ALIAS ###
   programs.zsh.shellAliases = {
-      # headscale command alias so we don't have to use docker exec every time
-      headscale = "${ociBackend} exec -it headscale-server headscale";
+      # alias the podman command to use the podman user
+      podman = "sudo -u podman podman";
   };
 
 }
