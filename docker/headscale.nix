@@ -131,10 +131,10 @@ in
         "homepage.description" = "Headscale dashboard and management UI";
         "homepage.siteMonitor" = "https://headplane.31337.im";
       };
+    } // lib.optionalAttrs isPodman {
+      podman.user = cfg.podman_user;
     };
 
-  } // lib.optionalAttrs isPodman {
-    podman.user = cfg.podman_user;
   };
 }
 
