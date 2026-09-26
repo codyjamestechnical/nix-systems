@@ -50,7 +50,14 @@
   programs.zsh.interactiveShellInit = ''
     if [ "$USER" = "cody" ]; then
       # alias the podman command to use the podman user
-      alias podman="cd /home/podman && sudo -H -u podman podman"
+      alias podman="sudo -u podman podman"
+      # Run podman as the podman user. Use a function instead of an
+      # alias so we can cd to / first: rootless podman re-execs and
+      # chdirs into the current working directory, which fails if we
+      # are inside /home/cody (not accessible to the podman user).
+      podman() {
+        ( cd / && exec sudo -H -u podman podman "$@" )
+      }
     fi
   '';
 
