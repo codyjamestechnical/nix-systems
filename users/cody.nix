@@ -46,10 +46,12 @@
     };
   };
 
-  ### ZSH SHELL ALIAS ###
-  programs.zsh.shellAliases = {
+  ### ZSH SHELL ALIAS (cody only) ###
+  programs.zsh.interactiveShellInit = ''
+    if [ "$USER" = "cody" ]; then
       # alias the podman command to use the podman user
-      podman = "sudo -u podman podman";
-  };
+      alias podman="sudo -u podman podman"
+    fi
+  '';
 
 }
