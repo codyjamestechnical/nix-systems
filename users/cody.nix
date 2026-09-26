@@ -12,6 +12,13 @@
     groups = {
       cody.gid = 1001;
     };
+
+    ### ZSH SHELL ALIAS ###
+    programs.zsh.shellAliases = {
+        # alias the podman command to use the podman user
+        podman = "sudo -u podman podman";
+    };
+
     users.cody = {
       isNormalUser = true;
       description = "Cody";
