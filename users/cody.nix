@@ -50,7 +50,7 @@
   programs.zsh.interactiveShellInit = ''
     if [ "$USER" = "cody" ]; then
       # alias the podman command to use the podman user
-      alias podman="sudo -H -u podman podman"
+      alias podman="cd /home/podman && sudo -H -u podman podman"
     fi
   '';
 
