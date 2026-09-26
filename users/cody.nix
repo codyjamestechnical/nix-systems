@@ -52,4 +52,10 @@
     };
   };
 
+  ### ZSH SHELL ALIAS ###
+  programs.zsh.shellAliases = {
+      # headscale command alias so we don't have to use docker exec every time
+      headscale = "${ociBackend} exec -it headscale-server headscale";
+  };
+
 }
