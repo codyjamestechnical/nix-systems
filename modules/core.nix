@@ -5,21 +5,6 @@
     ../users/cody.nix
   ];
 
-  boot.kernelModules = [
-      # IPv4 legacy iptables modules
-      "ip_tables"
-      "iptable_filter"
-      "iptable_nat"
-
-      # IPv6 legacy iptables modules
-      "ip6_tables"
-      "ip6table_filter"
-      "ip6table_nat"
-  ];
-
-  ### CLEANUP TMP ON BOOT ###
-  boot.tmp.cleanOnBoot = true;
-
   ### ENABLE ZRAM SWAP ###
   zramSwap.enable = true;
 
@@ -76,13 +61,6 @@
     smartmontools
   ];
 
-  ### OpenSSH DEAMON ###
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = false;
-    settings.PermitRootLogin = "no";
-  };
-
   ### ZSH ###
   programs.zsh = {
     enable = true;
@@ -126,7 +104,6 @@
   };
 
   # Create a symlink from /usr/libexec/platform-python to the Python executable
-  # Create secrets directory
   systemd.tmpfiles.rules = [
     "L+ /usr/libexec/platform-python - - - - ${pkgs.python3Minimal}/bin/python3"
   ];
@@ -151,6 +128,9 @@
     options = "--delete-older-than 30d";
   };
 
+  ### CLEANUP TMP ON BOOT ###
+    boot.tmp.cleanOnBoot = true;
+    
   ### NIX SETTINGS ###
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
