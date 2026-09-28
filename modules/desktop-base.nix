@@ -84,7 +84,7 @@
         docker.docker
       ];
     })
-    pkgs.zed-editor
+    zed-editor
     kdePackages.kcharselect # Character map
     kdePackages.kclock # Clock app
     kdePackages.kcolorchooser # Color picker
@@ -97,9 +97,10 @@
     firefox
   ];
 
-  ### BRAVE NIGHTLY ORIGIN ###
-  programs.brave-origin-nightly = {
+  ### BRAVE ORIGIN ###
+  programs.chromium = {
     enable = true;
+    package = pkgs.brave-origin;
     extensions = [
       "nngceckbapebfimnlniiiahkandclblb" # Bitwarden
       "kgcjekpmcjjogibpjebkhaanilehneje" # KaraKeep
@@ -142,5 +143,5 @@
       modulePath = "plasmalogin";
     };
   };
-    
+
 }

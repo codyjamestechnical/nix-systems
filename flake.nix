@@ -25,17 +25,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Add brave-browser-previews
-    brave-previews.url = "github:drishal/brave-browser-flake";
-    
-    # Recommended: Follow your system's nixpkgs to avoid duplicate store paths
-    brave-previews.inputs.nixpkgs.follows = "nixpkgs";
-
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.7.0";
 
   };
 
-  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware, nix-flatpak, brave-previews, ... }@inputs: {
+  outputs = { self, nixpkgs, ssh-keys, webzfs, nixos-hardware, nix-flatpak, ... }@inputs: {
     nixosConfigurations = {
       mars-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -106,7 +100,7 @@
           ./modules/core.nix
           ./modules/desktop-base.nix
           ./hosts/laptop
-          
+
           nix-flatpak.nixosModules.nix-flatpak
           nixos-hardware.nixosModules.framework-intel-core-ultra-series3
         ];
