@@ -31,13 +31,13 @@
       turbo = "auto";
     };
   };
-  
+
   ### ENABLE THERMALD FOR INTEL CPUs ###
   services.thermald.enable = true;
 
   ### ENABLE STEAM ###
   programs.steam = {
-    enable = true; 
+    enable = true;
     remotePlay.openFirewall = true;  # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server hosting
   };
@@ -63,7 +63,7 @@
     #   STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
 
     # };
-  }
+  };
 
   system.stateVersion = "26.05";
 }
