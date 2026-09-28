@@ -1,10 +1,6 @@
-{ config, pkgs, brave-previews, ... }:
+{ config, pkgs, ... }:
 
 {
-  imports = [
-    brave-previews.nixosModules.default
-  ];
-
   ### ENABLE WIRELESS NETWORK ###
   networking.wireless.enable = true;
 
@@ -84,6 +80,7 @@
         docker.docker
       ];
     })
+    brave-origin
     zed-editor
     kdePackages.kcharselect # Character map
     kdePackages.kclock # Clock app
@@ -100,14 +97,24 @@
   ### BRAVE ORIGIN ###
   programs.chromium = {
     enable = true;
-    package = pkgs.brave-origin;
     extensions = [
       "nngceckbapebfimnlniiiahkandclblb" # Bitwarden
       "kgcjekpmcjjogibpjebkhaanilehneje" # KaraKeep
       # "cdglnehniifkbagbbombnjghhcihifij" # Kagi
     ];
+    defaultSearchProviderEnabled = true;
     defaultSearchProviderSearchURL = "https://kagi.com/search?q={searchTerms}";
     defaultSearchProviderSuggestURL= "https://kagisuggest.com/api/autosuggest?q={searchTerms}";
+    extraOpts = {
+      "WebAppInstallForceList" = [
+        {
+          "custom_name" = "Home Assistant";
+          "create_desktop_shortcut" = false;
+          "default_launch_container" = "window";
+          "url" = "https://hass.31337.im";
+        }
+      ];
+    };
   };
 
   ### ENABLE CUPS ###
