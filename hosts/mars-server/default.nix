@@ -28,7 +28,6 @@
     networking = {
       hostName = "mars-server";
       hostId = "deadb33f";
-      networkmanager.enable = true;
     };
 
     ### ZFS POOL SETUP ###

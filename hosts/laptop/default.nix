@@ -1,12 +1,18 @@
 { inputs, config, pkgs, ... }:
 {
   imports = [
-      ./hardware-configuration.nix
+    ./hardware-configuration.nix
   ];
+
+  ### BOOTLOADER ###
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
   ### NETWORKING ###
   networking = {
-      hostName = "core-infra";
+    hostName = "CJ-Laptop";
   };
 
   ### INTEL FWUPD MODS ###
@@ -20,17 +26,17 @@
   powerManagement.powertop.enable = true;
 
   ### ENABLE AUTO CPUFREQ ###
-  services.auto-cpufreq.enable = true;
-  services.auto-cpufreq.settings = {
-    battery = {
-      governor = "powersave";
-      turbo = "auto";
-    };
-    charger = {
-      governor = "performance";
-      turbo = "auto";
-    };
-  };
+  # services.auto-cpufreq.enable = true;
+  # services.auto-cpufreq.settings = {
+  #   battery = {
+  #     governor = "powersave";
+  #     turbo = "auto";
+  #   };
+  #   charger = {
+  #     governor = "performance";
+  #     turbo = "auto";
+  #   };
+  # };
 
   ### ENABLE THERMALD FOR INTEL CPUs ###
   services.thermald.enable = true;

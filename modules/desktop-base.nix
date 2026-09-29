@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  ### ENABLE WIRELESS NETWORK ###
-  networking.wireless.enable = true;
-
   ### ENABLE BLUETOOTH ###
   hardware.bluetooth = {
     enable = true;
@@ -40,7 +37,7 @@
       "com.github.wwmm.easyeffects"            # Easy Effect
       "org.freecad.FreeCAD"                    # FreeCAD
       "org.gimp.GIMP"                          # GIMP
-      "gwenview"                               # GwenView
+      "org.kde.gwenview"                       # GwenView
       "com.github.tchx84.Flatseal"             # Flatseal
       "org.kde.isoimagewriter"                 # ISO Image Writer
       "org.kde.kcalc"                          # KCalc
@@ -71,15 +68,15 @@
 
   ### SYSTEM PACKAGES ###
   environment.systemPackages = with pkgs; [
-    (vscode-with-extensions.override {
-      vscode = vscodium;
-      vscodeExtensions = with vscode-extensions; [
-        yzhang.markdown-all-in-one
-        ana-mara4353.nix-ide
-        jnoortheen.nix-ide
-        docker.docker
-      ];
-    })
+    # (vscode-with-extensions.override {
+    #   vscode = vscodium;
+    #   vscodeExtensions = with vscode-extensions; [
+        # yzhang.markdown-all-in-one
+        # ana-mara4353.nix-ide
+        # jnoortheen.nix-ide
+        # docker.docker
+    #   ];
+    # })
     brave-origin
     zed-editor
     kdePackages.kcharselect # Character map
@@ -93,6 +90,19 @@
     wl-clipboard # Wayland copy/paste support
     firefox
   ];
+
+  ### VSCODIUM ###
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium;
+    defaultEditor = true;
+    extensions = with pkgs.vscode-extensions; [
+      yzhang.markdown-all-in-one
+      ana-mara4353.nix-ide
+      jnoortheen.nix-ide
+      docker.docker
+    ];
+  };
 
   ### BRAVE ORIGIN ###
   programs.chromium = {
@@ -121,8 +131,6 @@
   services.printing.enable = true;
 
   ### ENABLE PIPEWIRE ###
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio.extraConfig = "load-module module-combine-sink";

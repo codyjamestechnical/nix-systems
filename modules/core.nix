@@ -5,6 +5,9 @@
     ../users/cody.nix
   ];
 
+  ### ENABLE NETWORK MANAGER ###
+  networking.networkmanager.enable = true;
+
   ### ENABLE ZRAM SWAP ###
   zramSwap.enable = true;
 
@@ -129,7 +132,7 @@
   };
 
   ### CLEANUP TMP ON BOOT ###
-    boot.tmp.cleanOnBoot = true;
+  boot.tmp.cleanOnBoot = true;
     
   ### NIX SETTINGS ###
   nix.settings = {
