@@ -1,15 +1,28 @@
 { config, pkgs, ... }:
 let
+  ociBackend = "${config.virtualisation.oci-containers.backend}";
+  isPodman = ociBackend == "podman";
+  dockerSocket = if !isPodman then "/var/run/docker.sock" else "/run/user/1000/podman/podman.sock";
   cfg = {
     service_name = "komodo-periphery";
     network_name = "komodo-periphery-internal";
     base_dir = "/docker-data/komodo-periphery";
     secrets_dir = "/etc/nixos/secrets";
   };
+  # List of volumes to create if they don't exist
+  create_volumes = [
+    "${cfg.base_dir}/keys"
+    "${cfg.base_dir}/config"
+  ];
+  # Generate the tmpfiles rules mapping
+  userMapping = if isPodman then cfg.podman_user else ociBackend;
+  volumeTmpfilesRules = map (dir: "d ${dir} 0770 ${userMapping} ${userMapping} -") create_volumes;
 in
 {
+  # Dynamically apply the generated tmpfiles rules
+  systemd.tmpfiles.rules = volumeTmpfilesRules;
+
   ### OCI CONTAINERS ###
-  virtualisation.oci-containers.backend = ociBackend;
   virtualisation.oci-containers.containers = {
 
     ### KOMODO PERIPHERY ###
@@ -18,7 +31,7 @@ in
       ports = [ "0.0.0.0:8120:8120" ];
       log-driver = "journald";
       volumes = [
-        "/var/run/docker.sock:/var/run/docker.sock"
+        "${dockerSocket}:/var/run/docker.sock"
         "/proc:/proc"
 
         "${cfg.base_dir}/keys:/config/keys"
