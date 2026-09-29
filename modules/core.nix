@@ -42,6 +42,7 @@
     git
     htop
     bfs
+    dig
     eza
     pwgen
     helix
