@@ -210,7 +210,7 @@
         network_name = "net_macvlan";
         network_gateway = "10.0.35.1";
         network_subnet = "10.0.35.0/24";
-        network_parent_interface = "enp5s0.35";
+        network_parent_interface = "enp6s0f4u2u1.35";
         network_starting_ip = "10.0.35.2";
         network_ip_range = "10.0.35.0/27";
         network_other_options = "";
