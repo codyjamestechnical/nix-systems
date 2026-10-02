@@ -1,291 +1,291 @@
 { inputs, config, pkgs, ... }:
 {
-    imports = [
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
-    ### BOOTLOADER ###
-    boot.loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+  ### BOOTLOADER ###
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Swap Realtek generic driver for the proprietary one
+  boot.blacklistedKernelModules = [ "r8169" ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+  boot.kernelModules = [ "r8125" ];
+
+  # Disable PCIe ASPM to avoid driver issues with Realtek card
+  boot.kernelParams = [ "pcie_aspm=off" ];
+
+  # Disable Energy Efficient Ethernet (EEE) and ASPM to prevent link drops for Realtek
+  boot.extraModprobeConfig = ''
+    options r8125 eee_enable=0 aspm=0
+  '';
+
+  ### NETWORK ###
+  networking = {
+    hostName = "mars-server";
+    hostId = "deadb33f";
+  };
+
+  ### ZFS POOL SETUP ###
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs = {
+    forceImportRoot = false;
+    extraPools = [ "cjt_pool" "nvme_pool"];
+  };
+
+  services.zfs = {
+    autoScrub.enable = true;
+    trim.enable = true;
+  };
+
+  ### WEBZFS DASHBOARD ###
+  services.webzfs = {
+    enable = true;
+    host = "0.0.0.0";
+    openFirewall = true;
+    package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
+
+  # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
+  # the same key on every subsequent start. The key is written outside the
+  # Nix store (which is world-readable) and survives rebuilds/reboots.
+  systemd.services.webzfs-secret-key = {
+    description = "Generate and persist the WebZFS SECRET_KEY";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "webzfs.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      UMask = "0077";
     };
-
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-    # Swap Realtek generic driver for the proprietary one
-    boot.blacklistedKernelModules = [ "r8169" ];
-    boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
-    boot.kernelModules = [ "r8125" ];
-
-    # Disable PCIe ASPM to avoid driver issues with Realtek card
-    boot.kernelParams = [ "pcie_aspm=off" ];
-
-    # Disable Energy Efficient Ethernet (EEE) and ASPM to prevent link drops for Realtek
-    boot.extraModprobeConfig = ''
-      options r8125 eee_enable=0 aspm=0
+    script = ''
+      set -eu
+      keyfile="/var/lib/webzfs/secret_key.env"
+      mkdir -p "$(dirname "$keyfile")"
+      if [ ! -s "$keyfile" ]; then
+        printf 'SECRET_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > "$keyfile"
+        chmod 600 "$keyfile"
+      fi
     '';
+  };
 
-    ### NETWORK ###
-    networking = {
-      hostName = "mars-server";
-      hostId = "deadb33f";
-    };
+  # Feed the generated key into WebZFS. pydantic-settings gives environment
+  # variables priority over the bundled .env file, so this is the key the
+  # application actually uses.
+  systemd.services.webzfs = {
+    after = [ "webzfs-secret-key.service" ];
+    requires = [ "webzfs-secret-key.service" ];
+    serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
+  };
 
-    ### ZFS POOL SETUP ###
-    boot.supportedFilesystems = [ "zfs" ];
-    boot.zfs = {
-      forceImportRoot = false;
-      extraPools = [ "cjt_pool" "nvme_pool"];
-    };
-
-    services.zfs = {
-      autoScrub.enable = true;
-      trim.enable = true;
-    };
-
-    ### WEBZFS DASHBOARD ###
-    services.webzfs = {
-      enable = true;
-      host = "0.0.0.0";
-      openFirewall = true;
-      package = inputs.webzfs.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    };
-
-    # Auto-generate a persistent SECRET_KEY for WebZFS on first start and reuse
-    # the same key on every subsequent start. The key is written outside the
-    # Nix store (which is world-readable) and survives rebuilds/reboots.
-    systemd.services.webzfs-secret-key = {
-      description = "Generate and persist the WebZFS SECRET_KEY";
-      wantedBy = [ "multi-user.target" ];
-      before = [ "webzfs.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        UMask = "0077";
-      };
-      script = ''
-        set -eu
-        keyfile="/var/lib/webzfs/secret_key.env"
-        mkdir -p "$(dirname "$keyfile")"
-        if [ ! -s "$keyfile" ]; then
-          printf 'SECRET_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > "$keyfile"
-          chmod 600 "$keyfile"
-        fi
-      '';
-    };
-
-    # Feed the generated key into WebZFS. pydantic-settings gives environment
-    # variables priority over the bundled .env file, so this is the key the
-    # application actually uses.
-    systemd.services.webzfs = {
-      after = [ "webzfs-secret-key.service" ];
-      requires = [ "webzfs-secret-key.service" ];
-      serviceConfig.EnvironmentFile = [ "/var/lib/webzfs/secret_key.env" ];
-    };
-
-    ### BESZEL AGENT CONFIG ###
-    services.beszel-agent = {
-        zfsEnabled = true;
-        extraDevices = [
-          "/dev/sda:/dev/sda"
-          "/dev/sdb:/dev/sdb"
-          "/dev/sdc:/dev/sdc"
-          "/dev/sdd:/dev/sdd"
-          "/dev/sde:/dev/sde"
-          "/dev/nvme0:/dev/nvme0"
-          "/dev/nvme1:/dev/nvme1"
-        ];
-    };
-
-    ### TAILSCALE ###
-    modules.tailscale = {
-      enable = true;
-      advertiseExitNode = true;
-    };
-
-    # # Create a udev rule that changes NVMe devices to disk group ownership
-    # # for Beszel to be able to show them correctly
-    # services.udev.extraRules = ''
-    #   KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
-    # '';
-
-    ### ARKEEP PHOTO DIRECTORY ADDITION ###
-    services.arkeep-agent.extraVolumes = [
-        "/cjt_pool/Photo_Library:/hostfs/photo-library:ro"
+  ### BESZEL AGENT CONFIG ###
+  services.beszel-agent = {
+    zfsEnabled = true;
+    extraDevices = [
+      "/dev/sda:/dev/sda"
+      "/dev/sdb:/dev/sdb"
+      "/dev/sdc:/dev/sdc"
+      "/dev/sdd:/dev/sdd"
+      "/dev/sde:/dev/sde"
+      "/dev/nvme0:/dev/nvme0"
+      "/dev/nvme1:/dev/nvme1"
     ];
+  };
 
-    ### SAMBA SHARES ###
-    services.samba = {
-        enable = true;
-        package = pkgs.samba4Full.override { enableCephFS = false; };
-        openFirewall = true;
-        settings = {
-          global = {
-            "workgroup" = "WORKGROUP";
-            "server string" = "mars-server";
-            "netbios name" = "mars-server";
-            "security" = "user";
-            #"use sendfile" = "yes";
-            # "max protocol" = "smb3";
-            # note: localhost is the ipv6 localhost ::1
-            "hosts allow" = "10.0.10. 10.0.30. 127.0.0.1 localhost";
-            "hosts deny" = "0.0.0.0/0";
-            "guest account" = "nobody";
-            "map to guest" = "bad user";
-            "log file" = "/var/log/samba/client.%I";
-            "log level" = "2";
-            "wins support" = "yes";
-            "local master" = "yes";
-            "preferred master" = "yes";
-            "server min protocol" = "SMB3_00";
-          };
-          "docker-data" = {
-            "path" = "/docker-data";
-            "browseable" = "yes";
-            "read only" = "no";
-            "guest ok" = "yes";
-            "create mask" = "0777";
-            "directory mask" = "0777";
-            "force user" = "cody";
-          };
-          "Movies" = {
-            "path" = "/mnt/cjt_pool/Media-Files/TV";
-            "browseable" = "yes";
-            "read only" = "no";
-            "guest ok" = "yes";
-            "create mask" = "0777";
-            "directory mask" = "0777";
-            "force user" = "cody";
-          };
-          "TV-Shows" = {
-            "path" = "/mnt/cjt_pool/Media-Files/TV";
-            "browseable" = "yes";
-            "read only" = "no";
-            "guest ok" = "yes";
-            "create mask" = "0777";
-            "directory mask" = "0777";
-            "force user" = "cody";
-          };
-        };
-    };
+  ### TAILSCALE ###
+  modules.tailscale = {
+    enable = true;
+    advertiseExitNode = true;
+  };
 
-    ### SAMBA WSDD ###
-    services.samba-wsdd = {
-        enable = true;
-        openFirewall = true;
-    };
+  # # Create a udev rule that changes NVMe devices to disk group ownership
+  # # for Beszel to be able to show them correctly
+  # services.udev.extraRules = ''
+  #   KERNEL=="nvme[0-9]*", GROUP="disk", MODE="0660"
+  # '';
 
-    ### AVAHI ###
-    services.avahi = {
-      enable = true;
-      nssmdns4 = true;
-      nssmdns6 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        domain = true;
-        hinfo = true;
-        userServices = true;
-        workstation = true;
+  ### ARKEEP PHOTO DIRECTORY ADDITION ###
+  services.arkeep-agent.extraVolumes = [
+    "/cjt_pool/Photo_Library:/hostfs/photo-library:ro"
+  ];
+
+  ### SAMBA SHARES ###
+  services.samba = {
+    enable = true;
+    package = pkgs.samba4Full.override { enableCephFS = false; };
+    openFirewall = true;
+    settings = {
+      global = {
+        "workgroup" = "WORKGROUP";
+        "server string" = "mars-server";
+        "netbios name" = "mars-server";
+        "security" = "user";
+        #"use sendfile" = "yes";
+        # "max protocol" = "smb3";
+        # note: localhost is the ipv6 localhost ::1
+        "hosts allow" = "10.0.10. 10.0.30. 127.0.0.1 localhost";
+        "hosts deny" = "0.0.0.0/0";
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
+        "log file" = "/var/log/samba/client.%I";
+        "log level" = "2";
+        "wins support" = "yes";
+        "local master" = "yes";
+        "preferred master" = "yes";
+        "server min protocol" = "SMB3_00";
       };
-      extraServiceFiles = {
-      smb = ''
-        <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
-        <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-        <service-group>
-        <name replace-wildcards="yes">%h</name>
-        <service>
-            <type>_smb._tcp</type>
-            <port>445</port>
-        </service>
-        </service-group>
-      '';
+      "docker-data" = {
+        "path" = "/docker-data";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "force user" = "cody";
       };
-    };
-
-    ### DOCKER MACVLAN NETWORK ###
-    # Create a macvlan network for Docker containers
-    # for local LAN access when tailscale is not available
-    systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers;
-    let
-        network_name = "net_macvlan";
-        network_gateway = "10.0.35.1";
-        network_subnet = "10.0.35.0/24";
-        network_parent_interface = "enp6s0f4u2u1.35";
-        network_starting_ip = "10.0.35.2";
-        network_ip_range = "10.0.35.0/27";
-        network_other_options = "";
-        backendBin = "${pkgs.docker}/bin/${backend}";
-    in
-    {
-        enable = true;
-        serviceConfig.Type = "oneshot";
-        wantedBy = [ "basic.target" ];
-        after = ["docker.service" "docker.socket"];
-        script = "
-            ${backendBin} network inspect ${network_name} >/dev/null 2>&1|| \
-            ${backendBin} network create --subnet=${network_subnet} --gateway=${network_gateway} --aux-address 'host=${network_starting_ip}' --ip-range ${network_ip_range} --driver=macvlan -o parent=${network_parent_interface} ${network_name}
-            ";
-    };
-
-  power.ups = {
-  enable = true;
-  mode = "standalone";
-  # section: The upsd UPS declarations: ups.conf
-  # this UPS device is named UPS-1.
-  ups."UPS-1" = {
-    description = "Gold Mate 1000VA UPS";
-
-    # driver name from https://networkupstools.org/stable-hcl.html
-    driver = "usbhid-ups";
-
-    # usbhid-ups driver always use value "auto"
-    port = "auto";
-
-    directives = [
-      # "Restore power on AC" BIOS option needs power to be cut a few seconds to work;
-      # this is achieved by the offdelay and ondelay directives.
-
-      # in the last stages of system shutdown, "upsdrvctl shutdown" is called to tell UPS that
-      # after offdelay seconds, the UPS power must be cut, even if
-      # wall power returns.
-
-      # There is a danger that the system will take longer than the default 20 seconds to shut down. 
-      # If that were to happen, the UPS shutdown would provoke a brutal system crash.
-      # We adjust offdelay, to solve this issue.
-      "offdelay = 60"
-
-      # UPS power is now cut regardless of wall power.  After (ondelay minus offdelay) seconds,
-      # if wall power returns, turn on UPS power.  The system has now been disconnected for a minimum of (ondelay minus offdelay) seconds,
-      # "Restore power on AC" should now power on the system.
-      # For reasons described above, ondelay value must be larger than offdelay value.
-      # We adjust ondelay, to ensure Restore power on AC option returns to Power Disconnected state.
-      "ondelay = 70"
-
-      # set value for battery.charge.low,
-      # upsmon initiate shutdown once this threshold is reached.
-      "lowbatt = 10"
-
-      # ignore it if the UPS reports a low battery condition
-      # without this, system will shutdown only when ups reports lb,
-      # not respecting lowbatt option
-      "ignorelb"
-    ];
-
-    upsd = {
-      listen = [
-        {
-          address = "0.0.0.0";
-          port = 3493;
-        }
-      ];
-    };
-
-    users."nut-admin" = {
-      # A file that contains just the password.
-      passwordFile = "/etc/nixos/secrets/ups-passwd.txt";
-      upsmon = "primary";
+      "Movies" = {
+        "path" = "/mnt/cjt_pool/Media-Files/TV";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "force user" = "cody";
+      };
+      "TV-Shows" = {
+        "path" = "/mnt/cjt_pool/Media-Files/TV";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "force user" = "cody";
+      };
     };
   };
 
-    system.stateVersion = "26.05";
+  ### SAMBA WSDD ###
+  services.samba-wsdd = {
+      enable = true;
+      openFirewall = true;
+  };
+
+  ### AVAHI ###
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    nssmdns6 = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      domain = true;
+      hinfo = true;
+      userServices = true;
+      workstation = true;
+    };
+    extraServiceFiles = {
+    smb = ''
+      <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+      <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+      <service-group>
+      <name replace-wildcards="yes">%h</name>
+      <service>
+          <type>_smb._tcp</type>
+          <port>445</port>
+      </service>
+      </service-group>
+    '';
+    };
+  };
+
+  ### DOCKER MACVLAN NETWORK ###
+  # Create a macvlan network for Docker containers
+  # for local LAN access when tailscale is not available
+  systemd.services.create-docker-macvlan-network = with config.virtualisation.oci-containers;
+  let
+    network_name = "net_macvlan";
+    network_gateway = "10.0.35.1";
+    network_subnet = "10.0.35.0/24";
+    network_parent_interface = "enp6s0f4u2u1.35";
+    network_starting_ip = "10.0.35.2";
+    network_ip_range = "10.0.35.0/27";
+    network_other_options = "";
+    backendBin = "${pkgs.docker}/bin/${backend}";
+  in
+  {
+    enable = true;
+    serviceConfig.Type = "oneshot";
+    wantedBy = [ "basic.target" ];
+    after = ["docker.service" "docker.socket"];
+    script = "
+        ${backendBin} network inspect ${network_name} >/dev/null 2>&1|| \
+        ${backendBin} network create --subnet=${network_subnet} --gateway=${network_gateway} --aux-address 'host=${network_starting_ip}' --ip-range ${network_ip_range} --driver=macvlan -o parent=${network_parent_interface} ${network_name}
+        ";
+  };
+
+  power.ups = {
+    enable = true;
+    mode = "standalone";
+    # section: The upsd UPS declarations: ups.conf
+    # this UPS device is named UPS-1.
+    ups."UPS-1" = {
+      description = "Gold Mate 1000VA UPS";
+
+      # driver name from https://networkupstools.org/stable-hcl.html
+      driver = "usbhid-ups";
+
+      # usbhid-ups driver always use value "auto"
+      port = "auto";
+
+      directives = [
+        # "Restore power on AC" BIOS option needs power to be cut a few seconds to work;
+        # this is achieved by the offdelay and ondelay directives.
+
+        # in the last stages of system shutdown, "upsdrvctl shutdown" is called to tell UPS that
+        # after offdelay seconds, the UPS power must be cut, even if
+        # wall power returns.
+
+        # There is a danger that the system will take longer than the default 20 seconds to shut down. 
+        # If that were to happen, the UPS shutdown would provoke a brutal system crash.
+        # We adjust offdelay, to solve this issue.
+        "offdelay = 60"
+
+        # UPS power is now cut regardless of wall power.  After (ondelay minus offdelay) seconds,
+        # if wall power returns, turn on UPS power.  The system has now been disconnected for a minimum of (ondelay minus offdelay) seconds,
+        # "Restore power on AC" should now power on the system.
+        # For reasons described above, ondelay value must be larger than offdelay value.
+        # We adjust ondelay, to ensure Restore power on AC option returns to Power Disconnected state.
+        "ondelay = 70"
+
+        # set value for battery.charge.low,
+        # upsmon initiate shutdown once this threshold is reached.
+        "lowbatt = 10"
+
+        # ignore it if the UPS reports a low battery condition
+        # without this, system will shutdown only when ups reports lb,
+        # not respecting lowbatt option
+        "ignorelb"
+      ];
+    };
+      upsd = {
+        listen = [
+          {
+            address = "0.0.0.0";
+            port = 3493;
+          }
+        ];
+      };
+
+      users."nut-admin" = {
+        # A file that contains just the password.
+        passwordFile = "/etc/nixos/secrets/ups-passwd.txt";
+        upsmon = "primary";
+      };
+  };
+
+  system.stateVersion = "26.05";
 }
