@@ -271,20 +271,30 @@
         "ignorelb"
       ];
     };
-      upsd = {
-        listen = [
-          {
-            address = "0.0.0.0";
-            port = 3493;
-          }
-        ];
-      };
 
-      users."nut-admin" = {
-        # A file that contains just the password.
-        passwordFile = "/etc/nixos/secrets/ups-passwd.txt";
-        upsmon = "primary";
-      };
+    upsd = {
+      listen = [
+        {
+          address = "0.0.0.0";
+          port = 3493;
+        }
+      ];
+    };
+
+    users."nut-admin" = {
+      # A file that contains just the password.
+      passwordFile = "/etc/nixos/secrets/ups-passwd.txt";
+      upsmon = "primary";
+    };
+
+    upsmon.monitor."UPS-1" = {
+      system = "UPS-1@localhost";
+      powerValue = 1;
+      user = "nut-admin";
+      passwordFile = "/etc/nixos/secrets/ups-passwd.txt";
+      type = "primary";
+    };
+
   };
 
   system.stateVersion = "26.05";
