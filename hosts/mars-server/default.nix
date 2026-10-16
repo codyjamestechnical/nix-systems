@@ -92,7 +92,7 @@
       "/dev/sdd:/dev/sdd"
       "/dev/sde:/dev/sde"
       "/dev/nvme0:/dev/nvme0"
-      "/dev/nvme1:/dev/nvme1"
+      # "/dev/nvme1:/dev/nvme1"
     ];
   };
 
@@ -249,7 +249,7 @@
         # after offdelay seconds, the UPS power must be cut, even if
         # wall power returns.
 
-        # There is a danger that the system will take longer than the default 20 seconds to shut down. 
+        # There is a danger that the system will take longer than the default 20 seconds to shut down.
         # If that were to happen, the UPS shutdown would provoke a brutal system crash.
         # We adjust offdelay, to solve this issue.
         "offdelay = 60"
