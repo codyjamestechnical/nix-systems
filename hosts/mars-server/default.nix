@@ -17,7 +17,12 @@
   boot.kernelModules = [ "r8125" ];
 
   # Disable PCIe ASPM to avoid driver issues with Realtek card
-  boot.kernelParams = [ "pcie_aspm=off" ];
+  # Cap ZFS ARC at 24GiB (of 64GiB RAM) so ARC growth can't starve the
+  # 30 tailscale containers and trigger reboot-only memory reclaim storms.
+  boot.kernelParams = [
+    "pcie_aspm=off"
+    "zfs.zfs_arc_max=25769803776"
+  ];
 
   # Disable Energy Efficient Ethernet (EEE) and ASPM to prevent link drops for Realtek
   boot.extraModprobeConfig = ''
@@ -28,6 +33,19 @@
   networking = {
     hostName = "mars-server";
     hostId = "deadb33f";
+  };
+
+  # Headroom for the ~30 tailscale containers + macvlan on this host.
+  # Conntrack/neighbor table overflow causes progressive connectivity
+  # degradation that only clears on reboot.
+  boot.kernel.sysctl = {
+    "net.netfilter.nf_conntrack_max" = 262144;
+    "net.ipv4.neigh.default.gc_thresh1" = 1024;
+    "net.ipv4.neigh.default.gc_thresh2" = 4096;
+    "net.ipv4.neigh.default.gc_thresh3" = 8192;
+    "net.ipv6.neigh.default.gc_thresh1" = 1024;
+    "net.ipv6.neigh.default.gc_thresh2" = 4096;
+    "net.ipv6.neigh.default.gc_thresh3" = 8192;
   };
 
   ### ZFS POOL SETUP ###
