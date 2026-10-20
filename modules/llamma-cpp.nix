@@ -3,12 +3,14 @@
   services.llama-cpp = {
     enable = true;
     package = pkgs.llama-cpp-vulkan;
+    host = "0.0.0.0";
+    openFirewall = true;
     # package = (pkgs.llama-cpp.override { cudaSupport = true; })
     # package = pkgs.llama-cpp-rocm;
 
     # Takes care of downloading if model not present
     modelsPreset = {
-      
+
       "Gemma-4-12B-TurboQuant-GGUF" = {
         # Extract from the model URL on HuggingFace
         hf-repo = "majentik/gemma-4-12B-TurboQuant-GGUF-Q5_K_M";
