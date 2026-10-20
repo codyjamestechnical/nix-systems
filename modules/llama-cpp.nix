@@ -9,6 +9,7 @@
     settings = {
       host = "0.0.0.0";
       port = 9080;
+      model = "/docker-data/gemma-4-12B-Q5_K_M.gguf"
     };
     
     openFirewall = true;
