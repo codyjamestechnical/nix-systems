@@ -9,7 +9,7 @@
     settings = {
       host = "0.0.0.0";
       port = 9080;
-      model = "/docker-data/deepseek-coder-1.3b-instruct.Q4_K_M.gguf";
+      model = "/docker-data/gemma-4-E2B-Q8_0.gguf";
     };
     
     openFirewall = true;
