@@ -42,6 +42,7 @@
           ./modules/tailscale.nix
           ./modules/acme.nix
           ./modules/docker.nix
+          ./modules/llamma-cpp.nix
           webzfs.nixosModules.webzfs
           nixos-hardware.nixosModules.minisforum-um790-pro # Hardware special config
           ## CORE DOCKER STACKS ##
