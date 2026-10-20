@@ -48,6 +48,11 @@
     "net.ipv6.neigh.default.gc_thresh3" = 8192;
   };
 
+  systemd.network.links."10-usbnic" = {
+    matchConfig.PermanentMACAddress = "c8:7f:54:9a:73:ee";
+    linkConfig.Name = "enp5s0f4u2u1";
+  };
+
   ### ZFS POOL SETUP ###
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
