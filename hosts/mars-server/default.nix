@@ -171,7 +171,7 @@
         "force user" = "cody";
       };
       "Movies" = {
-        "path" = "/mnt/cjt_pool/Media-Files/TV";
+        "path" = "/mnt/cjt_pool/Media-Files/Movies";
         "browseable" = "yes";
         "read only" = "no";
         "guest ok" = "yes";
