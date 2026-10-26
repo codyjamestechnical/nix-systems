@@ -170,8 +170,18 @@
         "directory mask" = "0777";
         "force user" = "cody";
       };
+      "home-assistant-backups" = {
+        "path" = "/cjt_pool/home-assistant-backups";
+        "hosts allow" = "10.0.10.4";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0770";
+        "directory mask" = "0770";
+        "force user" = "cody";
+      };
       "Movies" = {
-        "path" = "/cjt_pool/Media-Files/Movies";
+        "path" = "/cjt_pool/Media_Files/Movies";
         "browseable" = "yes";
         "read only" = "no";
         "guest ok" = "yes";
@@ -180,7 +190,7 @@
         "force user" = "cody";
       };
       "TV-Shows" = {
-        "path" = "/cjt_pool/Media-Files/TV";
+        "path" = "/cjt_pool/Media_Files/TV";
         "browseable" = "yes";
         "read only" = "no";
         "guest ok" = "yes";
