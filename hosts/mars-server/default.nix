@@ -171,7 +171,7 @@
         "force user" = "cody";
       };
       "home-assistant-backups" = {
-        "path" = "/cjt_pool/home-assistant-backups";
+        "path" = "/cjt_pool/home_assistant_backups";
         "hosts allow" = "10.0.10.4";
         "browseable" = "yes";
         "read only" = "no";
