@@ -163,12 +163,12 @@
       };
       "docker-data" = {
         "path" = "/docker-data";
-        "browseable" = "yes";
+        "browseable" = "no";
         "read only" = "no";
-        "guest ok" = "yes";
-        "create mask" = "0777";
-        "directory mask" = "0777";
-        "force user" = "cody";
+        "guest ok" = "no";
+        "create mask" = "0770";
+        "directory mask" = "0770";
+        "force user" = "docker";
       };
       "home-assistant-backups" = {
         "path" = "/cjt_pool/home_assistant_backups";
