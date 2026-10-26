@@ -198,6 +198,15 @@
         "directory mask" = "0777";
         "force user" = "cody";
       };
+      "Music" = {
+        "path" = "/cjt_pool/Media_Files/Music";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "force user" = "cody";
+      };
     };
   };
 
