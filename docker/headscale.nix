@@ -63,7 +63,7 @@ in
 
     ### HEADSCALE SERVER ###
     "${cfg.service_name}-server" = {
-      image = "ghcr.io/juanfont/headscale:v0.29.4";
+      image = "ghcr.io/juanfont/headscale:v0.29.7";
       labels = {
         "komodo.skip" = "";
         "me.tale.headplane.target" = "headscale";
@@ -102,7 +102,7 @@ in
 
     ### HEADPLANE ###
     "${cfg.service_name}-headplane" = {
-      image = "ghcr.io/tale/headplane:0.7.1";
+      image = "ghcr.io/tale/headplane:0.8.2";
       dependsOn = [
         "${cfg.service_name}-server"
       ];
